@@ -220,8 +220,8 @@ Apri il file `demo.html` in un browser per vedere il widget in azione su una pag
 
 ```bash
 # Clona il repository
-git clone https://github.com/asset-srl/asset-accessibility.git
-cd asset-accessibility
+git clone https://github.com/maurky/asset-access.git
+cd asset-access
 
 # Apri la demo nel browser
 open demo.html
@@ -249,6 +249,8 @@ asset-accessibility/
 
 Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede framework, librerie esterne o build tools.
 
+> **Nota:** monocromatico e saturazione usano `backdrop-filter` per non interferire con `position: fixed`. Browser senza supporto (Firefox < 103) usano un fallback con `filter` su elementi diretti del body.
+
 ## Roadmap
 
 - [x] Persistenza delle preferenze (localStorage)
@@ -271,7 +273,7 @@ Il progetto è in fase iniziale e ogni contributo è benvenuto. Se desideri coll
 4. Pusha il branch (`git push origin feature/nuova-funzione`)
 5. Apri una Pull Request
 
-Per segnalazioni di bug o richieste di funzionalità, apri una [Issue](https://github.com/asset-srl/asset-accessibility/issues).
+Per segnalazioni di bug o richieste di funzionalità, apri una [Issue](https://github.com/maurky/asset-access/issues).
 
 ## Riferimenti normativi
 

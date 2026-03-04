@@ -908,9 +908,20 @@
       'html.aa-contrast-high body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *){background-color:transparent!important;color:#ff0!important;border-color:#ff0!important;}\n' +
       'html.aa-contrast-high a:not(#aa-panel a){color:#0ff!important;}\n' +
 
-      'html.aa-monochrome body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay){filter:grayscale(100%)!important;}\n' +
-      'html.aa-saturation-high body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay){filter:saturate(200%)!important;}\n' +
-      'html.aa-saturation-low body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay){filter:saturate(40%)!important;}\n' +
+      /* Monochrome & saturation: use a backdrop-filter overlay so that
+         CSS filter does NOT create a new containing block (which would
+         break position:fixed on navbars, modals, cookie bars, etc.). */
+      '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:' + (cfg.zIndex - 1) + ';}\n' +
+      'html.aa-monochrome #aa-filter-overlay{backdrop-filter:grayscale(100%);-webkit-backdrop-filter:grayscale(100%);}\n' +
+      'html.aa-saturation-high #aa-filter-overlay{backdrop-filter:saturate(200%);-webkit-backdrop-filter:saturate(200%);}\n' +
+      'html.aa-saturation-low #aa-filter-overlay{backdrop-filter:saturate(40%);-webkit-backdrop-filter:saturate(40%);}\n' +
+
+      /* Fallback for older browsers without backdrop-filter (e.g. Firefox <103) */
+      '@supports not (backdrop-filter:grayscale(100%)){' +
+      'html.aa-monochrome body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:grayscale(100%)!important;}' +
+      'html.aa-saturation-high body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:saturate(200%)!important;}' +
+      'html.aa-saturation-low body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:saturate(40%)!important;}' +
+      '}\n' +
 
       '/* end widget styles */\n';
 
@@ -936,6 +947,12 @@
     live.style.cssText = 'position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
     document.body.appendChild(live);
     this._liveRegion = live;
+
+    /* ── Filter Overlay (for grayscale / saturation without breaking position:fixed) ── */
+    var filterOv = document.createElement('div');
+    filterOv.id = 'aa-filter-overlay';
+    filterOv.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(filterOv);
 
     /* ── Trigger Button ── */
     var btn = document.createElement('button');

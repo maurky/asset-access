@@ -205,11 +205,17 @@
 
 <body>
 
+  <!-- Fixed navbar per testare che monocromatico/saturazione non rompano position:fixed -->
+  <nav
+    style="position:fixed;top:0;left:0;right:0;height:48px;background:#1a56db;color:#fff;display:flex;align-items:center;padding:0 24px;z-index:1000;font-weight:600;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.15);">
+    <span>🔒 Fixed Navbar — deve restare in posizione con Monocromatico / Saturazione attivi</span>
+  </nav>
+
   <!-- ═══════════════════════════════════════ -->
   <!--           DEMO PAGE CONTENT            -->
   <!-- ═══════════════════════════════════════ -->
 
-  <div class="hero">
+  <div class="hero" style="margin-top:48px;">
     <h1>Asset Accessibility Demo</h1>
     <p>Un widget di accessibilità leggero e conforme WCAG 2.1 AA, installabile con un singolo script. Prova il pulsante
       in basso a destra.</p>
