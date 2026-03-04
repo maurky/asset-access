@@ -307,7 +307,7 @@
      DEFAULT CONFIG
   ─────────────────────────────────────────── */
   var defaults = {
-    position: 'bottom-right', // bottom-right | bottom-left | top-right | top-left
+    position: 'bottom-right', // bottom-right | bottom-left | bottom-center | top-right | top-left
     buttonColor: '#1a56db',
     buttonSize: 56,
     buttonIcon: 'default', // 'default' or SVG string
@@ -453,25 +453,29 @@
   proto._injectStyles = function () {
     var cfg = this.cfg;
     var pos = cfg.position;
+    var isCenter = pos === 'bottom-center';
+
     var btnBottom = pos.indexOf('bottom') > -1 ? '20px' : 'auto';
     var btnTop = pos.indexOf('top') > -1 ? '20px' : 'auto';
-    var btnRight = pos.indexOf('right') > -1 ? '20px' : 'auto';
-    var btnLeft = pos.indexOf('left') > -1 ? '20px' : 'auto';
+    var btnRight = isCenter ? 'auto' : (pos.indexOf('right') > -1 ? '20px' : 'auto');
+    var btnLeft = isCenter ? '50%' : (pos.indexOf('left') > -1 ? '20px' : 'auto');
+    var btnTransform = isCenter ? 'translateX(-50%)' : 'none';
 
     var panelBottom = pos.indexOf('bottom') > -1 ? (cfg.buttonSize + 30) + 'px' : 'auto';
     var panelTop = pos.indexOf('top') > -1 ? (cfg.buttonSize + 30) + 'px' : 'auto';
-    var panelRight = pos.indexOf('right') > -1 ? '20px' : 'auto';
-    var panelLeft = pos.indexOf('left') > -1 ? '20px' : 'auto';
+    var panelRight = isCenter ? 'auto' : (pos.indexOf('right') > -1 ? '20px' : 'auto');
+    var panelLeft = isCenter ? '50%' : (pos.indexOf('left') > -1 ? '20px' : 'auto');
+    var panelTransform = isCenter ? 'translateX(-50%)' : 'none';
 
     var css = '\n' +
       '/* ===== Asset Accessibility ===== */\n' +
-      '#aa-trigger{position:fixed;bottom:' + btnBottom + ';top:' + btnTop + ';right:' + btnRight + ';left:' + btnLeft + ';width:' + cfg.buttonSize + 'px;height:' + cfg.buttonSize + 'px;border-radius:50%;background:' + cfg.buttonColor + ';color:#fff;border:none;cursor:pointer;z-index:' + cfg.zIndex + ';display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:transform .2s ease,box-shadow .2s ease;padding:0;}\n' +
-      '#aa-trigger:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,0,0,.35);}\n' +
+      '#aa-trigger{position:fixed;bottom:' + btnBottom + ';top:' + btnTop + ';right:' + btnRight + ';left:' + btnLeft + ';transform:' + btnTransform + ';width:' + cfg.buttonSize + 'px;height:' + cfg.buttonSize + 'px;border-radius:50%;background:' + cfg.buttonColor + ';color:#fff;border:none;cursor:pointer;z-index:' + cfg.zIndex + ';display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:transform .2s ease,box-shadow .2s ease;padding:0;}\n' +
+      '#aa-trigger:hover{transform:' + (isCenter ? 'translateX(-50%) ' : '') + 'scale(1.08);box-shadow:0 6px 24px rgba(0,0,0,.35);}\n' +
       '#aa-trigger:focus-visible{outline:3px solid ' + cfg.buttonColor + ';outline-offset:3px;}\n' +
       '#aa-trigger svg{width:28px;height:28px;}\n' +
-      '#aa-panel{position:fixed;bottom:' + panelBottom + ';top:' + panelTop + ';right:' + panelRight + ';left:' + panelLeft + ';width:320px;max-width:calc(100vw - 40px);max-height:50vh;background:#fff;border-radius:16px;z-index:' + (cfg.zIndex + 1) + ';box-shadow:0 12px 48px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.06);display:none;flex-direction:column;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}\n' +
+      '#aa-panel{position:fixed;bottom:' + panelBottom + ';top:' + panelTop + ';right:' + panelRight + ';left:' + panelLeft + ';transform:' + panelTransform + ';width:320px;max-width:calc(100vw - 40px);max-height:50vh;background:#fff;border-radius:16px;z-index:' + (cfg.zIndex + 1) + ';box-shadow:0 12px 48px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.06);display:none;flex-direction:column;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}\n' +
       '#aa-panel.aa-visible{display:flex;animation:aa-slideIn .25s ease;}\n' +
-      '@keyframes aa-slideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}\n' +
+      '@keyframes aa-slideIn{from{opacity:0;transform:' + (isCenter ? 'translateX(-50%) ' : '') + 'translateY(12px);}to{opacity:1;transform:' + (isCenter ? 'translateX(-50%) ' : '') + 'translateY(0);}}\n' +
       '#aa-panel *{box-sizing:border-box;margin:0;}\n' +
 
       /* Header */
