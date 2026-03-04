@@ -235,11 +235,11 @@ Distribuito con licenza **MIT**. Vedi il file [LICENSE](LICENSE) per i dettagli.
 
 ## Autore
 
-**Asset s.r.l.**
+**[Asset s.r.l.](https://www.assetroma.it)**
 Dal 1995, prodotti, servizi e soluzioni per le esigenze di raccolta fondi di organizzazioni non profit.
 
 ---
 
 <p align="center">
-  <sub>Made with ❤️ by Asset s.r.l.</sub>
+  <sub>Made with ❤️ by <a href="https://www.assetroma.it">Asset s.r.l.</a></sub>
 </p>

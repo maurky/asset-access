@@ -3,7 +3,7 @@
  * Lightweight WCAG 2.1 AA accessibility widget — Vanilla JS, zero dependencies
  * Supports European Accessibility Act (EAA) / Italian D.Lgs. 82/2022
  *
- * Copyright (C) 2026 Asset s.r.l.
+ * Copyright (C) 2026 Asset s.r.l. — https://www.assetroma.it
  * Licensed under the GNU General Public License v3.0 (GPL-3.0)
  * See LICENSE file for details.
  *
