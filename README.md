@@ -14,7 +14,7 @@
 
 ## Panoramica
 
-**Asset Accessibility** è un widget di accessibilità web sviluppato da [Asset s.r.l.](https://www.asset.it), azienda che dal 1995 si occupa di prodotti, servizi e soluzioni per le esigenze di raccolta fondi di organizzazioni non profit.
+**Asset Accessibility** è un widget di accessibilità web sviluppato da [Asset s.r.l.](https://www.assetroma.it), azienda che dal 1995 si occupa di prodotti, servizi e soluzioni per le esigenze di raccolta fondi di organizzazioni non profit.
 
 Il widget consente ai visitatori di un sito web di personalizzare la propria esperienza di navigazione, intervenendo su dimensione del testo, contrasto, spaziatura, animazioni e molto altro — il tutto in tempo reale e senza ricaricare la pagina.
 
