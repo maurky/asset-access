@@ -57,12 +57,27 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 
 ### Altro
 
-- Nascondi immagini
+- Nascondi immagini (incluse background-image CSS)
 - Cursore grande
 - Ferma tutte le animazioni
 - Cambio lingua (IT, EN, FR, DE, ES)
 - Dichiarazione di accessibilità (popup dedicata)
 - Reset completo delle impostazioni
+
+### Screen Reader e Tastiera
+
+- `aria-live` region per annunci di ogni cambio di stato
+- `role="dialog"` con `aria-modal` su pannello e dichiarazione
+- `aria-expanded`, `aria-controls`, `aria-haspopup` sul trigger
+- `aria-pressed` su profili, pill colore, allineamento
+- `role="switch"` con `aria-checked` su tutti i toggle
+- `aria-label` descrittivi su stepper (diminuisci/aumenta + nome controllo)
+- Sezioni raggruppate con `role="group"` e `aria-labelledby`
+- SVG decorativi con `aria-hidden="true"` e `focusable="false"`
+- Focus trap completo (Tab / Shift+Tab cicla dentro il pannello)
+- Focus automatico al primo controllo all'apertura, ritorno al trigger alla chiusura
+- Escape chiude pannello o dichiarazione
+- Annunci tradotti in tutte e 5 le lingue
 
 ## Installazione
 
@@ -76,7 +91,7 @@ Includi lo script nel tuo sito e definisci l'oggetto di configurazione con almen
 <script>
   var AssetAccessibilityConfig = {
     contactEmail: "accessibilita@esempio.it",
-    contactPhone: "+39 06 1234567",
+    contactPhone: "+39 02 1234567",
     position: "bottom-right",
     buttonColor: "#1a56db",
   };
@@ -179,10 +194,6 @@ asset-accessibility/
 | Firefox | 60+             |
 | Safari  | 12+             |
 | Edge    | 79+             |
-| Opera   | 47+ +           |
-| Firefox | 60+             |
-| Safari  | 12+             |
-| Edge    | 79+             |
 | Opera   | 47+             |
 
 Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede framework, librerie esterne o build tools.
@@ -192,8 +203,8 @@ Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede f
 - [x] Persistenza delle preferenze (localStorage)
 - [x] Supporto lingue aggiuntive (francese, tedesco, spagnolo)
 - [x] Profili di accessibilità predefiniti (Accessibilità, Ipovedente, ADHD, Disabilità Cognitiva, Dislessia)
-- [ ] Navigazione da tastiera completa nel pannello
-- [ ] Screen reader: attributi ARIA avanzati
+- [x] Navigazione da tastiera completa nel pannello (focus trap, Tab/Shift+Tab, Escape)
+- [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
 - [ ] Generatore automatico della dichiarazione di accessibilità AgID
 - [ ] Distribuzione via CDN e pacchetto npm
 - [ ] Test suite automatizzata

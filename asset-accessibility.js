@@ -67,6 +67,17 @@
       close: 'Chiudi',
       on: 'ON',
       off: 'OFF',
+      srOpenPanel: 'Apri pannello accessibilità',
+      srClosePanel: 'Chiudi pannello accessibilità',
+      srDecrease: 'Diminuisci',
+      srIncrease: 'Aumenta',
+      srCurrentValue: 'Valore attuale',
+      srChangeLang: 'Cambia lingua',
+      srActivated: 'attivato',
+      srDeactivated: 'disattivato',
+      srProfileActivated: 'Profilo attivato',
+      srProfileDeactivated: 'Profilo disattivato',
+      srResetDone: 'Tutte le impostazioni sono state ripristinate',
     },
     en: {
       panelTitle: 'Accessibility',
@@ -103,6 +114,17 @@
       close: 'Close',
       on: 'ON',
       off: 'OFF',
+      srOpenPanel: 'Open accessibility panel',
+      srClosePanel: 'Close accessibility panel',
+      srDecrease: 'Decrease',
+      srIncrease: 'Increase',
+      srCurrentValue: 'Current value',
+      srChangeLang: 'Change language',
+      srActivated: 'activated',
+      srDeactivated: 'deactivated',
+      srProfileActivated: 'Profile activated',
+      srProfileDeactivated: 'Profile deactivated',
+      srResetDone: 'All settings have been reset',
     },
     fr: {
       panelTitle: 'Accessibilité',
@@ -139,6 +161,17 @@
       close: 'Fermer',
       on: 'ON',
       off: 'OFF',
+      srOpenPanel: 'Ouvrir le panneau d\'accessibilité',
+      srClosePanel: 'Fermer le panneau d\'accessibilité',
+      srDecrease: 'Diminuer',
+      srIncrease: 'Augmenter',
+      srCurrentValue: 'Valeur actuelle',
+      srChangeLang: 'Changer de langue',
+      srActivated: 'activé',
+      srDeactivated: 'désactivé',
+      srProfileActivated: 'Profil activé',
+      srProfileDeactivated: 'Profil désactivé',
+      srResetDone: 'Tous les paramètres ont été réinitialisés',
     },
     de: {
       panelTitle: 'Barrierefreiheit',
@@ -175,6 +208,17 @@
       close: 'Schließen',
       on: 'AN',
       off: 'AUS',
+      srOpenPanel: 'Barrierefreiheitspanel öffnen',
+      srClosePanel: 'Barrierefreiheitspanel schließen',
+      srDecrease: 'Verringern',
+      srIncrease: 'Erhöhen',
+      srCurrentValue: 'Aktueller Wert',
+      srChangeLang: 'Sprache wechseln',
+      srActivated: 'aktiviert',
+      srDeactivated: 'deaktiviert',
+      srProfileActivated: 'Profil aktiviert',
+      srProfileDeactivated: 'Profil deaktiviert',
+      srResetDone: 'Alle Einstellungen wurden zurückgesetzt',
     },
     es: {
       panelTitle: 'Accesibilidad',
@@ -211,6 +255,17 @@
       close: 'Cerrar',
       on: 'ON',
       off: 'OFF',
+      srOpenPanel: 'Abrir panel de accesibilidad',
+      srClosePanel: 'Cerrar panel de accesibilidad',
+      srDecrease: 'Disminuir',
+      srIncrease: 'Aumentar',
+      srCurrentValue: 'Valor actual',
+      srChangeLang: 'Cambiar idioma',
+      srActivated: 'activado',
+      srDeactivated: 'desactivado',
+      srProfileActivated: 'Perfil activado',
+      srProfileDeactivated: 'Perfil desactivado',
+      srResetDone: 'Todos los ajustes han sido restablecidos',
     },
   };
 
@@ -222,7 +277,7 @@
   ─────────────────────────────────────────── */
   var PROFILES = {
     accessibility: {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M7 8.5h10"/><path d="M12 8.5v5"/><path d="M9 20l3-6.5 3 6.5"/></svg>',
+      icon: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M7 8.5h10"/><path d="M12 8.5v5"/><path d="M9 20l3-6.5 3 6.5"/></svg>',
       state: {
         fontSizeStep: 2,
         readableFont: true,
@@ -238,7 +293,7 @@
       },
     },
     visuallyImpaired: {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+      icon: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
       state: {
         fontSizeStep: 4,
         readableFont: true,
@@ -254,7 +309,7 @@
       },
     },
     adhd: {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><path d="M21 3l-1.5 1.5"/><path d="M18 2l.5 2"/><path d="M22 6l-2 .5"/></svg>',
+      icon: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><path d="M21 3l-1.5 1.5"/><path d="M18 2l.5 2"/><path d="M22 6l-2 .5"/></svg>',
       state: {
         fontSizeStep: 1,
         readableFont: true,
@@ -270,7 +325,7 @@
       },
     },
     cognitive: {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+      icon: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
       state: {
         fontSizeStep: 2,
         readableFont: true,
@@ -286,7 +341,7 @@
       },
     },
     dyslexia: {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h13"/><path d="M8 3v4"/><path d="M14 3v4"/></svg>',
+      icon: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h13"/><path d="M8 3v4"/><path d="M14 3v4"/></svg>',
       state: {
         fontSizeStep: 1,
         readableFont: true,
@@ -383,22 +438,22 @@
   ─────────────────────────────────────────── */
   var icons = {
     accessibility:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M7 8.5h10"/><path d="M12 8.5v5"/><path d="M9 20l3-6.5 3 6.5"/></svg>',
+      '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M7 8.5h10"/><path d="M12 8.5v5"/><path d="M9 20l3-6.5 3 6.5"/></svg>',
     close:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+      '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    plus: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
     minus:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+      '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>',
     reset:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
-    lang: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>',
-    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+      '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
+    lang: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>',
+    doc: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
     alignLeft:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>',
+      '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>',
     alignCenter:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>',
+      '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>',
     alignRight:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>',
+      '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>',
   };
 
   /* ───────────────────────────────────────────
@@ -611,10 +666,23 @@
   proto._buildDOM = function () {
     var self = this;
 
+    /* ── Screen Reader Live Region ── */
+    var live = document.createElement('div');
+    live.id = 'aa-live-region';
+    live.setAttribute('role', 'status');
+    live.setAttribute('aria-live', 'polite');
+    live.setAttribute('aria-atomic', 'true');
+    live.style.cssText = 'position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+    document.body.appendChild(live);
+    this._liveRegion = live;
+
     /* ── Trigger Button ── */
     var btn = document.createElement('button');
     btn.id = 'aa-trigger';
-    btn.setAttribute('aria-label', this.t('panelTitle'));
+    btn.setAttribute('aria-label', this.t('srOpenPanel'));
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', 'aa-panel');
+    btn.setAttribute('aria-haspopup', 'dialog');
     btn.setAttribute('title', this.t('panelTitle'));
     btn.innerHTML =
       this.cfg.buttonIcon === 'default'
@@ -627,16 +695,20 @@
     var panel = document.createElement('div');
     panel.id = 'aa-panel';
     panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-label', this.t('panelTitle'));
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-labelledby', 'aa-panel-title');
     document.body.appendChild(panel);
     this._panel = panel;
 
     /* ── Statement Overlay ── */
     var stmtOv = document.createElement('div');
     stmtOv.id = 'aa-statement-overlay';
+    stmtOv.setAttribute('role', 'dialog');
+    stmtOv.setAttribute('aria-modal', 'true');
+    stmtOv.setAttribute('aria-labelledby', 'aa-stmt-title-id');
     stmtOv.innerHTML =
       '<div id="aa-statement-box">' +
-      '<div class="aa-stmt-header"><h3 class="aa-stmt-title">' +
+      '<div class="aa-stmt-header"><h3 class="aa-stmt-title" id="aa-stmt-title-id">' +
       this.t('statementTitle') +
       '</h3><button class="aa-hdr-btn aa-stmt-close" aria-label="' +
       this.t('close') +
@@ -660,17 +732,20 @@
     /* Header */
     html +=
       '<div class="aa-header">' +
-      '<span class="aa-header-title">' +
+      '<span class="aa-header-title" id="aa-panel-title">' +
       icons.accessibility +
       ' ' +
       this.t('panelTitle') +
       '</span>' +
       '<div class="aa-header-actions">' +
-      '<button class="aa-hdr-btn aa-lang-btn" data-action="toggleLang">' +
+      '<button class="aa-hdr-btn aa-lang-btn" data-action="toggleLang" aria-label="' +
+      this.t('srChangeLang') + ': ' +
+      LANGS[(LANGS.indexOf(this.lang) + 1) % LANGS.length].toUpperCase() +
+      '">' +
       LANGS[(LANGS.indexOf(this.lang) + 1) % LANGS.length].toUpperCase() +
       '</button>' +
       '<button class="aa-hdr-btn" data-action="closePanel" aria-label="' +
-      this.t('close') +
+      this.t('srClosePanel') +
       '">' +
       icons.close +
       '</button>' +
@@ -680,8 +755,8 @@
     html += '<div class="aa-body">';
 
     /* ─ Profiles section ─ */
-    html += '<div class="aa-section-label">' + this.t('sectionProfiles') + '</div>';
-    html += '<div class="aa-profiles">';
+    html += '<div class="aa-section-label" id="aa-sec-profiles">' + this.t('sectionProfiles') + '</div>';
+    html += '<div class="aa-profiles" role="group" aria-labelledby="aa-sec-profiles">';
     var profileKeys = ['accessibility', 'visuallyImpaired', 'adhd', 'cognitive', 'dyslexia'];
     var profileI18nKeys = ['profileAccessibility', 'profileVisuallyImpaired', 'profileAdhd', 'profileCognitive', 'profileDyslexia'];
     for (var p = 0; p < profileKeys.length; p++) {
@@ -689,7 +764,9 @@
       var isActive = s.activeProfile === pKey;
       html +=
         '<button class="aa-profile-card' + (isActive ? ' aa-active' : '') +
-        '" data-action="applyProfile" data-value="' + pKey + '" aria-pressed="' + isActive + '">' +
+        '" data-action="applyProfile" data-value="' + pKey +
+        '" aria-pressed="' + isActive +
+        '" aria-label="' + this.t(profileI18nKeys[p]) + (isActive ? ', ' + this.t('srActivated') : '') + '">' +
         PROFILES[pKey].icon +
         '<span class="aa-profile-card-label">' + this.t(profileI18nKeys[p]) + '</span>' +
         '</button>';
@@ -698,7 +775,8 @@
 
     /* ─ Content section ─ */
     html +=
-      '<div class="aa-section-label">' + this.t('sectionContent') + '</div>';
+      '<div class="aa-section-label" id="aa-sec-content">' + this.t('sectionContent') + '</div>';
+    html += '<div role="group" aria-labelledby="aa-sec-content">';
 
     // Font size stepper
     html += this._rowStepper('fontSize', s.fontSizeStep, '%');
@@ -710,26 +788,26 @@
     html +=
       '<div class="aa-row"><span class="aa-row-label">' +
       this.t('textAlign') +
-      '</span><div class="aa-align-group">' +
+      '</span><div class="aa-align-group" role="group" aria-label="' + this.t('textAlign') + '">' +
       '<button class="aa-align-btn' +
       (s.textAlign === 'left' ? ' aa-active' : '') +
       '" data-action="align" data-value="left" aria-label="' +
       this.t('alignLeft') +
-      '">' +
+      '" aria-pressed="' + (s.textAlign === 'left') + '">' +
       icons.alignLeft +
       '</button>' +
       '<button class="aa-align-btn' +
       (s.textAlign === 'center' ? ' aa-active' : '') +
       '" data-action="align" data-value="center" aria-label="' +
       this.t('alignCenter') +
-      '">' +
+      '" aria-pressed="' + (s.textAlign === 'center') + '">' +
       icons.alignCenter +
       '</button>' +
       '<button class="aa-align-btn' +
       (s.textAlign === 'right' ? ' aa-active' : '') +
       '" data-action="align" data-value="right" aria-label="' +
       this.t('alignRight') +
-      '">' +
+      '" aria-pressed="' + (s.textAlign === 'right') + '">' +
       icons.alignRight +
       '</button>' +
       '</div></div>';
@@ -740,48 +818,53 @@
     // Letter spacing stepper
     html += this._rowStepper('letterSpacing', s.letterSpacing, '%');
 
+    html += '</div>'; // close content group
+
     /* ─ Color section ─ */
     html +=
-      '<div class="aa-section-label">' + this.t('sectionColor') + '</div>';
-    html += '<div class="aa-pills">';
+      '<div class="aa-section-label" id="aa-sec-color">' + this.t('sectionColor') + '</div>';
+    html += '<div class="aa-pills" role="group" aria-labelledby="aa-sec-color">';
     var modes = ['contrastDark', 'contrastLight', 'contrastHigh'];
     var modeVals = ['dark', 'light', 'high'];
     for (var i = 0; i < modes.length; i++) {
+      var mActive = s.contrastMode === modeVals[i];
       html +=
         '<button class="aa-pill' +
-        (s.contrastMode === modeVals[i] ? ' aa-active' : '') +
+        (mActive ? ' aa-active' : '') +
         '" data-action="contrast" data-value="' +
         modeVals[i] +
-        '">' +
+        '" aria-pressed="' + mActive + '">' +
         this.t(modes[i]) +
         '</button>';
     }
     html +=
       '<button class="aa-pill' +
       (s.monochrome ? ' aa-active' : '') +
-      '" data-action="toggleMono">' +
+      '" data-action="toggleMono" aria-pressed="' + !!s.monochrome + '">' +
       this.t('monochrome') +
       '</button>';
     html +=
       '<button class="aa-pill' +
       (s.saturation === 'high' ? ' aa-active' : '') +
-      '" data-action="saturation" data-value="high">' +
+      '" data-action="saturation" data-value="high" aria-pressed="' + (s.saturation === 'high') + '">' +
       this.t('saturationHigh') +
       '</button>';
     html +=
       '<button class="aa-pill' +
       (s.saturation === 'low' ? ' aa-active' : '') +
-      '" data-action="saturation" data-value="low">' +
+      '" data-action="saturation" data-value="low" aria-pressed="' + (s.saturation === 'low') + '">' +
       this.t('saturationLow') +
       '</button>';
     html += '</div>';
 
     /* ─ Other section ─ */
     html +=
-      '<div class="aa-section-label">' + this.t('sectionOther') + '</div>';
+      '<div class="aa-section-label" id="aa-sec-other">' + this.t('sectionOther') + '</div>';
+    html += '<div role="group" aria-labelledby="aa-sec-other">';
     html += this._rowToggle('hideImages', s.hideImages);
     html += this._rowToggle('cursorSize', s.bigCursor);
     html += this._rowToggle('stopAnimations', s.stopAnimations);
+    html += '</div>';
 
     html += '</div>'; // .aa-body
 
@@ -819,21 +902,29 @@
     } else {
       display = '+' + value * 20 + suffix;
     }
+    var label = this.t(key);
     return (
-      '<div class="aa-row"><span class="aa-row-label">' +
-      this.t(key) +
+      '<div class="aa-row" role="group" aria-label="' + label + '">' +
+      '<span class="aa-row-label">' +
+      label +
       '</span><div class="aa-row-controls">' +
       '<button class="aa-step-btn" data-action="step" data-key="' +
       key +
-      '" data-dir="-1">' +
+      '" data-dir="-1" aria-label="' +
+      this.t('srDecrease') + ' ' + label +
+      '">' +
       icons.minus +
       '</button>' +
-      '<span class="aa-step-value">' +
+      '<span class="aa-step-value" aria-live="polite" aria-label="' +
+      this.t('srCurrentValue') + ': ' + display +
+      '">' +
       display +
       '</span>' +
       '<button class="aa-step-btn" data-action="step" data-key="' +
       key +
-      '" data-dir="1">' +
+      '" data-dir="1" aria-label="' +
+      this.t('srIncrease') + ' ' + label +
+      '">' +
       icons.plus +
       '</button></div></div>'
     );
@@ -883,6 +974,19 @@
   };
 
   /* ───────────────────────────────────────────
+     SCREEN READER ANNOUNCE
+  ─────────────────────────────────────────── */
+  proto._announce = function (msg) {
+    if (!this._liveRegion) return;
+    this._liveRegion.textContent = '';
+    var self = this;
+    /* Small delay to ensure screen readers pick up the change */
+    setTimeout(function () {
+      self._liveRegion.textContent = msg;
+    }, 50);
+  };
+
+  /* ───────────────────────────────────────────
      EVENTS
   ─────────────────────────────────────────── */
   proto._bindEvents = function () {
@@ -908,6 +1012,7 @@
           self._saveState();
           self._renderPanel();
           self._updateStatementOverlay();
+          self._announce(self.t('srChangeLang') + ': ' + self.lang.toUpperCase());
           break;
         case 'step':
           self._handleStep(
@@ -930,17 +1035,21 @@
           if (self.state.monochrome) self.state.saturation = '';
           self._applyState();
           self._renderPanel();
+          self._announce(self.t('monochrome') + ': ' + (self.state.monochrome ? self.t('srActivated') : self.t('srDeactivated')));
           break;
         case 'saturation':
           self.state.activeProfile = '';
           var val = target.getAttribute('data-value');
+          var satLabel = val === 'high' ? self.t('saturationHigh') : self.t('saturationLow');
           self.state.saturation = self.state.saturation === val ? '' : val;
           if (self.state.saturation) self.state.monochrome = false;
           self._applyState();
           self._renderPanel();
+          self._announce(satLabel + ': ' + (self.state.saturation === val ? self.t('srActivated') : self.t('srDeactivated')));
           break;
         case 'reset':
           self._resetAll();
+          self._announce(self.t('srResetDone'));
           break;
         case 'applyProfile':
           self._applyProfile(target.getAttribute('data-value'));
@@ -968,7 +1077,7 @@
       }
     });
 
-    /* Escape key */
+    /* Escape key + Focus trap */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         if (self.statementOpen) {
@@ -977,6 +1086,32 @@
         } else if (self.isOpen) {
           self._closePanel();
           self._fireCallback('closePanel');
+        }
+        return;
+      }
+
+      /* Focus trap: Tab / Shift+Tab */
+      if (e.key === 'Tab') {
+        var container = null;
+        if (self.statementOpen) container = self._stmtOverlay.querySelector('#aa-statement-box');
+        else if (self.isOpen) container = self._panel;
+        if (!container) return;
+
+        var focusable = container.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+        if (!focusable.length) return;
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
         }
       }
     });
@@ -1008,28 +1143,49 @@
   proto._handleToggle = function (key) {
     this.state.activeProfile = '';
     this.state[key] = !this.state[key];
+    /* Map state key back to i18n key for announcement */
+    var labelMap = { readableFont: 'readableFont', hideImages: 'hideImages', bigCursor: 'cursorSize', stopAnimations: 'stopAnimations' };
+    var label = this.t(labelMap[key] || key);
     this._applyState();
     this._renderPanel();
+    this._announce(label + ': ' + (this.state[key] ? this.t('srActivated') : this.t('srDeactivated')));
   };
 
   proto._handleAlign = function (val) {
     this.state.activeProfile = '';
     this.state.textAlign = this.state.textAlign === val ? '' : val;
+    var alignMap = { left: 'alignLeft', center: 'alignCenter', right: 'alignRight' };
     this._applyState();
     this._renderPanel();
+    this._announce(this.t('textAlign') + ': ' + (this.state.textAlign ? this.t(alignMap[this.state.textAlign]) : this.t('srDeactivated')));
   };
 
   proto._handleContrast = function (val) {
     this.state.activeProfile = '';
     this.state.contrastMode = this.state.contrastMode === val ? '' : val;
+    var contrastMap = { dark: 'contrastDark', light: 'contrastLight', high: 'contrastHigh' };
     this._applyState();
     this._renderPanel();
+    this._announce(
+      this.state.contrastMode
+        ? this.t(contrastMap[this.state.contrastMode]) + ': ' + this.t('srActivated')
+        : this.t(contrastMap[val]) + ': ' + this.t('srDeactivated')
+    );
+  };
+
+  var PROFILE_I18N = {
+    accessibility: 'profileAccessibility',
+    visuallyImpaired: 'profileVisuallyImpaired',
+    adhd: 'profileAdhd',
+    cognitive: 'profileCognitive',
+    dyslexia: 'profileDyslexia',
   };
 
   proto._applyProfile = function (key) {
     /* Toggle off if same profile is already active */
     if (this.state.activeProfile === key) {
       this._resetAll();
+      this._announce(this.t(PROFILE_I18N[key]) + ': ' + this.t('srProfileDeactivated'));
       return;
     }
     var profile = PROFILES[key];
@@ -1045,6 +1201,7 @@
     this.state.activeProfile = key;
     this._applyState();
     this._renderPanel();
+    this._announce(this.t(PROFILE_I18N[key]) + ': ' + this.t('srProfileActivated'));
   };
 
   /* ───────────────────────────────────────────
@@ -1152,11 +1309,20 @@
     this._panel.classList.add('aa-visible');
     this.isOpen = true;
     this._btn.setAttribute('aria-expanded', 'true');
+    this._btn.setAttribute('aria-label', this.t('srClosePanel'));
+    /* Focus first interactive element in panel */
+    var self = this;
+    setTimeout(function () {
+      var first = self._panel.querySelector('button, [tabindex]');
+      if (first) first.focus();
+    }, 100);
   };
   proto._closePanel = function () {
     this._panel.classList.remove('aa-visible');
     this.isOpen = false;
     this._btn.setAttribute('aria-expanded', 'false');
+    this._btn.setAttribute('aria-label', this.t('srOpenPanel'));
+    this._btn.focus();
   };
 
   /* ───────────────────────────────────────────
@@ -1166,10 +1332,19 @@
     this._updateStatementOverlay();
     this._stmtOverlay.classList.add('aa-visible');
     this.statementOpen = true;
+    /* Focus close button in statement */
+    var self = this;
+    setTimeout(function () {
+      var closeBtn = self._stmtOverlay.querySelector('.aa-stmt-close');
+      if (closeBtn) closeBtn.focus();
+    }, 100);
   };
   proto._closeStatement = function () {
     this._stmtOverlay.classList.remove('aa-visible');
     this.statementOpen = false;
+    /* Return focus to statement button in panel */
+    var stmtBtn = this._panel.querySelector('[data-action="showStatement"]');
+    if (stmtBtn) stmtBtn.focus();
   };
   proto._updateStatementOverlay = function () {
     var titleEl = this._stmtOverlay.querySelector('.aa-stmt-title');
