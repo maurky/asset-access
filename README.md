@@ -79,7 +79,6 @@ Includi lo script nel tuo sito e definisci l'oggetto di configurazione con almen
     contactPhone: "+39 06 1234567",
     position: "bottom-right",
     buttonColor: "#1a56db",
-    lang: "it",
   };
 </script>
 ```
@@ -90,19 +89,38 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 
 ## Configurazione
 
-| Parametro          | Tipo     | Default          | Descrizione                                                                                                                                     |
-| ------------------ | -------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`contactEmail`** | `string` | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                  |
-| **`contactPhone`** | `string` | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                               |
-| `position`         | `string` | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `top-right`, `top-left`                                                                  |
-| `buttonColor`      | `string` | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                            |
-| `buttonSize`       | `number` | `56`             | Dimensione in pixel del pulsante trigger                                                                                                        |
-| `buttonIcon`       | `string` | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                  |
-| `lang`             | `string` | _rilevato_       | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`                                                                                         |
-| `statementText`    | `object` | _auto-generato_  | Oggetto con chiavi `it` e `en`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
-| `zIndex`           | `number` | `999999`         | z-index del widget                                                                                                                              |
+| Parametro          | Tipo       | Default          | Descrizione                                                                                                                                                      |
+| ------------------ | ---------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`contactEmail`** | `string`   | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                                   |
+| **`contactPhone`** | `string`   | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                                                |
+| `position`         | `string`   | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `top-right`, `top-left`                                                                                   |
+| `buttonColor`      | `string`   | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                                             |
+| `buttonSize`       | `number`   | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
+| `buttonIcon`       | `string`   | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
+| `lang`             | `string`   | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
+| `callback`         | `function` | `null`           | Funzione di callback invocata a ogni interazione. Riceve un oggetto `{ action, detail, state, lang }`.                                                           |
+| `statementText`    | `object`   | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
+| `zIndex`           | `number`   | `999999`         | z-index del widget                                                                                                                                               |
 
 > \* Almeno uno tra `contactEmail` e `contactPhone` deve essere specificato, altrimenti il widget non si avvia.
+
+### Callback
+
+La funzione `callback` viene invocata a ogni interazione dell'utente con il widget. Riceve un oggetto con queste proprietà:
+
+```javascript
+var AssetAccessibilityConfig = {
+  contactEmail: "accessibilita@esempio.it",
+  callback: function (event) {
+    console.log(event.action); // es. 'toggle', 'step', 'applyProfile', 'reset', ...
+    console.log(event.detail); // es. { key: 'readableFont' } o { value: 'adhd' }
+    console.log(event.state); // copia completa dello stato corrente
+    console.log(event.lang); // lingua corrente ('it', 'en', ...)
+  },
+};
+```
+
+Azioni possibili: `openPanel`, `closePanel`, `toggleLang`, `step`, `toggle`, `align`, `contrast`, `toggleMono`, `saturation`, `reset`, `applyProfile`, `showStatement`, `closeStatement`.
 
 ## Traduzioni
 

@@ -229,14 +229,14 @@
         <span class="c-comment">&lt;!-- 2. Configura (contactEmail e/o contactPhone OBBLIGATORI) --&gt;</span><br>
         <span class="c-tag">&lt;script&gt;</span><br>
         &nbsp;&nbsp;<span class="c-key">var</span> AssetAccessibilityConfig = {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactEmail</span>: <span class="c-str">'<a
-            href="/cdn-cgi/l/email-protection" class="__cf_email__"
-            data-cfemail="610002020412120803080d081500210412040c11080e4f0815">[email&#160;protected]</a>'</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactEmail</span>: <span
+          class="c-str">'accessibilita@esempio.it'</span>,<br>
         &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactPhone</span>: <span class="c-str">'+39 02
           1234567'</span>,<br>
         &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">position</span>: <span class="c-str">'bottom-right'</span>,<br>
         &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">buttonColor</span>: <span class="c-str">'#1a56db'</span>,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">lang</span>: <span class="c-str">'it'</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">callback</span>: <span class="c-key">function</span>(e) {
+        console.log(e); }<br>
         &nbsp;&nbsp;};<br>
         <span class="c-tag">&lt;/script&gt;</span>
       </div>
@@ -289,8 +289,13 @@
           </tr>
           <tr>
             <td><code>lang</code></td>
-            <td><code>'it'</code></td>
-            <td>Lingua iniziale: 'it', 'en', 'fr', 'de', 'es'</td>
+            <td><em>auto-detect</em></td>
+            <td>Lingua iniziale: 'it', 'en', 'fr', 'de', 'es'. Rilevata dal browser se omessa.</td>
+          </tr>
+          <tr>
+            <td><code>callback</code></td>
+            <td><code>null</code></td>
+            <td>Funzione invocata a ogni interazione: <code>function(event) { }</code></td>
           </tr>
           <tr>
             <td><code>statementText</code></td>
@@ -373,11 +378,16 @@
   <!-- 2. Configura (contactEmail e/o contactPhone sono OBBLIGATORI) -->
   <script>
     var AssetAccessibilityConfig = {
-      contactEmail: "accessibilita@esempio.it",
-      contactPhone: "+39 06 1234567",
+      contactEmail: 'accessibilita@esempio.it',
+      contactPhone: '+39 06 1234567',
+      position: 'bottom-right',
+      buttonColor: '#1a56db',
+      callback: function (event) {
+        console.log('[AA Callback]', event.action, event.detail, event.state);
+      }
     };
-
   </script>
+
 </body>
 
 </html>

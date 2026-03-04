@@ -15,11 +15,12 @@
  * <script>
  *   var AssetAccessibilityConfig = {
  *     contactEmail: 'accessibilita@esempio.it',  // REQUIRED (email and/or phone)
- *     contactPhone: '+39 06 1234567',             // REQUIRED (email and/or phone)
+ *     contactPhone: '+39 02 1234567',             // REQUIRED (email and/or phone)
  *     position: 'bottom-right',
  *     buttonColor: '#1a56db',
  *     buttonIcon: 'default',
- *     lang: 'it',
+ *     lang: 'it',                                 // auto-detected from browser if omitted
+ *     callback: function(e) { console.log(e); },  // optional
  *     statementText: { it: '...', en: '...' }
  *   };
  * </script>
@@ -311,11 +312,12 @@
     buttonSize: 56,
     buttonIcon: 'default', // 'default' or SVG string
     lang: navigator.languages
-      .map(lang => lang.split('-')[0])
-      .find(lang => LANGS.includes(lang)) || 'en',
+      .map(function (l) { return l.split('-')[0]; })
+      .find(function (l) { return LANGS.indexOf(l) !== -1; }) || 'en',
     contactEmail: '',  // REQUIRED: at least one of contactEmail / contactPhone
     contactPhone: '',  // REQUIRED: at least one of contactEmail / contactPhone
     statementText: null, // auto-generated from contacts if not provided
+    callback: null, // function(action, state) — called on every UI interaction
     zIndex: 999999,
   };
 
@@ -857,6 +859,26 @@
   };
 
   /* ───────────────────────────────────────────
+     CALLBACK
+  ─────────────────────────────────────────── */
+  proto._fireCallback = function (action, detail) {
+    if (typeof this.cfg.callback === 'string') {
+      this.cfg.callback = window[this.cfg.callback]
+    }
+    if (typeof this.cfg.callback !== 'function') return;
+    try {
+      this.cfg.callback({
+        action: action,
+        detail: detail || null,
+        state: JSON.parse(JSON.stringify(this.state)),
+        lang: this.lang,
+      });
+    } catch (e) {
+      console.warn('[Asset Accessibility] Callback error:', e);
+    }
+  };
+
+  /* ───────────────────────────────────────────
      EVENTS
   ─────────────────────────────────────────── */
   proto._bindEvents = function () {
@@ -864,6 +886,7 @@
 
     this._btn.addEventListener('click', function () {
       self.isOpen ? self._closePanel() : self._openPanel();
+      self._fireCallback(self.isOpen ? 'openPanel' : 'closePanel');
     });
 
     this._panel.addEventListener('click', function (e) {
@@ -922,6 +945,12 @@
           self._showStatement();
           break;
       }
+
+      /* Fire callback for every panel interaction */
+      self._fireCallback(action, {
+        key: target.getAttribute('data-key') || undefined,
+        value: target.getAttribute('data-value') || undefined,
+      });
     });
 
     /* Statement overlay */
@@ -931,14 +960,20 @@
         e.target.closest('.aa-stmt-close')
       ) {
         self._closeStatement();
+        self._fireCallback('closeStatement');
       }
     });
 
     /* Escape key */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
-        if (self.statementOpen) self._closeStatement();
-        else if (self.isOpen) self._closePanel();
+        if (self.statementOpen) {
+          self._closeStatement();
+          self._fireCallback('closeStatement');
+        } else if (self.isOpen) {
+          self._closePanel();
+          self._fireCallback('closePanel');
+        }
       }
     });
   };
