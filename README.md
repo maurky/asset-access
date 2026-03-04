@@ -76,7 +76,7 @@ Includi lo script nel tuo sito e definisci l'oggetto di configurazione con almen
 <script>
   var AssetAccessibilityConfig = {
     contactEmail: "accessibilita@esempio.it",
-    contactPhone: "+39 02 1234567",
+    contactPhone: "+39 06 1234567",
     position: "bottom-right",
     buttonColor: "#1a56db",
     lang: "it",

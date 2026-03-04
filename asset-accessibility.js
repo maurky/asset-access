@@ -15,7 +15,7 @@
  * <script>
  *   var AssetAccessibilityConfig = {
  *     contactEmail: 'accessibilita@esempio.it',  // REQUIRED (email and/or phone)
- *     contactPhone: '+39 02 1234567',             // REQUIRED (email and/or phone)
+ *     contactPhone: '+39 06 1234567',             // REQUIRED (email and/or phone)
  *     position: 'bottom-right',
  *     buttonColor: '#1a56db',
  *     buttonIcon: 'default',
@@ -311,7 +311,7 @@
     buttonSize: 56,
     buttonIcon: 'default', // 'default' or SVG string
     lang: navigator.languages
-      .map(lang => lang.split('-')[0]) // extract prefix
+      .map(lang => lang.split('-')[0])
       .find(lang => LANGS.includes(lang)) || 'en',
     contactEmail: '',  // REQUIRED: at least one of contactEmail / contactPhone
     contactPhone: '',  // REQUIRED: at least one of contactEmail / contactPhone
@@ -1180,7 +1180,7 @@
         'Esempio:\n' +
         '  var AssetAccessibilityConfig = {\n' +
         '    contactEmail: "accessibilita@esempio.it",\n' +
-        '    contactPhone: "+39 02 1234567"\n' +
+        '    contactPhone: "+39 06 1234567"\n' +
         '  };\n\n' +
         'Il widget non verrà caricato.'
       );
