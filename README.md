@@ -114,10 +114,61 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 | `buttonIcon`       | `string`   | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
 | `lang`             | `string`   | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
 | `callback`         | `function` | `null`           | Funzione di callback invocata a ogni interazione. Riceve un oggetto `{ action, detail, state, lang }`.                                                           |
+| `agidDeclaration`  | `object`   | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
 | `statementText`    | `object`   | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
 | `zIndex`           | `number`   | `999999`         | z-index del widget                                                                                                                                               |
 
 > \* Almeno uno tra `contactEmail` e `contactPhone` deve essere specificato, altrimenti il widget non si avvia.
+
+### Dichiarazione di Accessibilità AgID (Allegato 1)
+
+Il parametro `agidDeclaration` genera automaticamente una dichiarazione conforme al modello AgID Allegato 1 (Linee Guida sull'Accessibilità degli Strumenti Informatici) per soggetti privati, ai sensi della L. 4/2004 e del D.Lgs. 82/2022 (EAA).
+
+La dichiarazione viene prodotta in italiano (versione legale completa) e tradotta nelle altre 4 lingue supportate. Sovrascrive qualsiasi `statementText` manuale.
+
+```javascript
+var AssetAccessibilityConfig = {
+  contactEmail: "accessibilita@esempio.it",
+  contactPhone: "+39 02 1234567",
+  agidDeclaration: {
+    entityName: "Azienda s.r.l.",
+    entityUrl: "https://www.esempio.it",
+    entityType: "sito web", // 'sito web' | 'applicazione mobile'
+    conformanceStatus: "partial", // 'full' | 'partial' | 'none'
+    nonAccessibleContent: {
+      nonConformities: [
+        "Alcune immagini mancano di testo alternativo (WCAG 1.1.1)",
+        "Contrasto insufficiente in alcune sezioni (WCAG 1.4.3)",
+      ],
+      disproportionateBurden: [], // Contenuti con deroga per onere sproporzionato
+      outsideScope: [], // Contenuti fuori ambito legislazione
+      alternatives: "", // Descrizione alternative accessibili
+    },
+    declarationDate: "2026-01-15", // Data prima redazione (YYYY-MM-DD)
+    lastReviewDate: "2026-09-01", // Data ultimo riesame (YYYY-MM-DD)
+    evaluationMethod: "self", // 'self' | 'third-party'
+    evaluationDetails: "", // Dettagli aggiuntivi
+    technologies: ["HTML", "CSS", "JavaScript", "WAI-ARIA"],
+    feedbackEmail: "", // Fallback su contactEmail se vuoto
+    feedbackPhone: "", // Fallback su contactPhone se vuoto
+    feedbackUrl: "", // URL modulo segnalazione online
+    feedbackResponseTime: "30", // Giorni per risposta
+    responsibleName: "Mario Rossi",
+    responsibleRole: "Web Manager",
+  },
+};
+```
+
+**Struttura della dichiarazione generata** (conforme Allegato 1 AgID):
+
+1. **Intestazione** — Impegno del soggetto erogatore all'accessibilità (L. 4/2004)
+2. **Stato di conformità** — Conforme / Parzialmente conforme / Non conforme (UNI CEI EN 301549)
+3. **Contenuti non accessibili** — Inosservanza, onere sproporzionato, contenuti fuori ambito, alternative accessibili
+4. **Redazione della dichiarazione** — Data, metodologia (autovalutazione / terzi), tecnologie
+5. **Meccanismo di feedback** — Contatti per segnalazioni accessibilità
+6. **Procedura di attuazione** — Link ad AgID per reclami dopo 30 giorni senza risposta
+
+> **Nota:** Per le PA, la dichiarazione ufficiale va compilata esclusivamente tramite il form AgID su <https://form.agid.gov.it>. Il generatore del widget è pensato per i soggetti privati che devono pubblicare una dichiarazione HTML o PDF basata sul modello Allegato 1.
 
 ### Callback
 
@@ -205,7 +256,7 @@ Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede f
 - [x] Profili di accessibilità predefiniti (Accessibilità, Ipovedente, ADHD, Disabilità Cognitiva, Dislessia)
 - [x] Navigazione da tastiera completa nel pannello (focus trap, Tab/Shift+Tab, Escape)
 - [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
-- [ ] Generatore automatico della dichiarazione di accessibilità AgID
+- [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
 - [ ] Distribuzione via CDN e pacchetto npm
 - [ ] Test suite automatizzata
 - [ ] Documentazione API completa

@@ -226,17 +226,19 @@
         <span class="c-comment">&lt;!-- 1. Carica lo script --&gt;</span><br>
         <span class="c-tag">&lt;script</span> <span class="c-key">src</span>=<span
           class="c-str">"asset-accessibility.js"</span><span class="c-tag">&gt;&lt;/script&gt;</span><br><br>
-        <span class="c-comment">&lt;!-- 2. Configura (contactEmail e/o contactPhone OBBLIGATORI) --&gt;</span><br>
+        <span class="c-comment">&lt;!-- 2. Configura --&gt;</span><br>
         <span class="c-tag">&lt;script&gt;</span><br>
         &nbsp;&nbsp;<span class="c-key">var</span> AssetAccessibilityConfig = {<br>
         &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactEmail</span>: <span
           class="c-str">'accessibilita@esempio.it'</span>,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactPhone</span>: <span class="c-str">'+39 02
-          1234567'</span>,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">position</span>: <span class="c-str">'bottom-right'</span>,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">buttonColor</span>: <span class="c-str">'#1a56db'</span>,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">callback</span>: <span class="c-key">function</span>(e) {
-        console.log(e); }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">agidDeclaration</span>: {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">entityName</span>: <span class="c-str">'Azienda
+          s.r.l.'</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">entityUrl</span>: <span
+          class="c-str">'https://www.esempio.it'</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">conformanceStatus</span>: <span
+          class="c-str">'partial'</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
         &nbsp;&nbsp;};<br>
         <span class="c-tag">&lt;/script&gt;</span>
       </div>
@@ -298,15 +300,122 @@
             <td>Funzione invocata a ogni interazione: <code>function(event) { }</code></td>
           </tr>
           <tr>
+            <td><code>agidDeclaration</code></td>
+            <td><code>null</code></td>
+            <td>Oggetto per la generazione automatica della Dichiarazione AgID (Allegato 1). Se presente, sovrascrive
+              <code>statementText</code>. Vedi sezione dedicata sotto.
+            </td>
+          </tr>
+          <tr>
             <td><code>statementText</code></td>
             <td><em>auto-generato</em></td>
-            <td>Oggetto con chiavi 'it' e 'en' contenenti HTML della dichiarazione. Se omesso, viene generato
+            <td>Oggetto con chiavi 'it', 'en', ... contenenti HTML della dichiarazione. Se omesso, viene generato
               automaticamente dai contatti.</td>
           </tr>
           <tr>
             <td><code>zIndex</code></td>
             <td><code>999999</code></td>
             <td>z-index del widget</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Dichiarazione AgID (Allegato 1)</h2>
+      <p>Il parametro <code>agidDeclaration</code> genera automaticamente una dichiarazione di accessibilità conforme al
+        modello AgID Allegato 1 per soggetti privati (L. 4/2004, D.Lgs. 82/2022). La dichiarazione viene prodotta in
+        italiano (versione legale) e tradotta nelle altre 4 lingue.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Proprietà</th>
+            <th>Default</th>
+            <th>Descrizione</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>entityName</code></td>
+            <td>—</td>
+            <td>Denominazione del soggetto erogatore</td>
+          </tr>
+          <tr>
+            <td><code>entityUrl</code></td>
+            <td>—</td>
+            <td>URL del sito web o dell'app</td>
+          </tr>
+          <tr>
+            <td><code>entityType</code></td>
+            <td><code>'sito web'</code></td>
+            <td><code>'sito web'</code> oppure <code>'applicazione mobile'</code></td>
+          </tr>
+          <tr>
+            <td><code>conformanceStatus</code></td>
+            <td><code>'partial'</code></td>
+            <td><code>'full'</code>, <code>'partial'</code> o <code>'none'</code></td>
+          </tr>
+          <tr>
+            <td><code>nonAccessibleContent</code></td>
+            <td><code>{}</code></td>
+            <td>Oggetto con array: <code>nonConformities</code>, <code>disproportionateBurden</code>,
+              <code>outsideScope</code>, <code>alternatives</code>
+            </td>
+          </tr>
+          <tr>
+            <td><code>declarationDate</code></td>
+            <td><em>oggi</em></td>
+            <td>Data prima redazione (formato <code>YYYY-MM-DD</code>)</td>
+          </tr>
+          <tr>
+            <td><code>lastReviewDate</code></td>
+            <td>—</td>
+            <td>Data ultimo riesame (formato <code>YYYY-MM-DD</code>)</td>
+          </tr>
+          <tr>
+            <td><code>evaluationMethod</code></td>
+            <td><code>'self'</code></td>
+            <td><code>'self'</code> (autovalutazione) o <code>'third-party'</code></td>
+          </tr>
+          <tr>
+            <td><code>evaluationDetails</code></td>
+            <td>—</td>
+            <td>Dettagli aggiuntivi sulla valutazione</td>
+          </tr>
+          <tr>
+            <td><code>technologies</code></td>
+            <td><code>['HTML','CSS','JS','WAI-ARIA']</code></td>
+            <td>Tecnologie utilizzate</td>
+          </tr>
+          <tr>
+            <td><code>feedbackEmail</code></td>
+            <td><em>da contactEmail</em></td>
+            <td>Email per segnalazioni (fallback su <code>contactEmail</code>)</td>
+          </tr>
+          <tr>
+            <td><code>feedbackPhone</code></td>
+            <td><em>da contactPhone</em></td>
+            <td>Telefono per segnalazioni (fallback su <code>contactPhone</code>)</td>
+          </tr>
+          <tr>
+            <td><code>feedbackUrl</code></td>
+            <td>—</td>
+            <td>URL modulo di segnalazione online</td>
+          </tr>
+          <tr>
+            <td><code>feedbackResponseTime</code></td>
+            <td><code>'30'</code></td>
+            <td>Tempo di risposta in giorni</td>
+          </tr>
+          <tr>
+            <td><code>responsibleName</code></td>
+            <td>—</td>
+            <td>Nome del responsabile</td>
+          </tr>
+          <tr>
+            <td><code>responsibleRole</code></td>
+            <td>—</td>
+            <td>Ruolo/qualifica del responsabile</td>
           </tr>
         </tbody>
       </table>
@@ -383,6 +492,23 @@
       contactPhone: '+39 06 1234567',
       position: 'bottom-right',
       buttonColor: '#1a56db',
+      agidDeclaration: {
+        entityName: 'Nome società',
+        entityUrl: 'https://www.example.it',
+        entityType: 'sito web',
+        conformanceStatus: 'partial',
+        nonAccessibleContent: {
+          nonConformities: [
+            'Alcune immagini non hanno testo alternativo adeguato (WCAG 1.1.1)',
+            'Il contrasto del testo in alcune sezioni non raggiunge il rapporto 4.5:1 (WCAG 1.4.3)'
+          ]
+        },
+        declarationDate: '2026-03-04',
+        evaluationMethod: 'self',
+        technologies: ['HTML', 'CSS', 'JavaScript', 'WAI-ARIA'],
+        responsibleName: 'Responsabile Accessibilità',
+        responsibleRole: 'Web Manager'
+      },
       callback: function (event) {
         console.log('[AA Callback]', event.action, event.detail, event.state);
       }

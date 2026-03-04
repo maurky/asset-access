@@ -21,6 +21,13 @@
  *     buttonIcon: 'default',
  *     lang: 'it',                                 // auto-detected from browser if omitted
  *     callback: function(e) { console.log(e); },  // optional
+ *     agidDeclaration: {                           // optional — generates AgID Allegato 1 declaration
+ *       entityName: 'Azienda s.r.l.',
+ *       entityUrl: 'https://www.esempio.it',
+ *       conformanceStatus: 'partial',              // 'full' | 'partial' | 'none'
+ *       declarationDate: '2026-01-15',
+ *       feedbackEmail: 'accessibilita@esempio.it'
+ *     },
  *     statementText: { it: '...', en: '...' }
  *   };
  * </script>
@@ -372,6 +379,7 @@
     contactEmail: '',  // REQUIRED: at least one of contactEmail / contactPhone
     contactPhone: '',  // REQUIRED: at least one of contactEmail / contactPhone
     statementText: null, // auto-generated from contacts if not provided
+    agidDeclaration: null, // AgID declaration config (overrides statementText) — see README
     callback: null, // function(action, state) — called on every UI interaction
     zIndex: 999999,
   };
@@ -409,6 +417,259 @@
       es: '<p>Este sitio web ha sido diseñado para ser accesible al mayor número posible de usuarios, en conformidad con las directrices WCAG 2.1 nivel AA y el European Accessibility Act (D.Lgs. 82/2022).</p>' +
         '<p><strong>Contactos para reportes de accesibilidad:</strong><br>' + contacts.es + '</p>' +
         '<p>En caso de respuesta ausente o insatisfactoria en un plazo de 30 días, puede dirigirse al Defensor Cívico Digital en AgID.</p>',
+    };
+  }
+
+  /* ── Build AgID-compliant declaration (Allegato 1) ── */
+  function buildAgidDeclaration(cfg) {
+    var a = cfg.agidDeclaration;
+    if (!a) return null;
+
+    /* ── Defaults ── */
+    var entity = a.entityName || '';
+    var url = a.entityUrl || '';
+    var targetType = a.entityType || 'sito web'; // 'sito web' | 'applicazione mobile'
+    var status = a.conformanceStatus || 'partial'; // 'full' | 'partial' | 'none'
+    var nc = a.nonAccessibleContent || {};
+    var nonConf = nc.nonConformities || [];
+    var burden = nc.disproportionateBurden || [];
+    var outside = nc.outsideScope || [];
+    var alternatives = nc.alternatives || '';
+    var declDate = a.declarationDate || new Date().toISOString().slice(0, 10);
+    var reviewDate = a.lastReviewDate || '';
+    var evalMethod = a.evaluationMethod || 'self'; // 'self' | 'third-party'
+    var evalDetails = a.evaluationDetails || '';
+    var techs = a.technologies || ['HTML', 'CSS', 'JavaScript', 'WAI-ARIA'];
+    var fbEmail = a.feedbackEmail || cfg.contactEmail || '';
+    var fbPhone = a.feedbackPhone || cfg.contactPhone || '';
+    var fbUrl = a.feedbackUrl || '';
+    var fbResponseDays = a.feedbackResponseTime || '30';
+    var respName = a.responsibleName || '';
+    var respRole = a.responsibleRole || '';
+
+    /* ── Helpers ── */
+    function esc(s) { return (s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function fmtDate(d) {
+      if (!d) return '';
+      var parts = d.split('-');
+      if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
+      return d;
+    }
+    function list(arr) {
+      if (!arr || !arr.length) return '';
+      var h = '<ul style="margin:8px 0;padding-left:20px;">';
+      for (var i = 0; i < arr.length; i++) h += '<li>' + esc(arr[i]) + '</li>';
+      return h + '</ul>';
+    }
+
+    /* ── Status labels per language ── */
+    var statusLabels = {
+      full: {
+        it: 'pienamente conforme',
+        en: 'fully compliant',
+        fr: 'entièrement conforme',
+        de: 'vollständig konform',
+        es: 'plenamente conforme',
+      },
+      partial: {
+        it: 'parzialmente conforme',
+        en: 'partially compliant',
+        fr: 'partiellement conforme',
+        de: 'teilweise konform',
+        es: 'parcialmente conforme',
+      },
+      none: {
+        it: 'non conforme',
+        en: 'non-compliant',
+        fr: 'non conforme',
+        de: 'nicht konform',
+        es: 'no conforme',
+      },
+    };
+
+    var evalLabels = {
+      self: {
+        it: 'autovalutazione effettuata direttamente dal soggetto erogatore',
+        en: 'self-assessment carried out directly by the service provider',
+        fr: 'auto-évaluation effectuée directement par le fournisseur de services',
+        de: 'Selbstbewertung, die direkt vom Dienstleister durchgeführt wurde',
+        es: 'autoevaluación realizada directamente por el proveedor del servicio',
+      },
+      'third-party': {
+        it: 'valutazione effettuata da terzi',
+        en: 'third-party evaluation',
+        fr: 'évaluation réalisée par des tiers',
+        de: 'Bewertung durch Dritte',
+        es: 'evaluación realizada por terceros',
+      },
+    };
+
+    /* ── Contact block builder ── */
+    function contactBlock(lang) {
+      var phoneL = { it: 'Telefono', en: 'Phone', fr: 'Téléphone', de: 'Telefon', es: 'Teléfono' };
+      var h = '';
+      if (fbEmail) h += 'Email: <a href="mailto:' + esc(fbEmail) + '">' + esc(fbEmail) + '</a><br>';
+      if (fbPhone) h += phoneL[lang] + ': <strong>' + esc(fbPhone) + '</strong><br>';
+      if (fbUrl) h += 'Online: <a href="' + esc(fbUrl) + '" target="_blank" rel="noopener">' + esc(fbUrl) + '</a><br>';
+      if (respName) {
+        var respL = { it: 'Responsabile', en: 'Contact person', fr: 'Responsable', de: 'Verantwortliche Person', es: 'Responsable' };
+        h += respL[lang] + ': <strong>' + esc(respName) + '</strong>';
+        if (respRole) h += ' (' + esc(respRole) + ')';
+        h += '<br>';
+      }
+      return h;
+    }
+
+    /* ────────────────────────────────────────────
+       ITALIAN (official version — Allegato 1 AgID)
+    ──────────────────────────────────────────── */
+    var it = '';
+    it += '<div style="font-size:14px;line-height:1.6;">';
+
+    /* 1. Intestazione */
+    it += '<p><strong>' + esc(entity) + '</strong> si impegna a rendere ';
+    it += targetType === 'applicazione mobile' ? 'la propria applicazione mobile' : 'il proprio sito web';
+    if (url) it += ' <a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + '</a>';
+    it += ' accessibile, conformemente alla legge 9 gennaio 2004, n. 4.</p>';
+
+    /* 2. Stato di conformità */
+    it += '<h4 style="margin:16px 0 8px;">Stato di conformità</h4>';
+    it += '<p>';
+    if (status === 'full') {
+      it += 'Questo ' + esc(targetType) + ' è <strong>pienamente conforme</strong> ai requisiti previsti dall\'allegato A alla norma UNI CEI EN 301549 in attuazione della Direttiva UE 2016/2102.';
+    } else if (status === 'partial') {
+      it += 'Questo ' + esc(targetType) + ' è <strong>parzialmente conforme</strong> ai requisiti previsti dall\'allegato A alla norma UNI CEI EN 301549 in attuazione della Direttiva UE 2016/2102, a causa delle non conformità elencate di seguito.';
+    } else {
+      it += 'Questo ' + esc(targetType) + ' <strong>non è conforme</strong> ai requisiti previsti dall\'allegato A alla norma UNI CEI EN 301549 in attuazione della Direttiva UE 2016/2102, per i motivi elencati di seguito.';
+    }
+    it += '</p>';
+
+    /* 3. Contenuti non accessibili */
+    if (status !== 'full' && (nonConf.length || burden.length || outside.length)) {
+      it += '<h4 style="margin:16px 0 8px;">Contenuti non accessibili</h4>';
+
+      if (nonConf.length) {
+        it += '<p><strong>a) Inosservanza della legge 9 gennaio 2004, n. 4:</strong></p>';
+        it += list(nonConf);
+      }
+      if (burden.length) {
+        it += '<p><strong>b) Onere sproporzionato (art. 3-ter, legge 9 gennaio 2004, n. 4):</strong></p>';
+        it += list(burden);
+      }
+      if (outside.length) {
+        it += '<p><strong>c) Il contenuto non rientra nell\'ambito della legislazione applicabile:</strong></p>';
+        it += list(outside);
+      }
+      if (alternatives) {
+        it += '<p><strong>Alternative accessibili:</strong> ' + esc(alternatives) + '</p>';
+      }
+    }
+
+    /* 4. Redazione della dichiarazione */
+    it += '<h4 style="margin:16px 0 8px;">Redazione della dichiarazione di accessibilità</h4>';
+    it += '<p>La presente dichiarazione è stata redatta il <strong>' + fmtDate(declDate) + '</strong>.';
+    if (reviewDate) {
+      it += ' Ultimo riesame: <strong>' + fmtDate(reviewDate) + '</strong>.';
+    }
+    it += '</p>';
+    it += '<p>La dichiarazione è stata redatta sulla base di una <strong>' + (evalLabels[evalMethod] || evalLabels.self).it + '</strong>.';
+    if (evalDetails) it += ' ' + esc(evalDetails);
+    it += '</p>';
+    if (techs.length) {
+      it += '<p>Tecnologie utilizzate per la realizzazione del ' + esc(targetType) + ': ' + techs.map(esc).join(', ') + '.</p>';
+    }
+
+    /* 5. Meccanismo di feedback */
+    it += '<h4 style="margin:16px 0 8px;">Meccanismo di feedback e recapiti</h4>';
+    it += '<p>Per segnalare eventuali problemi di accessibilità di questo ' + esc(targetType) + ', è possibile contattare:</p>';
+    it += '<p>' + contactBlock('it') + '</p>';
+    it += '<p>Il soggetto erogatore risponderà alla segnalazione entro ' + esc(fbResponseDays) + ' giorni.</p>';
+
+    /* 6. Procedura di attuazione */
+    it += '<h4 style="margin:16px 0 8px;">Procedura di attuazione</h4>';
+    it += '<p>In caso di risposta insoddisfacente o di mancata risposta, nel termine di trenta giorni, alla notifica ';
+    it += 'o alla richiesta, l\'interessato può inoltrare una segnalazione all\'AgID, tramite il ';
+    it += '<a href="https://www.agid.gov.it/it/design-servizi/accessibilita" target="_blank" rel="noopener">link dedicato sul sito AgID</a>.</p>';
+
+    it += '</div>';
+
+    /* ────────────────────────────────────────────
+       OTHER LANGUAGES (simplified but complete)
+    ──────────────────────────────────────────── */
+    function buildLang(lang) {
+      var sLabel = (statusLabels[status] || statusLabels.partial)[lang];
+      var eLabel = (evalLabels[evalMethod] || evalLabels.self)[lang];
+      var h = '<div style="font-size:14px;line-height:1.6;">';
+
+      var headings = {
+        en: { cs: 'Compliance Status', nc: 'Non-Accessible Content', rd: 'Preparation of this Declaration', fb: 'Feedback Mechanism', pa: 'Enforcement Procedure' },
+        fr: { cs: 'État de conformité', nc: 'Contenus non accessibles', rd: 'Rédaction de la déclaration', fb: 'Mécanisme de retour d\'information', pa: 'Procédure de mise en œuvre' },
+        de: { cs: 'Konformitätsstatus', nc: 'Nicht barrierefreie Inhalte', rd: 'Erstellung dieser Erklärung', fb: 'Feedback-Mechanismus', pa: 'Durchsetzungsverfahren' },
+        es: { cs: 'Estado de conformidad', nc: 'Contenidos no accesibles', rd: 'Redacción de la declaración', fb: 'Mecanismo de retroalimentación', pa: 'Procedimiento de aplicación' },
+      };
+      var hd = headings[lang] || headings.en;
+
+      var intro = {
+        en: ' is committed to making its ' + (targetType === 'applicazione mobile' ? 'mobile application' : 'website') + ' accessible, in accordance with Italian Law No. 4 of 9 January 2004.',
+        fr: ' s\'engage à rendre ' + (targetType === 'applicazione mobile' ? 'son application mobile' : 'son site web') + ' accessible, conformément à la loi italienne n° 4 du 9 janvier 2004.',
+        de: ' verpflichtet sich, ' + (targetType === 'applicazione mobile' ? 'seine mobile Anwendung' : 'seine Website') + ' barrierefrei zu gestalten, gemäß dem italienischen Gesetz Nr. 4 vom 9. Januar 2004.',
+        es: ' se compromete a hacer accesible ' + (targetType === 'applicazione mobile' ? 'su aplicación móvil' : 'su sitio web') + ', de conformidad con la Ley italiana n.° 4 del 9 de enero de 2004.',
+      };
+
+      /* Intro */
+      h += '<p><strong>' + esc(entity) + '</strong>' + intro[lang];
+      if (url) h += ' <a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + '</a>';
+      h += '</p>';
+
+      /* Compliance */
+      h += '<h4 style="margin:16px 0 8px;">' + hd.cs + '</h4>';
+      h += '<p>' + esc(entity) + ': <strong>' + sLabel + '</strong> (UNI CEI EN 301549 / WCAG 2.1 AA).</p>';
+
+      /* Non-accessible content */
+      if (status !== 'full' && (nonConf.length || burden.length || outside.length)) {
+        h += '<h4 style="margin:16px 0 8px;">' + hd.nc + '</h4>';
+        if (nonConf.length) h += list(nonConf);
+        if (burden.length) h += list(burden);
+        if (outside.length) h += list(outside);
+        if (alternatives) h += '<p>' + esc(alternatives) + '</p>';
+      }
+
+      /* Declaration info */
+      h += '<h4 style="margin:16px 0 8px;">' + hd.rd + '</h4>';
+      h += '<p>' + fmtDate(declDate) + '. ' + eLabel + '.';
+      if (reviewDate) h += ' (' + fmtDate(reviewDate) + ')';
+      h += '</p>';
+
+      /* Feedback */
+      h += '<h4 style="margin:16px 0 8px;">' + hd.fb + '</h4>';
+      h += '<p>' + contactBlock(lang) + '</p>';
+
+      /* Enforcement */
+      h += '<h4 style="margin:16px 0 8px;">' + hd.pa + '</h4>';
+      var enforce = {
+        en: 'If no satisfactory response is received within 30 days, you may file a complaint with AgID (Italian Digital Agency) via the ',
+        fr: 'En cas de réponse absente ou insatisfaisante dans un délai de 30 jours, vous pouvez adresser une réclamation à l\'AgID via le ',
+        de: 'Wenn innerhalb von 30 Tagen keine zufriedenstellende Antwort erfolgt, können Sie eine Beschwerde bei der AgID einreichen über den ',
+        es: 'En caso de falta de respuesta o respuesta insatisfactoria dentro de los 30 días, puede presentar una reclamación a AgID a través del ',
+      };
+      var linkLabel = {
+        en: 'dedicated link on the AgID website',
+        fr: 'lien dédié sur le site de l\'AgID',
+        de: 'entsprechenden Link auf der AgID-Website',
+        es: 'enlace dedicado en el sitio web de AgID',
+      };
+      h += '<p>' + enforce[lang] + '<a href="https://www.agid.gov.it/it/design-servizi/accessibilita" target="_blank" rel="noopener">' + linkLabel[lang] + '</a>.</p>';
+
+      h += '</div>';
+      return h;
+    }
+
+    return {
+      it: it,
+      en: buildLang('en'),
+      fr: buildLang('fr'),
+      de: buildLang('de'),
+      es: buildLang('es'),
     };
   }
 
@@ -1403,7 +1664,11 @@
 
     /* ── Auto-generate statementText from contacts if not provided ── */
     var merged = mergeDeep(defaults, userCfg);
-    if (!merged.statementText) {
+
+    /* AgID declaration takes priority over statementText */
+    if (merged.agidDeclaration) {
+      merged.statementText = buildAgidDeclaration(merged);
+    } else if (!merged.statementText) {
       merged.statementText = buildDefaultStatement(merged);
     }
 
