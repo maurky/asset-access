@@ -560,11 +560,12 @@
       '#aa-statement-box .aa-stmt-body p{margin-bottom:12px;}\n' +
 
       /* Utility classes applied to <html> */
-      '.aa-readable-font,.aa-readable-font *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-box):not(#aa-statement-box *){font-family:Arial,Helvetica,sans-serif!important;}\n' +
+      '.aa-readable-font,.aa-readable-font *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-box):not(#aa-statement-box *):not(.fa):not(.fas):not(.far):not(.fal):not(.fat):not(.fad):not(.fab):not(.fa-brands):not(.fa-solid):not(.fa-regular):not(.fa-light):not(.fa-thin):not(.fa-duotone):not(.material-icons):not(.material-symbols-outlined){font-family:Arial,Helvetica,sans-serif!important;}\n' +
       '.aa-align-left,.aa-align-left *:not(#aa-panel):not(#aa-panel *){text-align:left!important;}\n' +
       '.aa-align-center,.aa-align-center *:not(#aa-panel):not(#aa-panel *){text-align:center!important;}\n' +
       '.aa-align-right,.aa-align-right *:not(#aa-panel):not(#aa-panel *){text-align:right!important;}\n' +
       '.aa-hide-images img:not(#aa-panel img){opacity:0!important;}\n' +
+      '.aa-hide-images *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *){background-image:none!important;}\n' +
       '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
       '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
 
@@ -793,7 +794,15 @@
       '</button>' +
       '</div>';
 
+    /* Preserve scroll position */
+    var body = this._panel.querySelector('.aa-body');
+    var scrollPos = body ? body.scrollTop : 0;
+
     this._panel.innerHTML = html;
+
+    /* Restore scroll position */
+    var newBody = this._panel.querySelector('.aa-body');
+    if (newBody) newBody.scrollTop = scrollPos;
   };
 
   /* ─── Helper: stepper row ─── */

@@ -98,7 +98,7 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 | `buttonColor`      | `string` | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                            |
 | `buttonSize`       | `number` | `56`             | Dimensione in pixel del pulsante trigger                                                                                                        |
 | `buttonIcon`       | `string` | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                  |
-| `lang`             | `string` | `'it'`           | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`                                                                                         |
+| `lang`             | `string` | _rilevato_       | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`                                                                                         |
 | `statementText`    | `object` | _auto-generato_  | Oggetto con chiavi `it` e `en`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
 | `zIndex`           | `number` | `999999`         | z-index del widget                                                                                                                              |
 
