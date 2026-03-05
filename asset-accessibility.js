@@ -893,32 +893,28 @@
       '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
       '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
 
-      /* Contrast themes */
-      '.aa-contrast-dark:not(#aa-panel):not(#aa-panel *){background-color:#1a1a2e!important;color:#e0e0e0!important;}\n' +
-      '.aa-contrast-dark a:not(#aa-panel a){color:#7eb8ff!important;}\n' +
+      /* Contrast themes — explicit background matching the theme color */
       'html.aa-contrast-dark{background:#1a1a2e!important;}\n' +
       'html.aa-contrast-dark body{background:#1a1a2e!important;color:#e0e0e0!important;}\n' +
-      'html.aa-contrast-dark body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *){background-color:transparent!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
+      'html.aa-contrast-dark body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay){background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
       'html.aa-contrast-dark a:not(#aa-panel a){color:#7eb8ff!important;}\n' +
 
       'html.aa-contrast-light{background:#fff!important;}\n' +
       'html.aa-contrast-light body{background:#fff!important;color:#111!important;}\n' +
-      'html.aa-contrast-light body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *){background-color:transparent!important;color:#111!important;border-color:#ccc!important;}\n' +
+      'html.aa-contrast-light body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay){background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
 
       'html.aa-contrast-high{background:#000!important;}\n' +
       'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
-      'html.aa-contrast-high body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *){background-color:transparent!important;color:#ff0!important;border-color:#ff0!important;}\n' +
+      'html.aa-contrast-high body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay){background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
       'html.aa-contrast-high a:not(#aa-panel a){color:#0ff!important;}\n' +
 
-      /* Monochrome & saturation: use a backdrop-filter overlay so that
-         CSS filter does NOT create a new containing block (which would
-         break position:fixed on navbars, modals, cookie bars, etc.). */
+      /* Monochrome & saturation: backdrop-filter overlay to preserve position:fixed */
       '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:' + (cfg.zIndex - 1) + ';}\n' +
       'html.aa-monochrome #aa-filter-overlay{backdrop-filter:grayscale(100%);-webkit-backdrop-filter:grayscale(100%);}\n' +
       'html.aa-saturation-high #aa-filter-overlay{backdrop-filter:saturate(200%);-webkit-backdrop-filter:saturate(200%);}\n' +
       'html.aa-saturation-low #aa-filter-overlay{backdrop-filter:saturate(40%);-webkit-backdrop-filter:saturate(40%);}\n' +
 
-      /* Fallback for older browsers without backdrop-filter (e.g. Firefox <103) */
+      /* Fallback for older browsers without backdrop-filter */
       '@supports not (backdrop-filter:grayscale(100%)){' +
       'html.aa-monochrome body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:grayscale(100%)!important;}' +
       'html.aa-saturation-high body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:saturate(200%)!important;}' +

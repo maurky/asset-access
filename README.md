@@ -318,7 +318,7 @@ asset-access/
 
 Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede framework, librerie esterne o build tools.
 
-> **Nota:** monocromatico e saturazione usano `backdrop-filter` per non interferire con `position: fixed`. Browser senza supporto (Firefox < 103) usano un fallback con `filter` su elementi diretti del body.
+> **Nota:** i contrasti forzano `background-color` esplicito su tutti gli elementi (uguale allo sfondo del tema) per garantire leggibilità e compatibilità con `position: fixed`. Monocromatico e saturazione usano `backdrop-filter` su un overlay. Browser senza supporto `backdrop-filter` (Firefox < 103) usano un fallback con `filter` su elementi diretti del body.
 
 ## Roadmap
 
