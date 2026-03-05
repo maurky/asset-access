@@ -91,7 +91,7 @@ Includi lo script nel tuo sito e definisci l'oggetto di configurazione con almen
 <script>
   var AssetAccessibilityConfig = {
     contactEmail: "accessibilita@esempio.it",
-    contactPhone: "+39 02 1234567",
+    contactPhone: "+39 06 1234567",
     position: "bottom-right",
     buttonColor: "#1a56db",
   };
@@ -129,25 +129,63 @@ La dichiarazione viene prodotta in italiano (versione legale completa) e tradott
 ```javascript
 var AssetAccessibilityConfig = {
   contactEmail: "accessibilita@esempio.it",
-  contactPhone: "+39 02 1234567",
+  contactPhone: "+39 06 1234567",
   agidDeclaration: {
     entityName: "Azienda s.r.l.",
     entityUrl: "https://www.esempio.it",
     entityType: "sito web", // 'sito web' | 'applicazione mobile'
     conformanceStatus: "partial", // 'full' | 'partial' | 'none'
+
+    // ── Contenuti non accessibili ──────────────────────────────────
+    // Commentare o rimuovere le voci non applicabili.
+    // Se conformanceStatus è 'full', questa sezione viene ignorata.
     nonAccessibleContent: {
+      // a) Inosservanza della legge 9 gennaio 2004, n. 4
+      //    Elencare i casi di non conformità rispetto alla norma
+      //    UNI CEI EN 301549 / WCAG 2.1 AA.
       nonConformities: [
-        "Alcune immagini mancano di testo alternativo (WCAG 1.1.1)",
-        "Contrasto insufficiente in alcune sezioni (WCAG 1.4.3)",
+        "Alcune immagini decorative non hanno un attributo alt vuoto (WCAG 1.1.1 - Contenuto non testuale)",
+        "Il contrasto del testo in alcune sezioni è inferiore al rapporto 4.5:1 (WCAG 1.4.3 - Contrasto minimo)",
+        "Alcuni campi dei moduli non hanno etichette associate in modo programmatico (WCAG 1.3.1 - Informazioni e relazioni)",
+        "La navigazione tramite tastiera non è completamente garantita in tutte le pagine (WCAG 2.1.1 - Tastiera)",
+        "Alcuni video non dispongono di sottotitoli o audiodescrizione (WCAG 1.2.2 / 1.2.5 - Sottotitoli / Audiodescrizione)",
+        "Il focus della tastiera non è sempre visibile durante la navigazione (WCAG 2.4.7 - Focus visibile)",
+        "Alcune tabelle di dati non utilizzano intestazioni th correttamente associate (WCAG 1.3.1)",
+        "Il sito non presenta una skip navigation per saltare i blocchi ripetitivi (WCAG 2.4.1 - Salto dei blocchi)",
+        "Alcuni messaggi di errore nei form non sono identificati in modo programmatico (WCAG 3.3.1 - Identificazione degli errori)",
+        "La lingua di alcune sezioni in lingua straniera non è specificata con l'attributo lang (WCAG 3.1.2 - Lingua delle parti)",
       ],
-      disproportionateBurden: [], // Contenuti con deroga per onere sproporzionato
-      outsideScope: [], // Contenuti fuori ambito legislazione
-      alternatives: "", // Descrizione alternative accessibili
+
+      // b) Onere sproporzionato (art. 3-ter, legge 9 gennaio 2004, n. 4)
+      //    Contenuti per i quali viene temporaneamente fatta valere la deroga,
+      //    con indicazione delle motivazioni (dimensione organizzazione, costi,
+      //    frequenza utilizzo, ecc.).
+      disproportionateBurden: [
+        "Il visualizzatore di mappe interattive utilizza una libreria di terze parti non accessibile; la sostituzione richiederebbe uno sviluppo custom con costi sproporzionati rispetto alla dimensione dell'organizzazione",
+        "L'archivio storico di documenti PDF (precedenti al 2020) non è stato convertito in formato accessibile a causa del volume elevato di materiale; i nuovi documenti vengono pubblicati in formato accessibile",
+        "Il configuratore 3D del prodotto utilizza una tecnologia WebGL che non supporta nativamente le tecnologie assistive; è disponibile una descrizione testuale alternativa",
+      ],
+
+      // c) Il contenuto non rientra nell'ambito della legislazione applicabile
+      //    Contenuti esclusi dal campo di applicazione della Direttiva UE 2016/2102
+      //    o della L. 4/2004 (es. contenuti di terze parti, formati di file legacy,
+      //    contenuti intranet pubblicati prima del 23/09/2019, ecc.).
+      outsideScope: [
+        "Contenuti video trasmessi in live streaming (esclusi ai sensi dell'art. 1, comma 2, Direttiva UE 2016/2102)",
+        "Documenti PDF pubblicati da terze parti e non prodotti dal soggetto erogatore",
+        "Mappe online interattive, purché le informazioni essenziali siano fornite in formato digitale accessibile",
+        "Contenuti di siti web e applicazioni web archiviati, non aggiornati né necessari per i procedimenti amministrativi in corso",
+      ],
+
+      // Alternative accessibili fornite per i contenuti non accessibili
+      alternatives:
+        'Per i contenuti non accessibili è possibile richiedere formati alternativi contattando il recapito indicato nella sezione Meccanismo di feedback. Le informazioni presenti nel visualizzatore mappe sono disponibili anche in formato tabellare accessibile nella pagina "Sedi e contatti".',
     },
+
     declarationDate: "2026-01-15", // Data prima redazione (YYYY-MM-DD)
     lastReviewDate: "2026-09-01", // Data ultimo riesame (YYYY-MM-DD)
     evaluationMethod: "self", // 'self' | 'third-party'
-    evaluationDetails: "", // Dettagli aggiuntivi
+    evaluationDetails: "", // Dettagli aggiuntivi sulla valutazione
     technologies: ["HTML", "CSS", "JavaScript", "WAI-ARIA"],
     feedbackEmail: "", // Fallback su contactEmail se vuoto
     feedbackPhone: "", // Fallback su contactPhone se vuoto
