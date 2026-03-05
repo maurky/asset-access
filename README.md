@@ -8,7 +8,7 @@
 ---
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Status](https://img.shields.io/badge/status-in%20development-orange.svg)
+![Version](https://img.shields.io/badge/version-0.1.0--alpha-orange.svg)
 ![Vanilla JS](https://img.shields.io/badge/vanilla-JavaScript-yellow.svg)
 ![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-green.svg)
 
@@ -81,13 +81,33 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 
 ## Installazione
 
-Includi lo script nel tuo sito e definisci l'oggetto di configurazione con almeno un contatto per le segnalazioni:
+### CDN (consigliato)
+
+Il modo più rapido — nessun download, nessun build tool:
 
 ```html
-<!-- 1. Carica lo script -->
-<script src="asset-accessibility.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/maurky/asset-access@latest/asset-accessibility.min.js"></script>
+```
 
-<!-- 2. Configura (contactEmail e/o contactPhone sono OBBLIGATORI) -->
+Per fissare una versione specifica (consigliato in produzione):
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/maurky/asset-access@0.1.0-alpha/asset-accessibility.min.js"></script>
+```
+
+### Download manuale
+
+Scarica `asset-accessibility.js` dal [repository GitHub](https://github.com/maurky/asset-access) e includilo nel tuo progetto:
+
+```html
+<script src="asset-accessibility.js"></script>
+```
+
+### Configurazione
+
+Dopo aver incluso lo script, definisci l'oggetto di configurazione con almeno un contatto per le segnalazioni:
+
+```html
 <script>
   var AssetAccessibilityConfig = {
     contactEmail: "accessibilita@esempio.it",
@@ -297,7 +317,7 @@ Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede f
 - [x] Navigazione da tastiera completa nel pannello (focus trap, Tab/Shift+Tab, Escape)
 - [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
 - [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
-- [ ] Distribuzione via CDN e pacchetto npm
+- [x] Distribuzione via CDN (jsDelivr)
 - [ ] Test suite automatizzata
 - [ ] Documentazione API completa
 

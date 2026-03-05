@@ -1,11 +1,11 @@
 /**
- * Asset Accessibility v1.0.0-alpha
+ * Asset Accessibility v0.1.0-alpha
  * Lightweight WCAG 2.1 AA accessibility widget — Vanilla JS, zero dependencies
  * Supports European Accessibility Act (EAA) / Italian D.Lgs. 82/2022
  *
  * Copyright (C) 2026 Asset s.r.l. — https://www.assetroma.it
- * Licensed under the GNU General Public License v3.0 (GPL-3.0)
- * See LICENSE file for details.
+ * Licensed under the MIT License — See LICENSE file for details.
+ * Repository: https://github.com/maurky/asset-access
  *
  * ⚠️  WARNING: This software is under active development and is NOT yet
  *    suitable for production use. APIs and features may change without notice.
@@ -15,7 +15,7 @@
  * <script>
  *   var AssetAccessibilityConfig = {
  *     contactEmail: 'accessibilita@esempio.it',  // REQUIRED (email and/or phone)
- *     contactPhone: '+39 02 1234567',             // REQUIRED (email and/or phone)
+ *     contactPhone: '+39 06 1234567',             // REQUIRED (email and/or phone)
  *     position: 'bottom-right',
  *     buttonColor: '#1a56db',
  *     buttonIcon: 'default',

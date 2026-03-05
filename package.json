@@ -1,0 +1,37 @@
+{
+  "name": "asset-access",
+  "version": "0.1.0-alpha",
+  "description": "Widget di accessibilità web conforme WCAG 2.1 AA e EAA (D.Lgs. 82/2022) — Dichiarazione AgID Allegato 1, 5 lingue, 5 profili predefiniti, screen reader, zero dipendenze.",
+  "main": "asset-accessibility.js",
+  "files": [
+    "asset-accessibility.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "wcag",
+    "wcag21",
+    "widget",
+    "agid",
+    "eaa",
+    "european-accessibility-act",
+    "aria",
+    "screen-reader",
+    "contrast",
+    "dyslexia",
+    "adhd",
+    "italian-law"
+  ],
+  "author": "Asset s.r.l. <mauro@assetroma.it> (https://www.assetroma.it)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maurky/asset-access.git"
+  },
+  "homepage": "https://github.com/maurky/asset-access#readme",
+  "bugs": {
+    "url": "https://github.com/maurky/asset-access/issues"
+  }
+}
