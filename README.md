@@ -285,12 +285,23 @@ cd asset-access
 open demo.html
 ```
 
+## Test
+
+Il progetto include una test suite automatizzata con **100 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
+
+```bash
+open test.html
+```
+
+I test coprono: inizializzazione, elementi DOM, attributi ARIA, pannello apri/chiudi, regolazione contenuti, colori, toggle, profili, reset, persistenza localStorage, lingue (i18n), callback, dichiarazione AgID, statement default, configurazione, annunci screen reader, integrità classi CSS.
+
 ## Struttura del progetto
 
 ```
-asset-accessibility/
+asset-access/
 ├── asset-accessibility.js    # Widget completo (JS + CSS iniettato)
 ├── demo.html                 # Pagina demo con configurazione di esempio
+├── test.html                 # Test suite automatizzata (100 test)
 ├── README.md                 # Questo file
 └── LICENSE                   # Licenza MIT
 ```
@@ -318,7 +329,7 @@ Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede f
 - [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
 - [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
 - [x] Distribuzione via CDN (jsDelivr)
-- [ ] Test suite automatizzata
+- [x] Test suite automatizzata (100 test, 17 gruppi)
 - [ ] Documentazione API completa
 
 ## Contribuire
