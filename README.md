@@ -224,7 +224,7 @@ var AssetAccessibilityConfig = {
 };
 ```
 
-Azioni possibili: `openPanel`, `closePanel`, `toggleLang`, `step`, `toggle`, `align`, `contrast`, `toggleMono`, `saturation`, `reset`, `applyProfile`, `showStatement`, `closeStatement`.
+Azioni possibili: `openPanel`, `closePanel`, `changeLang`, `step`, `toggle`, `align`, `contrast`, `toggleMono`, `saturation`, `reset`, `applyProfile`, `showStatement`, `closeStatement`.
 
 ## Traduzioni
 

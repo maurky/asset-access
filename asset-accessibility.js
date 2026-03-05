@@ -278,6 +278,7 @@
 
   /* ── Supported languages (cycle order) ── */
   var LANGS = ['it', 'en', 'fr', 'de', 'es'];
+  var LANG_NAMES = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch', es: 'Español' };
 
   /* ───────────────────────────────────────────
      ACCESSIBILITY PROFILES
@@ -803,8 +804,9 @@
       '.aa-hdr-btn:hover{background:#e5e7eb;color:#111827;}\n' +
       '.aa-hdr-btn:focus-visible{outline:2px solid ' + cfg.buttonColor + ';outline-offset:1px;}\n' +
       '.aa-hdr-btn svg{width:16px;height:16px;}\n' +
-      '.aa-hdr-btn.aa-lang-btn{font-size:11px;font-weight:700;width:auto;padding:0 8px;text-transform:uppercase;color:#6b7280;}\n' +
-      '.aa-hdr-btn.aa-lang-btn:hover{color:' + cfg.buttonColor + ';}\n' +
+      '.aa-lang-select{font-size:12px;font-weight:600;height:28px;padding:0 24px 0 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27 fill=%27none%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 stroke=%27%236b7280%27 stroke-width=%271.5%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") no-repeat right 8px center;-webkit-appearance:none;-moz-appearance:none;appearance:none;color:#374151;cursor:pointer;font-family:inherit;outline:none;}\n' +
+      '.aa-lang-select:hover{border-color:' + cfg.buttonColor + ';color:' + cfg.buttonColor + ';}\n' +
+      '.aa-lang-select:focus-visible{border-color:' + cfg.buttonColor + ';box-shadow:0 0 0 2px ' + cfg.buttonColor + '33;}\n' +
 
       /* Scrollable body */
       '.aa-body{overflow-y:auto;padding:0rem 0.5rem;flex:1;}\n' +
@@ -1016,12 +1018,18 @@
       this.t('panelTitle') +
       '</span>' +
       '<div class="aa-header-actions">' +
-      '<button class="aa-hdr-btn aa-lang-btn" data-action="toggleLang" aria-label="' +
-      this.t('srChangeLang') + ': ' +
-      LANGS[(LANGS.indexOf(this.lang) + 1) % LANGS.length].toUpperCase() +
-      '">' +
-      LANGS[(LANGS.indexOf(this.lang) + 1) % LANGS.length].toUpperCase() +
-      '</button>' +
+      '<select class="aa-lang-select" data-action="changeLang" aria-label="' +
+      this.t('srChangeLang') + '">' +
+      (function (currentLang) {
+        var opts = '';
+        for (var li = 0; li < LANGS.length; li++) {
+          opts += '<option value="' + LANGS[li] + '"' +
+            (LANGS[li] === currentLang ? ' selected' : '') +
+            '>' + LANG_NAMES[LANGS[li]] + '</option>';
+        }
+        return opts;
+      })(this.lang) +
+      '</select>' +
       '<button class="aa-hdr-btn" data-action="closePanel" aria-label="' +
       this.t('srClosePanel') +
       '">' +
@@ -1284,14 +1292,6 @@
         case 'closePanel':
           self._closePanel();
           break;
-        case 'toggleLang':
-          var idx = LANGS.indexOf(self.lang);
-          self.lang = LANGS[(idx + 1) % LANGS.length];
-          self._saveState();
-          self._renderPanel();
-          self._updateStatementOverlay();
-          self._announce(self.t('srChangeLang') + ': ' + self.lang.toUpperCase());
-          break;
         case 'step':
           self._handleStep(
             target.getAttribute('data-key'),
@@ -1342,6 +1342,18 @@
         key: target.getAttribute('data-key') || undefined,
         value: target.getAttribute('data-value') || undefined,
       });
+    });
+
+    /* Language dropdown */
+    this._panel.addEventListener('change', function (e) {
+      if (e.target.classList.contains('aa-lang-select')) {
+        self.lang = e.target.value;
+        self._saveState();
+        self._renderPanel();
+        self._updateStatementOverlay();
+        self._announce(self.t('srChangeLang') + ': ' + LANG_NAMES[self.lang]);
+        self._fireCallback('changeLang', { value: self.lang });
+      }
     });
 
     /* Statement overlay */
