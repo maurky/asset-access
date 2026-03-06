@@ -347,6 +347,7 @@ I test coprono: inizializzazione, elementi DOM, attributi ARIA, pannello apri/ch
 asset-access/
 ├── asset-accessibility.js    # Widget completo (JS + CSS iniettato)
 ├── demo.html                 # Pagina demo con configurazione di esempio
+├── iframe.html               # Pagina di test per modalità iframe child
 ├── test.html                 # Test suite automatizzata (100 test)
 ├── README.md                 # Questo file
 └── LICENSE                   # Licenza MIT
@@ -378,6 +379,46 @@ Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede f
 - [x] Test suite automatizzata (100 test, 17 gruppi)
 - [x] Sincronizzazione iframe via `postMessage` (`?mode=iframe`)
 - [ ] Documentazione API completa
+
+## FAQ
+
+### Perché alcuni testi del mio sito non si ridimensionano?
+
+Il widget regola la dimensione del testo impostando `font-size` in percentuale sull'elemento `<html>` (es. `110%`, `120%`, ecc.). Questo funziona perché le unità relative — `rem`, `em`, `%` — scalano proporzionalmente rispetto al font-size del root.
+
+Se alcuni testi non si ridimensionano, è perché nel CSS del sito la loro dimensione è espressa in **unità assolute** (`px`):
+
+```css
+/* ❌ Non scala con il widget */
+h1 {
+  font-size: 32px;
+}
+p {
+  font-size: 14px;
+}
+
+/* ✅ Scala correttamente */
+h1 {
+  font-size: 2rem;
+}
+p {
+  font-size: 0.875rem;
+}
+```
+
+`px` è un valore fisso che non reagisce al cambio di `font-size` sull'`<html>`. Per rendere il sito completamente compatibile con il widget (e con le impostazioni di accessibilità del browser), è sufficiente convertire i `font-size` da `px` a `rem`:
+
+| px   | rem (base 16px) |
+| ---- | --------------- |
+| 12px | 0.75rem         |
+| 14px | 0.875rem        |
+| 16px | 1rem            |
+| 18px | 1.125rem        |
+| 20px | 1.25rem         |
+| 24px | 1.5rem          |
+| 32px | 2rem            |
+
+La formula è: **rem = px / 16**. Questo vale se il `font-size` base del browser è 16px (il default). La conversione va applicata solo ai `font-size`; le altre proprietà (`margin`, `padding`, `width`, ecc.) possono restare in `px` senza problemi.
 
 ## Contribuire
 
