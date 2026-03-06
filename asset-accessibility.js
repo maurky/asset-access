@@ -15,7 +15,7 @@
  * <script>
  *   var AssetAccessibilityConfig = {
  *     contactEmail: 'accessibilita@esempio.it',  // REQUIRED (email and/or phone)
- *     contactPhone: '+39 06 1234567',             // REQUIRED (email and/or phone)
+ *     contactPhone: '+39 02 1234567',             // REQUIRED (email and/or phone)
  *     position: 'bottom-right',
  *     buttonColor: '#1a56db',
  *     buttonIcon: 'default',
@@ -925,6 +925,11 @@
       'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
       'html.aa-contrast-high body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay)' + pbx + '{background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
       'html.aa-contrast-high a:not(#aa-panel a){color:#0ff!important;}\n' +
+
+      /* Visible border on interactive elements for all contrast modes */
+      'html.aa-contrast-dark body a:not(#aa-panel a):not(#aa-statement-overlay a),html.aa-contrast-dark body button:not(#aa-panel button):not(#aa-trigger):not(#aa-statement-overlay button),html.aa-contrast-dark body input[type="submit"],html.aa-contrast-dark body input[type="button"],html.aa-contrast-dark body select:not(.aa-lang-select),html.aa-contrast-dark body [role="button"]:not(#aa-panel [role="button"]){border:1px solid #7eb8ff!important;}\n' +
+      'html.aa-contrast-light body a:not(#aa-panel a):not(#aa-statement-overlay a),html.aa-contrast-light body button:not(#aa-panel button):not(#aa-trigger):not(#aa-statement-overlay button),html.aa-contrast-light body input[type="submit"],html.aa-contrast-light body input[type="button"],html.aa-contrast-light body select:not(.aa-lang-select),html.aa-contrast-light body [role="button"]:not(#aa-panel [role="button"]){border:1px solid #111!important;}\n' +
+      'html.aa-contrast-high body a:not(#aa-panel a):not(#aa-statement-overlay a),html.aa-contrast-high body button:not(#aa-panel button):not(#aa-trigger):not(#aa-statement-overlay button),html.aa-contrast-high body input[type="submit"],html.aa-contrast-high body input[type="button"],html.aa-contrast-high body select:not(.aa-lang-select),html.aa-contrast-high body [role="button"]:not(#aa-panel [role="button"]){border:1px solid #ff0!important;}\n' +
 
       /* Monochrome & saturation: backdrop-filter overlay to preserve position:fixed */
       '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:' + (cfg.zIndex - 1) + ';}\n' +
@@ -1844,7 +1849,12 @@
       'html.aa-contrast-high{background:#000!important;}\n' +
       'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
       'html.aa-contrast-high body *:not(#aa-filter-overlay)' + pbx + '{background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
-      'html.aa-contrast-high a{color:#0ff!important;}\n';
+      'html.aa-contrast-high a{color:#0ff!important;}\n' +
+
+      /* Visible border on interactive elements */
+      'html.aa-contrast-dark body a,html.aa-contrast-dark body button,html.aa-contrast-dark body input[type="submit"],html.aa-contrast-dark body input[type="button"],html.aa-contrast-dark body select,html.aa-contrast-dark body [role="button"]{border:1px solid #7eb8ff!important;}\n' +
+      'html.aa-contrast-light body a,html.aa-contrast-light body button,html.aa-contrast-light body input[type="submit"],html.aa-contrast-light body input[type="button"],html.aa-contrast-light body select,html.aa-contrast-light body [role="button"]{border:1px solid #111!important;}\n' +
+      'html.aa-contrast-high body a,html.aa-contrast-high body button,html.aa-contrast-high body input[type="submit"],html.aa-contrast-high body input[type="button"],html.aa-contrast-high body select,html.aa-contrast-high body [role="button"]{border:1px solid #ff0!important;}\n';
 
     var style = document.createElement('style');
     style.setAttribute('data-aw', 'iframe-contrast');
