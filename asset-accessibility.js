@@ -31,6 +31,10 @@
  *     statementText: { it: '...', en: '...' }
  *   };
  * </script>
+ *
+ * Inside iframes (no config needed):
+ *   <script src="asset-accessibility.js?mode=iframe"></script>
+ *   <script src="asset-accessibility.js?mode=iframe&origin=https://parent.example.com"></script>
  */
 (function () {
   'use strict';
@@ -382,6 +386,7 @@
     statementText: null, // auto-generated from contacts if not provided
     agidDeclaration: null, // AgID declaration config (overrides statementText) — see README
     callback: null, // function(action, state) — called on every UI interaction
+    iframeOrigins: null, // null = same-origin only, ['https://...'] or '*' to accept cross-origin iframes
     zIndex: 999999,
   };
 
@@ -731,6 +736,7 @@
     this.lang = this.cfg.lang;
     this.isOpen = false;
     this.statementOpen = false;
+    this._iframeChildren = []; // tracked iframe windows for broadcasting
 
     // Default state
     this.state = {
@@ -755,6 +761,7 @@
     this._buildDOM();
     this._applyState();
     this._bindEvents();
+    this._listenForIframes();
   }
 
   var proto = AssetAccessibility.prototype;
@@ -1531,6 +1538,65 @@
   };
 
   /* ───────────────────────────────────────────
+     IFRAME PARENT: listen for children & broadcast
+  ─────────────────────────────────────────── */
+  proto._listenForIframes = function () {
+    var self = this;
+    var allowed = this.cfg.iframeOrigins; // null | '*' | ['https://...']
+    window.addEventListener('message', function (e) {
+      if (!e.data || e.data.type !== 'aa-child-ready') return;
+      /* Validate origin */
+      var ok = false;
+      if (allowed === '*') {
+        ok = true;
+      } else if (Array.isArray(allowed)) {
+        ok = allowed.indexOf(e.origin) !== -1 || e.origin === location.origin;
+      } else {
+        /* Default: same-origin only */
+        ok = e.origin === location.origin;
+      }
+      if (!ok) return;
+      /* Avoid registering the same source twice */
+      var src = e.source;
+      for (var i = 0; i < self._iframeChildren.length; i++) {
+        if (self._iframeChildren[i].source === src) {
+          self._sendStateTo(src, e.origin);
+          return;
+        }
+      }
+      self._iframeChildren.push({ source: src, origin: e.origin });
+      self._sendStateTo(src, e.origin);
+    });
+  };
+
+  proto._sendStateTo = function (targetWindow, origin) {
+    try {
+      targetWindow.postMessage({
+        type: 'aa-state-update',
+        state: JSON.parse(JSON.stringify(this.state)),
+      }, origin);
+    } catch (e) {
+      /* iframe may have been removed — ignore */
+    }
+  };
+
+  proto._broadcastState = function () {
+    var alive = [];
+    for (var i = 0; i < this._iframeChildren.length; i++) {
+      var child = this._iframeChildren[i];
+      try {
+        if (child.source && !child.source.closed) {
+          this._sendStateTo(child.source, child.origin);
+          alive.push(child);
+        }
+      } catch (e) {
+        /* cross-origin or removed — drop it */
+      }
+    }
+    this._iframeChildren = alive;
+  };
+
+  /* ───────────────────────────────────────────
      APPLY STATE TO PAGE
   ─────────────────────────────────────────── */
   proto._applyState = function () {
@@ -1586,6 +1652,9 @@
 
     /* Persist */
     this._saveState();
+
+    /* Broadcast to iframe children */
+    this._broadcastState();
   };
 
   /* ───────────────────────────────────────────
@@ -1664,9 +1733,202 @@
   };
 
   /* ───────────────────────────────────────────
+     IFRAME CHILD MODE
+  ─────────────────────────────────────────── */
+  function IframeChild(allowedOrigin) {
+    this._origin = allowedOrigin || location.origin;
+    this._pollTimer = null;
+    this._pollTimeout = null;
+    this._ready = false;
+    this.state = null;
+
+    this._injectStyles();
+    this._createOverlay();
+    this._listenForParent();
+    this._startPolling();
+  }
+
+  IframeChild.prototype._injectStyles = function () {
+    /* Inject only the utility CSS that affects page appearance.
+       Widget UI styles (#aa-trigger, #aa-panel, etc.) are excluded. */
+    var css = '\n/* ===== Asset Accessibility (iframe child) ===== */\n' +
+
+      /* Readable font */
+      '.aa-readable-font,.aa-readable-font *:not(.fa):not(.fas):not(.far):not(.fal):not(.fat):not(.fad):not(.fab):not(.fa-brands):not(.fa-solid):not(.fa-regular):not(.fa-light):not(.fa-thin):not(.fa-duotone):not(.material-icons):not(.material-symbols-outlined){font-family:Arial,Helvetica,sans-serif!important;}\n' +
+
+      /* Text align */
+      '.aa-align-left,.aa-align-left *{text-align:left!important;}\n' +
+      '.aa-align-center,.aa-align-center *{text-align:center!important;}\n' +
+      '.aa-align-right,.aa-align-right *{text-align:right!important;}\n' +
+
+      /* Hide images */
+      '.aa-hide-images img{opacity:0!important;}\n' +
+      '.aa-hide-images *{background-image:none!important;}\n' +
+
+      /* Stop animations */
+      '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
+
+      /* Big cursor */
+      '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
+
+      /* Contrast themes */
+      'html.aa-contrast-dark{background:#1a1a2e!important;}\n' +
+      'html.aa-contrast-dark body{background:#1a1a2e!important;color:#e0e0e0!important;}\n' +
+      'html.aa-contrast-dark body *:not(#aa-filter-overlay){background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
+      'html.aa-contrast-dark a{color:#7eb8ff!important;}\n' +
+
+      'html.aa-contrast-light{background:#fff!important;}\n' +
+      'html.aa-contrast-light body{background:#fff!important;color:#111!important;}\n' +
+      'html.aa-contrast-light body *:not(#aa-filter-overlay){background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
+
+      'html.aa-contrast-high{background:#000!important;}\n' +
+      'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
+      'html.aa-contrast-high body *:not(#aa-filter-overlay){background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
+      'html.aa-contrast-high a{color:#0ff!important;}\n' +
+
+      /* Monochrome / saturation overlay */
+      '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999998;}\n' +
+      'html.aa-monochrome #aa-filter-overlay{backdrop-filter:grayscale(100%);-webkit-backdrop-filter:grayscale(100%);}\n' +
+      'html.aa-saturation-high #aa-filter-overlay{backdrop-filter:saturate(200%);-webkit-backdrop-filter:saturate(200%);}\n' +
+      'html.aa-saturation-low #aa-filter-overlay{backdrop-filter:saturate(40%);-webkit-backdrop-filter:saturate(40%);}\n' +
+
+      /* Fallback */
+      '@supports not (backdrop-filter:grayscale(100%)){' +
+      'html.aa-monochrome body>*:not(#aa-filter-overlay){filter:grayscale(100%)!important;}' +
+      'html.aa-saturation-high body>*:not(#aa-filter-overlay){filter:saturate(200%)!important;}' +
+      'html.aa-saturation-low body>*:not(#aa-filter-overlay){filter:saturate(40%)!important;}' +
+      '}\n' +
+
+      '/* end iframe child styles */\n';
+
+    var style = document.createElement('style');
+    style.setAttribute('data-aw', 'iframe');
+    style.textContent = css;
+    document.head.appendChild(style);
+  };
+
+  IframeChild.prototype._createOverlay = function () {
+    var ov = document.createElement('div');
+    ov.id = 'aa-filter-overlay';
+    ov.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(ov);
+  };
+
+  IframeChild.prototype._applyState = function (s) {
+    this.state = s;
+    var html = document.documentElement;
+
+    /* Font size */
+    html.style.fontSize = s.fontSizeStep !== 0
+      ? (100 + s.fontSizeStep * 10) + '%' : '';
+
+    /* Line height */
+    document.body.style.lineHeight = s.lineHeight > 0
+      ? (1.5 + s.lineHeight * 0.3) + '' : '';
+
+    /* Letter spacing */
+    document.body.style.letterSpacing = s.letterSpacing > 0
+      ? (s.letterSpacing * 0.5) + 'px' : '';
+
+    /* Class toggles */
+    var classes = {
+      'aa-readable-font': s.readableFont,
+      'aa-align-left': s.textAlign === 'left',
+      'aa-align-center': s.textAlign === 'center',
+      'aa-align-right': s.textAlign === 'right',
+      'aa-contrast-dark': s.contrastMode === 'dark',
+      'aa-contrast-light': s.contrastMode === 'light',
+      'aa-contrast-high': s.contrastMode === 'high',
+      'aa-monochrome': s.monochrome,
+      'aa-saturation-high': s.saturation === 'high',
+      'aa-saturation-low': s.saturation === 'low',
+      'aa-hide-images': s.hideImages,
+      'aa-big-cursor': s.bigCursor,
+      'aa-stop-animations': s.stopAnimations,
+    };
+    for (var cls in classes) {
+      if (classes[cls]) html.classList.add(cls);
+      else html.classList.remove(cls);
+    }
+  };
+
+  IframeChild.prototype._listenForParent = function () {
+    var self = this;
+    window.addEventListener('message', function (e) {
+      if (!e.data || e.data.type !== 'aa-state-update') return;
+      /* Validate origin */
+      if (self._origin !== '*' && e.origin !== self._origin) return;
+      self._ready = true;
+      self._stopPolling();
+      self._applyState(e.data.state);
+    });
+  };
+
+  IframeChild.prototype._startPolling = function () {
+    var self = this;
+    var started = Date.now();
+    var INTERVAL = 200;
+    var TIMEOUT = 30000;
+
+    this._pollTimer = setInterval(function () {
+      if (self._ready || (Date.now() - started) > TIMEOUT) {
+        self._stopPolling();
+        if (!self._ready) {
+          console.warn('[Asset Accessibility iframe] Timeout: nessuna risposta dal parent dopo 30s.');
+        }
+        return;
+      }
+      try {
+        console.warn('[Asset Accessibility iframe] POLL.');
+        window.parent.postMessage({ type: 'aa-child-ready' }, self._origin);
+      } catch (e) {
+        /* cross-origin or no parent — stop */
+        self._stopPolling();
+      }
+    }, INTERVAL);
+  };
+
+  IframeChild.prototype._stopPolling = function () {
+    if (this._pollTimer) {
+      clearInterval(this._pollTimer);
+      this._pollTimer = null;
+    }
+  };
+
+  /* ───────────────────────────────────────────
+     DETECT MODE FROM SCRIPT TAG
+  ─────────────────────────────────────────── */
+  function getScriptParams() {
+    var scripts = document.getElementsByTagName('script');
+    for (var i = scripts.length - 1; i >= 0; i--) {
+      var src = scripts[i].src || '';
+      if (src.indexOf('asset-accessibility') !== -1) {
+        var match = src.match(/[?&]mode=iframe/);
+        if (match) {
+          var originMatch = src.match(/[?&]origin=([^&]+)/);
+          return {
+            mode: 'iframe',
+            origin: originMatch ? decodeURIComponent(originMatch[1]) : location.origin,
+          };
+        }
+      }
+    }
+    return { mode: 'parent' };
+  }
+
+  /* ───────────────────────────────────────────
      INIT ON DOM READY
   ─────────────────────────────────────────── */
   function init() {
+    var params = getScriptParams();
+
+    /* ── IFRAME CHILD MODE ── */
+    if (params.mode === 'iframe') {
+      window._aaIframeChild = new IframeChild(params.origin);
+      return;
+    }
+
+    /* ── PARENT MODE (default) ── */
     var userCfg = window.AssetAccessibilityConfig || {};
 
     /* ── Validate required contact fields ── */

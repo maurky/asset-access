@@ -79,6 +79,15 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 - Escape chiude pannello o dichiarazione
 - Annunci tradotti in tutte e 5 le lingue
 
+### Sincronizzazione iframe
+
+- Modalità `?mode=iframe` per sincronizzare le impostazioni in iframe contenuti nella pagina
+- Comunicazione via `postMessage` con validazione dell'origin
+- Polling automatico con timeout di 30 secondi
+- Supporto multi-iframe (più iframe nella stessa pagina)
+- Zero configurazione nell'iframe (basta il tag script)
+- Supporto cross-origin con parametro `origin`
+
 ## Installazione
 
 ### CDN (consigliato)
@@ -124,19 +133,20 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 
 ## Configurazione
 
-| Parametro          | Tipo       | Default          | Descrizione                                                                                                                                                      |
-| ------------------ | ---------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`contactEmail`** | `string`   | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                                   |
-| **`contactPhone`** | `string`   | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                                                |
-| `position`         | `string`   | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `bottom-center`, `top-right`, `top-left`                                                                  |
-| `buttonColor`      | `string`   | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                                             |
-| `buttonSize`       | `number`   | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
-| `buttonIcon`       | `string`   | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
-| `lang`             | `string`   | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
-| `callback`         | `function` | `null`           | Funzione di callback invocata a ogni interazione. Riceve un oggetto `{ action, detail, state, lang }`.                                                           |
-| `agidDeclaration`  | `object`   | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
-| `statementText`    | `object`   | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
-| `zIndex`           | `number`   | `999999`         | z-index del widget                                                                                                                                               |
+| Parametro          | Tipo                  | Default          | Descrizione                                                                                                                                                      |
+| ------------------ | --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`contactEmail`** | `string`              | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                                   |
+| **`contactPhone`** | `string`              | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                                                |
+| `position`         | `string`              | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `bottom-center`, `top-right`, `top-left`                                                                  |
+| `buttonColor`      | `string`              | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                                             |
+| `buttonSize`       | `number`              | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
+| `buttonIcon`       | `string`              | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
+| `lang`             | `string`              | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
+| `callback`         | `function`            | `null`           | Funzione di callback invocata a ogni interazione. Riceve un oggetto `{ action, detail, state, lang }`.                                                           |
+| `agidDeclaration`  | `object`              | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
+| `statementText`    | `object`              | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
+| `zIndex`           | `number`              | `999999`         | z-index del widget                                                                                                                                               |
+| `iframeOrigins`    | `null\|string\|array` | `null`           | Origini accettate per iframe child. `null` = same-origin, `'*'` = qualsiasi, `['https://...']` = lista specifica.                                                |
 
 > \* Almeno uno tra `contactEmail` e `contactPhone` deve essere specificato, altrimenti il widget non si avvia.
 
@@ -246,6 +256,42 @@ var AssetAccessibilityConfig = {
 
 Azioni possibili: `openPanel`, `closePanel`, `changeLang`, `step`, `toggle`, `align`, `contrast`, `toggleMono`, `saturation`, `reset`, `applyProfile`, `showStatement`, `closeStatement`.
 
+### Modalità iframe
+
+Se la pagina contiene uno o più `<iframe>` di cui si ha accesso all'HTML, è possibile sincronizzare le impostazioni di accessibilità tra la pagina padre e gli iframe.
+
+**Nell'iframe** — basta un tag script, senza alcuna configurazione:
+
+```html
+<script src="asset-accessibility.min.js?mode=iframe"></script>
+```
+
+Il widget non mostra alcun pulsante nell'iframe. Si limita ad applicare le stesse classi CSS e gli stessi stili della pagina padre.
+
+**Nella pagina padre** — nessuna modifica necessaria se gli iframe sono **same-origin**. Per iframe cross-origin, specificare le origini accettate:
+
+```javascript
+var AssetAccessibilityConfig = {
+  contactEmail: "accessibilita@esempio.it",
+  iframeOrigins: ["https://altro-dominio.it"], // oppure '*' per accettare tutti
+};
+```
+
+Per iframe cross-origin, specificare l'origin del padre nel tag script dell'iframe:
+
+```html
+<script src="asset-accessibility.js?mode=iframe&origin=https://padre.esempio.it"></script>
+```
+
+**Come funziona la sincronizzazione:**
+
+1. L'iframe invia `aa-child-ready` al parent ogni 200ms via `postMessage`
+2. Il parent, appena riceve il primo `aa-child-ready`, risponde con lo stato corrente e registra l'iframe
+3. L'iframe smette di fare polling e applica lo stato ricevuto
+4. A ogni cambio di stato (toggle, profilo, contrasto, reset...) il parent invia automaticamente l'aggiornamento a tutti gli iframe registrati
+5. Se il parent si inizializza dopo l'iframe, risponderà al prossimo tick di polling
+6. Timeout: dopo 30 secondi senza risposta l'iframe smette di fare polling
+
 ## Traduzioni
 
 Il widget supporta 5 lingue, selezionabili ciclicamente dal pulsante nell'header del pannello:
@@ -330,6 +376,7 @@ Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede f
 - [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
 - [x] Distribuzione via CDN (jsDelivr)
 - [x] Test suite automatizzata (100 test, 17 gruppi)
+- [x] Sincronizzazione iframe via `postMessage` (`?mode=iframe`)
 - [ ] Documentazione API completa
 
 ## Contribuire
