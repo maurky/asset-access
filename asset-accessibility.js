@@ -387,6 +387,7 @@
     agidDeclaration: null, // AgID declaration config (overrides statementText) — see README
     callback: null, // function(action, state) — called on every UI interaction
     iframeOrigins: null, // null = same-origin only, ['https://...'] or '*' to accept cross-origin iframes
+    preserveBackground: [], // CSS selectors excluded from contrast background override, e.g. ['.q-notifications__list']
     zIndex: 999999,
   };
 
@@ -791,6 +792,15 @@
     var panelLeft = isCenter ? '50%' : (pos.indexOf('left') > -1 ? '20px' : 'auto');
     var panelTransform = isCenter ? 'translateX(-50%)' : 'none';
 
+    /* Build :not() exclusions from preserveBackground config */
+    var pbx = '';
+    if (cfg.preserveBackground && cfg.preserveBackground.length) {
+      for (var pb = 0; pb < cfg.preserveBackground.length; pb++) {
+        var sel = cfg.preserveBackground[pb];
+        pbx += ':not(' + sel + '):not(' + sel + ' *)';
+      }
+    }
+
     var css = '\n' +
       '/* ===== Asset Accessibility ===== */\n' +
       '#aa-trigger{position:fixed;bottom:' + btnBottom + ';top:' + btnTop + ';right:' + btnRight + ';left:' + btnLeft + ';transform:' + btnTransform + ';width:' + cfg.buttonSize + 'px;height:' + cfg.buttonSize + 'px;border-radius:50%;background:' + cfg.buttonColor + ';color:#fff;border:none;cursor:pointer;z-index:' + cfg.zIndex + ';display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:transform .2s ease,box-shadow .2s ease;padding:0;}\n' +
@@ -901,18 +911,19 @@
       '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
 
       /* Contrast themes — explicit background matching the theme color */
+
       'html.aa-contrast-dark{background:#1a1a2e!important;}\n' +
       'html.aa-contrast-dark body{background:#1a1a2e!important;color:#e0e0e0!important;}\n' +
-      'html.aa-contrast-dark body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay){background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
+      'html.aa-contrast-dark body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay)' + pbx + '{background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
       'html.aa-contrast-dark a:not(#aa-panel a){color:#7eb8ff!important;}\n' +
 
       'html.aa-contrast-light{background:#fff!important;}\n' +
       'html.aa-contrast-light body{background:#fff!important;color:#111!important;}\n' +
-      'html.aa-contrast-light body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay){background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
+      'html.aa-contrast-light body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay)' + pbx + '{background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
 
       'html.aa-contrast-high{background:#000!important;}\n' +
       'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
-      'html.aa-contrast-high body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay){background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
+      'html.aa-contrast-high body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay)' + pbx + '{background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
       'html.aa-contrast-high a:not(#aa-panel a){color:#0ff!important;}\n' +
 
       /* Monochrome & saturation: backdrop-filter overlay to preserve position:fixed */
@@ -1543,8 +1554,10 @@
   proto._listenForIframes = function () {
     var self = this;
     var allowed = this.cfg.iframeOrigins; // null | '*' | ['https://...']
+    console.log('[AA parent] Ascolto per iframe children. iframeOrigins:', allowed, '| location.origin:', location.origin);
     window.addEventListener('message', function (e) {
       if (!e.data || e.data.type !== 'aa-child-ready') return;
+      console.log('[AA parent] Ricevuto aa-child-ready da origin:', e.origin);
       /* Validate origin */
       var ok = false;
       if (allowed === '*') {
@@ -1555,15 +1568,20 @@
         /* Default: same-origin only */
         ok = e.origin === location.origin;
       }
-      if (!ok) return;
+      if (!ok) {
+        console.warn('[AA parent] Origin rifiutato:', e.origin);
+        return;
+      }
       /* Avoid registering the same source twice */
       var src = e.source;
       for (var i = 0; i < self._iframeChildren.length; i++) {
         if (self._iframeChildren[i].source === src) {
+          console.log('[AA parent] Iframe già registrato, reinvio stato.');
           self._sendStateTo(src, e.origin);
           return;
         }
       }
+      console.log('[AA parent] Nuovo iframe registrato. Totale:', self._iframeChildren.length + 1);
       self._iframeChildren.push({ source: src, origin: e.origin });
       self._sendStateTo(src, e.origin);
     });
@@ -1571,12 +1589,14 @@
 
   proto._sendStateTo = function (targetWindow, origin) {
     try {
+      console.log('[AA parent] Invio stato a iframe, origin:', origin, '| state keys:', Object.keys(this.state).length);
       targetWindow.postMessage({
         type: 'aa-state-update',
         state: JSON.parse(JSON.stringify(this.state)),
+        preserveBackground: this.cfg.preserveBackground || [],
       }, origin);
     } catch (e) {
-      /* iframe may have been removed — ignore */
+      console.error('[AA parent] Errore invio a iframe:', e.message);
     }
   };
 
@@ -1740,7 +1760,10 @@
     this._pollTimer = null;
     this._pollTimeout = null;
     this._ready = false;
+    this._pbInjected = false;
     this.state = null;
+
+    console.log('[AA iframe] Modalità iframe attivata. Origin target:', this._origin);
 
     this._injectStyles();
     this._createOverlay();
@@ -1749,8 +1772,7 @@
   }
 
   IframeChild.prototype._injectStyles = function () {
-    /* Inject only the utility CSS that affects page appearance.
-       Widget UI styles (#aa-trigger, #aa-panel, etc.) are excluded. */
+    /* Utility CSS — injected once, never changes */
     var css = '\n/* ===== Asset Accessibility (iframe child) ===== */\n' +
 
       /* Readable font */
@@ -1771,21 +1793,6 @@
       /* Big cursor */
       '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
 
-      /* Contrast themes */
-      'html.aa-contrast-dark{background:#1a1a2e!important;}\n' +
-      'html.aa-contrast-dark body{background:#1a1a2e!important;color:#e0e0e0!important;}\n' +
-      'html.aa-contrast-dark body *:not(#aa-filter-overlay){background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
-      'html.aa-contrast-dark a{color:#7eb8ff!important;}\n' +
-
-      'html.aa-contrast-light{background:#fff!important;}\n' +
-      'html.aa-contrast-light body{background:#fff!important;color:#111!important;}\n' +
-      'html.aa-contrast-light body *:not(#aa-filter-overlay){background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
-
-      'html.aa-contrast-high{background:#000!important;}\n' +
-      'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
-      'html.aa-contrast-high body *:not(#aa-filter-overlay){background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
-      'html.aa-contrast-high a{color:#0ff!important;}\n' +
-
       /* Monochrome / saturation overlay */
       '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999998;}\n' +
       'html.aa-monochrome #aa-filter-overlay{backdrop-filter:grayscale(100%);-webkit-backdrop-filter:grayscale(100%);}\n' +
@@ -1799,12 +1806,54 @@
       'html.aa-saturation-low body>*:not(#aa-filter-overlay){filter:saturate(40%)!important;}' +
       '}\n' +
 
-      '/* end iframe child styles */\n';
+      '/* end iframe utility styles */\n';
 
     var style = document.createElement('style');
     style.setAttribute('data-aw', 'iframe');
     style.textContent = css;
     document.head.appendChild(style);
+
+    /* Inject contrast CSS separately (may be re-injected with exclusions) */
+    this._injectContrastCSS([]);
+  };
+
+  IframeChild.prototype._injectContrastCSS = function (preserveBackground) {
+    /* Remove existing contrast stylesheet if any */
+    var old = document.querySelector('style[data-aw="iframe-contrast"]');
+    if (old) old.remove();
+
+    /* Build :not() exclusions */
+    var pbx = '';
+    if (preserveBackground && preserveBackground.length) {
+      for (var i = 0; i < preserveBackground.length; i++) {
+        var sel = preserveBackground[i];
+        pbx += ':not(' + sel + '):not(' + sel + ' *)';
+      }
+    }
+
+    var css = '/* iframe contrast themes */\n' +
+      'html.aa-contrast-dark{background:#1a1a2e!important;}\n' +
+      'html.aa-contrast-dark body{background:#1a1a2e!important;color:#e0e0e0!important;}\n' +
+      'html.aa-contrast-dark body *:not(#aa-filter-overlay)' + pbx + '{background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
+      'html.aa-contrast-dark a{color:#7eb8ff!important;}\n' +
+
+      'html.aa-contrast-light{background:#fff!important;}\n' +
+      'html.aa-contrast-light body{background:#fff!important;color:#111!important;}\n' +
+      'html.aa-contrast-light body *:not(#aa-filter-overlay)' + pbx + '{background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
+
+      'html.aa-contrast-high{background:#000!important;}\n' +
+      'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
+      'html.aa-contrast-high body *:not(#aa-filter-overlay)' + pbx + '{background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
+      'html.aa-contrast-high a{color:#0ff!important;}\n';
+
+    var style = document.createElement('style');
+    style.setAttribute('data-aw', 'iframe-contrast');
+    style.textContent = css;
+    document.head.appendChild(style);
+
+    if (preserveBackground.length) {
+      console.log('[AA iframe] Contrasto CSS ri-iniettato con preserveBackground:', preserveBackground.join(', '));
+    }
   };
 
   IframeChild.prototype._createOverlay = function () {
@@ -1815,6 +1864,7 @@
   };
 
   IframeChild.prototype._applyState = function (s) {
+    console.log('[AA iframe] Applico stato:', JSON.stringify(s));
     this.state = s;
     var html = document.documentElement;
 
@@ -1855,11 +1905,23 @@
   IframeChild.prototype._listenForParent = function () {
     var self = this;
     window.addEventListener('message', function (e) {
+      console.log('[AA iframe] message ricevuto:', e.data && e.data.type, 'da origin:', e.origin);
       if (!e.data || e.data.type !== 'aa-state-update') return;
       /* Validate origin */
-      if (self._origin !== '*' && e.origin !== self._origin) return;
+      if (self._origin !== '*' && e.origin !== self._origin) {
+        console.warn('[AA iframe] Origin rifiutato:', e.origin, '(atteso:', self._origin + ')');
+        return;
+      }
+      console.log('[AA iframe] Stato ricevuto dal parent, applico...');
       self._ready = true;
       self._stopPolling();
+
+      /* Re-inject contrast CSS with preserveBackground exclusions (once) */
+      if (e.data.preserveBackground && e.data.preserveBackground.length && !self._pbInjected) {
+        self._injectContrastCSS(e.data.preserveBackground);
+        self._pbInjected = true;
+      }
+
       self._applyState(e.data.state);
     });
   };
@@ -1870,19 +1932,21 @@
     var INTERVAL = 200;
     var TIMEOUT = 30000;
 
+    console.log('[AA iframe] Avvio polling verso parent. Origin:', this._origin, '| location.origin:', location.origin);
+
     this._pollTimer = setInterval(function () {
       if (self._ready || (Date.now() - started) > TIMEOUT) {
         self._stopPolling();
         if (!self._ready) {
-          console.warn('[Asset Accessibility iframe] Timeout: nessuna risposta dal parent dopo 30s.');
+          console.warn('[AA iframe] Timeout: nessuna risposta dal parent dopo 30s.');
         }
         return;
       }
       try {
-        console.warn('[Asset Accessibility iframe] POLL.');
+        console.log('[AA iframe] Invio aa-child-ready a parent, targetOrigin:', self._origin);
         window.parent.postMessage({ type: 'aa-child-ready' }, self._origin);
       } catch (e) {
-        /* cross-origin or no parent — stop */
+        console.error('[AA iframe] Errore postMessage:', e.message);
         self._stopPolling();
       }
     }, INTERVAL);
@@ -1921,6 +1985,7 @@
   ─────────────────────────────────────────── */
   function init() {
     var params = getScriptParams();
+    console.log('[AA] Mode rilevato:', params.mode, params.mode === 'iframe' ? '| origin: ' + params.origin : '');
 
     /* ── IFRAME CHILD MODE ── */
     if (params.mode === 'iframe') {

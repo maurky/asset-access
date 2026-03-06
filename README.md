@@ -133,20 +133,21 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 
 ## Configurazione
 
-| Parametro          | Tipo                  | Default          | Descrizione                                                                                                                                                      |
-| ------------------ | --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`contactEmail`** | `string`              | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                                   |
-| **`contactPhone`** | `string`              | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                                                |
-| `position`         | `string`              | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `bottom-center`, `top-right`, `top-left`                                                                  |
-| `buttonColor`      | `string`              | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                                             |
-| `buttonSize`       | `number`              | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
-| `buttonIcon`       | `string`              | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
-| `lang`             | `string`              | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
-| `callback`         | `function`            | `null`           | Funzione di callback invocata a ogni interazione. Riceve un oggetto `{ action, detail, state, lang }`.                                                           |
-| `agidDeclaration`  | `object`              | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
-| `statementText`    | `object`              | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
-| `zIndex`           | `number`              | `999999`         | z-index del widget                                                                                                                                               |
-| `iframeOrigins`    | `null\|string\|array` | `null`           | Origini accettate per iframe child. `null` = same-origin, `'*'` = qualsiasi, `['https://...']` = lista specifica.                                                |
+| Parametro            | Tipo                  | Default          | Descrizione                                                                                                                                                      |
+| -------------------- | --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`contactEmail`**   | `string`              | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                                   |
+| **`contactPhone`**   | `string`              | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                                                |
+| `position`           | `string`              | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `bottom-center`, `top-right`, `top-left`                                                                  |
+| `buttonColor`        | `string`              | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                                             |
+| `buttonSize`         | `number`              | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
+| `buttonIcon`         | `string`              | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
+| `lang`               | `string`              | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
+| `callback`           | `function`            | `null`           | Funzione di callback invocata a ogni interazione. Riceve un oggetto `{ action, detail, state, lang }`.                                                           |
+| `agidDeclaration`    | `object`              | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
+| `statementText`      | `object`              | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
+| `zIndex`             | `number`              | `999999`         | z-index del widget                                                                                                                                               |
+| `iframeOrigins`      | `null\|string\|array` | `null`           | Origini accettate per iframe child. `null` = same-origin, `'*'` = qualsiasi, `['https://...']` = lista specifica.                                                |
+| `preserveBackground` | `array`               | `[]`             | Selettori CSS esclusi dall'override del `background-color` nei contrasti. Es: `['.q-notifications__list', '.my-modal']`                                          |
 
 > \* Almeno uno tra `contactEmail` e `contactPhone` deve essere specificato, altrimenti il widget non si avvia.
 
@@ -419,6 +420,73 @@ p {
 | 32px | 2rem            |
 
 La formula è: **rem = px / 16**. Questo vale se il `font-size` base del browser è 16px (il default). La conversione va applicata solo ai `font-size`; le altre proprietà (`margin`, `padding`, `width`, ecc.) possono restare in `px` senza problemi.
+
+### Perché l'altezza linea e la spaziatura caratteri non cambiano su alcuni elementi?
+
+Il widget imposta `line-height` e `letter-spacing` come stile inline su `<body>`. Essendo proprietà CSS ereditabili, il valore si propaga a tutti gli elementi discendenti — **a meno che** un elemento non abbia già un proprio `line-height` o `letter-spacing` dichiarato nel CSS del sito. In quel caso la regola locale vince sull'ereditarietà:
+
+```css
+/* ❌ Blocca l'ereditarietà — il widget non ha effetto su questo elemento */
+.card p {
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+}
+
+/* ✅ Lascia ereditare dal body — il widget funziona */
+.card p {
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+/* ✅ Anche omettere la proprietà funziona — il valore viene ereditato dal body */
+.card p {
+  /* nessun line-height né letter-spacing dichiarato */
+}
+```
+
+Questo è diverso dal problema dei `font-size` in `px`: lì il valore è assoluto e non reagisce alla percentuale sul root. Qui invece il meccanismo è l'**ereditarietà CSS**: qualsiasi dichiarazione esplicita su un elemento — anche senza `!important` — sovrascrive il valore ereditato dal `<body>`.
+
+I componenti più comuni che presentano questo problema sono: reset CSS (come Normalize.css che imposta `line-height: 1.15` su `html`), framework UI (Bootstrap, Tailwind) che dichiarano `line-height` e `letter-spacing` su molte classi, e componenti custom con stili inline.
+
+**Come verificare:** apri gli strumenti sviluppatore del browser, ispeziona l'elemento che non cambia e controlla nella scheda "Computed" se `line-height` e `letter-spacing` mostrano un valore ereditato da `body` oppure un valore dichiarato localmente. Se è locale, puoi rimuoverlo o sostituirlo con `inherit`.
+
+### Perché attivando un contrasto il contenuto dell'iframe sparisce o diventa invisibile?
+
+Quando il widget applica un tema di contrasto (scuro, chiaro o elevato), forza `background-color` su **tutti** gli elementi della pagina. Se all'interno dell'iframe c'è un framework come Vue.js (Quasar), React o Angular, è comune che il framework usi div wrapper a schermo intero (es. `.q-app`, `.q-layout`, `.q-page-container`) con `position: absolute` o `fixed`. Questi layer, ricevendo tutti lo stesso colore di sfondo opaco, si sovrappongono e nascondono il contenuto sottostante.
+
+**Come diagnosticare** — apri la console dell'iframe e individua l'elemento che copre il contenuto:
+
+```javascript
+// Mostra gli elementi full-screen sovrapposti
+document.querySelectorAll("*").forEach(function (el) {
+  var s = getComputedStyle(el);
+  if (
+    (s.position === "fixed" || s.position === "absolute") &&
+    el.offsetWidth > window.innerWidth * 0.8 &&
+    el.offsetHeight > window.innerHeight * 0.8
+  ) {
+    console.log(
+      el.tagName,
+      el.className,
+      "| z-index:",
+      s.zIndex,
+      "| bg:",
+      s.backgroundColor,
+    );
+  }
+});
+```
+
+**Come risolvere** — una volta identificata la classe colpevole, aggiungila al parametro `preserveBackground` nella configurazione del padre. Il widget escluderà quell'elemento (e i suoi discendenti) dall'override del `background-color`, sia nella pagina padre che negli iframe sincronizzati:
+
+```javascript
+var AssetAccessibilityConfig = {
+  contactEmail: "accessibilita@esempio.it",
+  preserveBackground: [".q-notifications__list", ".q-drawer__backdrop"],
+};
+```
+
+Il parametro accetta un array di selettori CSS (classi, id, tag). Viene trasmesso automaticamente agli iframe via `postMessage`.
 
 ## Contribuire
 
