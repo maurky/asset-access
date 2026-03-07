@@ -34,7 +34,7 @@
 <body>
 
 <h1>♿ Asset Accessibility — Test Suite</h1>
-<p class="subtitle">v0.1.0-alpha — 17 gruppi, 101 test</p>
+<p class="subtitle">v0.1.0-alpha — 17 gruppi, 104 test</p>
 <div id="summary" class="running">⏳ Running tests...</div>
 <div id="results"></div>
 
@@ -357,6 +357,50 @@ function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   /* ═══ 7. ALTRE FUNZIONALITÀ ═══ */
   T.beginGroup('7. Altre Funzionalità');
   T.test('Hide images', function () { aa._handleToggle('hideImages'); T.assert(html.classList.contains('aa-hide-images')); aa._handleToggle('hideImages'); T.assert(!html.classList.contains('aa-hide-images')); });
+
+  /* Add test images for alt-label tests */
+  var testImgWithAlt = document.createElement('img');
+  testImgWithAlt.id = 'aa-test-img-alt';
+  testImgWithAlt.alt = 'Test image description';
+  testImgWithAlt.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  testImgWithAlt.style.cssText = 'width:100px;height:50px;';
+  document.body.appendChild(testImgWithAlt);
+
+  var testImgNoAlt = document.createElement('img');
+  testImgNoAlt.id = 'aa-test-img-noalt';
+  testImgNoAlt.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  testImgNoAlt.style.cssText = 'width:100px;height:50px;';
+  document.body.appendChild(testImgNoAlt);
+
+  T.test('Hide images crea wrapper e label con alt text', function () {
+    aa._handleToggle('hideImages');
+    var wrap = document.querySelector('#aa-test-img-alt')?.closest('.aa-img-wrap');
+    T.assert(!!wrap, 'Wrapper creato');
+    var label = wrap?.querySelector('.aa-alt-label');
+    T.assert(!!label, 'Label creata');
+    T.assertEqual(label.textContent, 'Test image description');
+    T.assert(!label.classList.contains('aa-alt-missing'), 'Non marcata come missing');
+  });
+  T.test('Immagine senza alt mostra "Testo alternativo mancante"', function () {
+    var wrap = document.querySelector('#aa-test-img-noalt')?.closest('.aa-img-wrap');
+    T.assert(!!wrap, 'Wrapper creato');
+    var label = wrap?.querySelector('.aa-alt-label');
+    T.assert(!!label, 'Label creata');
+    T.assertEqual(label.textContent, aa.t('altTextMissing'));
+    T.assert(label.classList.contains('aa-alt-missing'), 'Marcata come missing');
+  });
+  T.test('Toggle off rimuove wrapper e label', function () {
+    aa._handleToggle('hideImages');
+    T.assert(!document.querySelector('.aa-img-wrap'), 'Nessun wrapper rimasto');
+    T.assert(!document.querySelector('.aa-alt-label'), 'Nessuna label rimasta');
+    T.assert(!!document.querySelector('#aa-test-img-alt'), 'Immagine con alt ripristinata');
+    T.assert(!!document.querySelector('#aa-test-img-noalt'), 'Immagine senza alt ripristinata');
+  });
+
+  /* Cleanup test images */
+  var ti1 = document.getElementById('aa-test-img-alt'); if (ti1) ti1.remove();
+  var ti2 = document.getElementById('aa-test-img-noalt'); if (ti2) ti2.remove();
+
   T.test('Big cursor', function () { aa._handleToggle('bigCursor'); T.assert(html.classList.contains('aa-big-cursor')); aa._handleToggle('bigCursor'); });
   T.test('Stop animations', function () { aa._handleToggle('stopAnimations'); T.assert(html.classList.contains('aa-stop-animations')); aa._handleToggle('stopAnimations'); });
   T.endGroup();

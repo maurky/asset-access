@@ -62,7 +62,7 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 
 ### Altro
 
-- Nascondi immagini (incluse background-image CSS)
+- Nascondi immagini (incluse background-image CSS) con visualizzazione dell'alt text al posto dell'immagine. Se l'alt text manca, viene mostrato un avviso in rosso ("Testo alternativo mancante", tradotto in tutte le lingue)
 - Cursore grande
 - Ferma tutte le animazioni
 - Cambio lingua (IT, EN, FR, DE, ES)
@@ -339,7 +339,7 @@ open demo.html
 
 ## Test
 
-Il progetto include una test suite automatizzata con **101 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
+Il progetto include una test suite automatizzata con **104 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
 
 ```bash
 open test.html
@@ -354,7 +354,7 @@ asset-access/
 ├── asset-accessibility.js    # Widget completo (JS + CSS iniettato)
 ├── demo.html                 # Pagina demo con configurazione di esempio
 ├── iframe.html               # Pagina di test per modalità iframe child
-├── test.html                 # Test suite automatizzata (101 test)
+├── test.html                 # Test suite automatizzata (104 test)
 ├── README.md                 # Questo file
 └── LICENSE                   # Licenza MIT
 ```
@@ -382,7 +382,7 @@ Il widget è sviluppato in vanilla JavaScript ES6 (classi, arrow functions, temp
 - [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
 - [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
 - [x] Distribuzione via CDN (jsDelivr)
-- [x] Test suite automatizzata (101 test, 17 gruppi)
+- [x] Test suite automatizzata (104 test, 17 gruppi)
 - [x] Sincronizzazione iframe via `postMessage` (`?mode=iframe`)
 - [ ] Documentazione API completa
 

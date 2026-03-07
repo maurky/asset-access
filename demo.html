@@ -235,8 +235,9 @@
         <span class="c-comment">&lt;!-- 2. Configura --&gt;</span><br>
         <span class="c-tag">&lt;script&gt;</span><br>
         &nbsp;&nbsp;<span class="c-key">var</span> AssetAccessibilityConfig = {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactEmail</span>: <span
-          class="c-str">'accessibilita@esempio.it'</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactEmail</span>: <span class="c-str">'<a
+            href="/cdn-cgi/l/email-protection" class="__cf_email__"
+            data-cfemail="ceafadadabbdbda7aca7a2a7baaf8eabbdaba3bea7a1e0a7ba">[email&#160;protected]</a>'</span>,<br>
         &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">agidDeclaration</span>: {<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">entityName</span>: <span class="c-str">'Azienda
           s.r.l.'</span>,<br>
@@ -446,8 +447,8 @@
       <div class="cards">
         <div class="card">
           <h3>👤 Profili</h3>
-          <p>Configurazioni predefinite con un click: Accessibilità, Ipovedente, ADHD, Disabilità Cognitiva, Dislessia.
-          </p>
+          <p>Configurazioni predefinite con un click: Accessibilità, Tema Scuro, Ipovedente, ADHD, Disabilità Cognitiva,
+            Dislessia.</p>
         </div>
         <div class="card">
           <h3>📝 Contenuti</h3>
@@ -471,6 +472,8 @@
 
       <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=400&fit=crop"
         alt="Laptop su scrivania con codice sullo schermo" class="demo-img">
+      <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=200&fit=crop" class="demo-img"
+        style="margin-top:12px;">
 
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus
         et ultrices posuere cubilia curae; Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec,
@@ -500,6 +503,7 @@
   <!-- ═══════════════════════════════════════ -->
 
   <!-- 1. Carica lo script -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script src="asset-accessibility.js"></script>
 
   <!-- 2. Configura (contactEmail e/o contactPhone sono OBBLIGATORI) -->
@@ -526,7 +530,7 @@
         responsibleName: 'Responsabile Accessibilità',
         responsibleRole: 'Web Manager'
       },
-      callback: function (event) {
+      callback: (event) => {
         console.log('[AA Callback]', event.action, event.detail, event.state);
       }
     };

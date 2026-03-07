@@ -58,6 +58,7 @@
       saturationLow: 'Saturazione Bassa',
       sectionOther: 'Altro',
       hideImages: 'Nascondi Immagini',
+      altTextMissing: 'Testo alternativo mancante',
       cursorSize: 'Cursore Grande',
       stopAnimations: 'Ferma Animazioni',
       resetAll: 'Ripristina Tutto',
@@ -106,6 +107,7 @@
       saturationLow: 'Low Saturation',
       sectionOther: 'Other',
       hideImages: 'Hide Images',
+      altTextMissing: 'Alternate text missing',
       cursorSize: 'Large Cursor',
       stopAnimations: 'Stop Animations',
       resetAll: 'Reset All',
@@ -154,6 +156,7 @@
       saturationLow: 'Saturation Basse',
       sectionOther: 'Autres',
       hideImages: 'Masquer les Images',
+      altTextMissing: 'Texte alternatif manquant',
       cursorSize: 'Grand Curseur',
       stopAnimations: 'Arrêter les Animations',
       resetAll: 'Tout Réinitialiser',
@@ -202,6 +205,7 @@
       saturationLow: 'Niedrige Sättigung',
       sectionOther: 'Sonstiges',
       hideImages: 'Bilder Ausblenden',
+      altTextMissing: 'Alternativtext fehlt',
       cursorSize: 'Großer Cursor',
       stopAnimations: 'Animationen Stoppen',
       resetAll: 'Alles Zurücksetzen',
@@ -250,6 +254,7 @@
       saturationLow: 'Saturación Baja',
       sectionOther: 'Otros',
       hideImages: 'Ocultar Imágenes',
+      altTextMissing: 'Texto alternativo faltante',
       cursorSize: 'Cursor Grande',
       stopAnimations: 'Detener Animaciones',
       resetAll: 'Restablecer Todo',
@@ -924,7 +929,10 @@
         '.aa-align-center,.aa-align-center *:not(#aa-panel):not(#aa-panel *){text-align:center!important;}\n' +
         '.aa-align-right,.aa-align-right *:not(#aa-panel):not(#aa-panel *){text-align:right!important;}\n' +
         '.aa-hide-images img:not(#aa-panel img){opacity:0!important;}\n' +
-        '.aa-hide-images *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *){background-image:none!important;}\n' +
+        '.aa-hide-images *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(.aa-alt-label){background-image:none!important;}\n' +
+        '.aa-img-wrap{position:relative;display:inline-block;}\n' +
+        '.aa-alt-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;word-break:break-word;border:2px dashed #9ca3af;border-radius:4px;background:rgba(243,244,246,0.9);color:#374151;font-style:italic;pointer-events:none;z-index:1;}\n' +
+        '.aa-alt-label.aa-alt-missing{color:#dc2626;border-color:#fca5a5;background:rgba(254,242,242,0.9);}\n' +
         '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
         '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
 
@@ -1601,6 +1609,7 @@
           type: 'aa-state-update',
           state: JSON.parse(JSON.stringify(this.state)),
           preserveBackground: this.cfg.preserveBackground || [],
+          altTextMissing: this.t('altTextMissing'),
         }, origin);
       } catch (e) {
         console.error('[AA parent] Errore invio a iframe:', e.message);
@@ -1675,6 +1684,13 @@
         } else {
           html.classList.remove(cls);
         }
+      }
+
+      /* Alt text overlays */
+      if (s.hideImages) {
+        this._showAltLabels();
+      } else {
+        this._hideAltLabels();
       }
 
       /* Persist */
@@ -1756,6 +1772,44 @@
       this._applyState();
       this._renderPanel();
     }
+
+    /* ───────────────────────────────────────────
+       ALT TEXT OVERLAY (when images are hidden)
+    ─────────────────────────────────────────── */
+    _showAltLabels() {
+      const missingText = this.t('altTextMissing');
+      document.querySelectorAll('img:not(#aa-panel img):not(#aa-statement-overlay img)').forEach((img) => {
+        if (img.closest('.aa-img-wrap')) return; // already wrapped
+
+        const wrap = document.createElement('span');
+        wrap.className = 'aa-img-wrap';
+
+        const label = document.createElement('span');
+        label.className = 'aa-alt-label';
+        const alt = (img.getAttribute('alt') ?? '').trim();
+        if (alt) {
+          label.textContent = alt;
+        } else {
+          label.textContent = missingText;
+          label.classList.add('aa-alt-missing');
+        }
+
+        img.parentNode.insertBefore(wrap, img);
+        wrap.appendChild(img);
+        wrap.appendChild(label);
+      });
+    }
+
+    _hideAltLabels() {
+      document.querySelectorAll('.aa-img-wrap').forEach((wrap) => {
+        const img = wrap.querySelector('img');
+        if (img) {
+          wrap.parentNode.insertBefore(img, wrap);
+        }
+        wrap.remove();
+      });
+    }
+
   } /* end class AssetAccessibility */
 
   /* ───────────────────────────────────────────
@@ -1768,6 +1822,7 @@
       this._pollTimeout = null;
       this._ready = false;
       this._pbInjected = false;
+      this._altTextMissing = 'Alternate text missing';
       this.state = null;
 
       console.log('[AA iframe] Modalità iframe attivata. Origin target:', this._origin);
@@ -1792,7 +1847,10 @@
 
         /* Hide images */
         '.aa-hide-images img{opacity:0!important;}\n' +
-        '.aa-hide-images *{background-image:none!important;}\n' +
+        '.aa-hide-images *:not(.aa-alt-label){background-image:none!important;}\n' +
+        '.aa-img-wrap{position:relative;display:inline-block;}\n' +
+        '.aa-alt-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;word-break:break-word;border:2px dashed #9ca3af;border-radius:4px;background:rgba(243,244,246,0.9);color:#374151;font-style:italic;pointer-events:none;z-index:1;}\n' +
+        '.aa-alt-label.aa-alt-missing{color:#dc2626;border-color:#fca5a5;background:rgba(254,242,242,0.9);}\n' +
 
         /* Stop animations */
         '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
@@ -1830,7 +1888,7 @@
       if (old) old.remove();
 
       /* Build :not() exclusions */
-      const pbx = '';
+      let pbx = '';
       if (preserveBackground && preserveBackground.length) {
         for (let i = 0; i < preserveBackground.length; i++) {
           let sel = preserveBackground[i];
@@ -1912,6 +1970,13 @@
         if (classes[cls]) html.classList.add(cls);
         else html.classList.remove(cls);
       }
+
+      /* Alt text overlays */
+      if (s.hideImages) {
+        this._showAltLabels();
+      } else {
+        this._hideAltLabels();
+      }
     }
 
     _listenForParent() {
@@ -1931,6 +1996,11 @@
         if (e.data.preserveBackground && e.data.preserveBackground.length && !this._pbInjected) {
           this._injectContrastCSS(e.data.preserveBackground);
           this._pbInjected = true;
+        }
+
+        /* Store translated alt-missing label from parent */
+        if (e.data.altTextMissing) {
+          this._altTextMissing = e.data.altTextMissing;
         }
 
         this._applyState(e.data.state);
@@ -1960,6 +2030,38 @@
           this._stopPolling();
         }
       }, INTERVAL);
+    }
+
+    _showAltLabels() {
+      const missingText = this._altTextMissing;
+      document.querySelectorAll('img').forEach((img) => {
+        if (img.closest('.aa-img-wrap')) return;
+
+        const wrap = document.createElement('span');
+        wrap.className = 'aa-img-wrap';
+
+        const label = document.createElement('span');
+        label.className = 'aa-alt-label';
+        const alt = (img.getAttribute('alt') ?? '').trim();
+        if (alt) {
+          label.textContent = alt;
+        } else {
+          label.textContent = missingText;
+          label.classList.add('aa-alt-missing');
+        }
+
+        img.parentNode.insertBefore(wrap, img);
+        wrap.appendChild(img);
+        wrap.appendChild(label);
+      });
+    }
+
+    _hideAltLabels() {
+      document.querySelectorAll('.aa-img-wrap').forEach((wrap) => {
+        const img = wrap.querySelector('img');
+        if (img) wrap.parentNode.insertBefore(img, wrap);
+        wrap.remove();
+      });
     }
 
     _stopPolling() {
