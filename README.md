@@ -32,6 +32,7 @@ L'obiettivo è fornire uno strumento semplice da installare che aiuti i gestori 
 ### Profili predefiniti
 
 - **Accessibilità** — testo più grande, font leggibile, interlinea e spaziatura aumentate
+- **Tema Scuro** — contrasto scuro e cursore grande
 - **Ipovedente** — testo molto grande, contrasto elevato, cursore grande
 - **ADHD** — riduzione distrazioni: saturazione bassa, animazioni ferme, immagini nascoste
 - **Disabilità cognitiva** — layout semplificato: testo grande, interlinea ampia, no animazioni
@@ -334,7 +335,7 @@ open demo.html
 
 ## Test
 
-Il progetto include una test suite automatizzata con **100 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
+Il progetto include una test suite automatizzata con **101 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
 
 ```bash
 open test.html
@@ -349,7 +350,7 @@ asset-access/
 ├── asset-accessibility.js    # Widget completo (JS + CSS iniettato)
 ├── demo.html                 # Pagina demo con configurazione di esempio
 ├── iframe.html               # Pagina di test per modalità iframe child
-├── test.html                 # Test suite automatizzata (100 test)
+├── test.html                 # Test suite automatizzata (101 test)
 ├── README.md                 # Questo file
 └── LICENSE                   # Licenza MIT
 ```
@@ -364,7 +365,7 @@ asset-access/
 | Edge    | 79+             |
 | Opera   | 47+             |
 
-Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede framework, librerie esterne o build tools.
+Il widget è sviluppato in vanilla JavaScript ES6 (classi, arrow functions, template literals, optional chaining) e non richiede framework, librerie esterne o build tools.
 
 > **Nota:** i contrasti forzano `background-color` esplicito su tutti gli elementi (uguale allo sfondo del tema) per garantire leggibilità e compatibilità con `position: fixed`. Monocromatico e saturazione usano `backdrop-filter` su un overlay. Browser senza supporto `backdrop-filter` (Firefox < 103) usano un fallback con `filter` su elementi diretti del body.
 
@@ -372,12 +373,12 @@ Il widget è sviluppato in vanilla JavaScript (ES5-compatibile) e non richiede f
 
 - [x] Persistenza delle preferenze (localStorage)
 - [x] Supporto lingue aggiuntive (francese, tedesco, spagnolo)
-- [x] Profili di accessibilità predefiniti (Accessibilità, Ipovedente, ADHD, Disabilità Cognitiva, Dislessia)
+- [x] Profili di accessibilità predefiniti (Accessibilità, Tema Scuro, Ipovedente, ADHD, Disabilità Cognitiva, Dislessia)
 - [x] Navigazione da tastiera completa nel pannello (focus trap, Tab/Shift+Tab, Escape)
 - [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
 - [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
 - [x] Distribuzione via CDN (jsDelivr)
-- [x] Test suite automatizzata (100 test, 17 gruppi)
+- [x] Test suite automatizzata (101 test, 17 gruppi)
 - [x] Sincronizzazione iframe via `postMessage` (`?mode=iframe`)
 - [ ] Documentazione API completa
 
@@ -485,6 +486,8 @@ var AssetAccessibilityConfig = {
   preserveBackground: [".q-notifications__list", ".q-drawer__backdrop"],
 };
 ```
+
+**Come risolvere** — una volta identificata la classe colpevole, aggiungila al parametro `preserveBackground` nella configurazione del padre. Il widget escluderà quell'elemento (e i suoi discendenti) dall'override del `background-color`, sia nella pagina padre che negli iframe sincronizzati:
 
 Il parametro accetta un array di selettori CSS (classi, id, tag). Viene trasmesso automaticamente agli iframe via `postMessage`.
 

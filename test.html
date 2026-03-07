@@ -34,7 +34,7 @@
 <body>
 
 <h1>♿ Asset Accessibility — Test Suite</h1>
-<p class="subtitle">v0.1.0-alpha — 17 gruppi, 100 test</p>
+<p class="subtitle">v0.1.0-alpha — 17 gruppi, 101 test</p>
 <div id="summary" class="running">⏳ Running tests...</div>
 <div id="results"></div>
 
@@ -237,9 +237,9 @@ function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   });
 
   aa._openPanel();
-  T.test('5 profili con aria-pressed', function () {
+  T.test('6 profili con aria-pressed', function () {
     var btns = aa._panel.querySelectorAll('[data-action="applyProfile"]');
-    T.assertEqual(btns.length, 5);
+    T.assertEqual(btns.length, 6);
     btns.forEach(function (b) { T.assert(b.hasAttribute('aria-pressed')); });
   });
   T.test('Toggle hanno role=switch + aria-checked', function () {
@@ -366,6 +366,7 @@ function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   T.test('Applica "accessibility"', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile,'accessibility'); T.assertEqual(aa.state.fontSizeStep,2); T.assert(aa.state.readableFont); });
   T.test('Toggle off stesso profilo → reset', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile,''); T.assertEqual(aa.state.fontSizeStep,0); });
   T.test('Profilo "visuallyImpaired"', function () { aa._applyProfile('visuallyImpaired'); T.assertEqual(aa.state.fontSizeStep,4); T.assert(aa.state.bigCursor); aa._resetAll(); });
+  T.test('Profilo "darkTheme"', function () { aa._applyProfile('darkTheme'); T.assertEqual(aa.state.contrastMode,'dark'); T.assert(aa.state.bigCursor); T.assertEqual(aa.state.fontSizeStep,0); aa._resetAll(); });
   T.test('Profilo "adhd"', function () { aa._applyProfile('adhd'); T.assert(aa.state.hideImages); T.assert(aa.state.stopAnimations); aa._resetAll(); });
   T.test('Profilo "cognitive"', function () { aa._applyProfile('cognitive'); T.assertEqual(aa.state.lineHeight,3); T.assert(aa.state.stopAnimations); aa._resetAll(); });
   T.test('Profilo "dyslexia"', function () { aa._applyProfile('dyslexia'); T.assertEqual(aa.state.textAlign,'left'); T.assert(aa.state.readableFont); aa._resetAll(); });
