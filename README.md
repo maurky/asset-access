@@ -25,7 +25,11 @@ L'obiettivo è fornire uno strumento semplice da installare che aiuti i gestori 
 - **D.Lgs. 82/2022** (recepimento italiano dell'EAA)
 - **Legge Stanca** — Legge 9 gennaio 2004, n. 4
 
-> **Nota:** l'installazione di un widget di accessibilità, da solo, non garantisce la piena conformità normativa. È necessario un approccio strutturato che includa analisi del codice, struttura semantica, test manuali e dichiarazione di accessibilità.
+> ### ⚠️ Importante
+>
+> **L'installazione di un widget di accessibilità, da solo, non garantisce la piena conformità normativa.** La conformità richiede un approccio strutturato che includa analisi del codice, struttura semantica HTML, test manuali con tecnologie assistive e dichiarazione di accessibilità.
+>
+> Tuttavia, un widget come questo può essere un **valido supporto per lo sviluppatore**: offre all'utente finale strumenti di personalizzazione immediati (contrasto, dimensione testo, spaziatura, profili predefiniti) e aiuta a coprire diversi criteri WCAG 2.1 AA, facilitando il percorso verso la conformità e migliorando concretamente l'esperienza di navigazione per persone con disabilità visive, cognitive o motorie.
 
 ## Funzionalità
 
@@ -359,11 +363,11 @@ asset-access/
 
 | Browser | Versione minima |
 | ------- | --------------- |
-| Chrome  | 60+             |
-| Firefox | 60+             |
-| Safari  | 12+             |
+| Chrome  | 74+             |
+| Firefox | 90+             |
+| Safari  | 14.1+           |
 | Edge    | 79+             |
-| Opera   | 47+             |
+| Opera   | 62+             |
 
 Il widget è sviluppato in vanilla JavaScript ES6 (classi, arrow functions, template literals, optional chaining) e non richiede framework, librerie esterne o build tools.
 
@@ -486,8 +490,6 @@ var AssetAccessibilityConfig = {
   preserveBackground: [".q-notifications__list", ".q-drawer__backdrop"],
 };
 ```
-
-**Come risolvere** — una volta identificata la classe colpevole, aggiungila al parametro `preserveBackground` nella configurazione del padre. Il widget escluderà quell'elemento (e i suoi discendenti) dall'override del `background-color`, sia nella pagina padre che negli iframe sincronizzati:
 
 Il parametro accetta un array di selettori CSS (classi, id, tag). Viene trasmesso automaticamente agli iframe via `postMessage`.
 
