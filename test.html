@@ -34,7 +34,7 @@
 <body>
 
 <h1>♿ Asset Accessibility — Test Suite</h1>
-<p class="subtitle">v0.1.0-alpha — 17 gruppi, 104 test</p>
+<p class="subtitle">v0.1.0-alpha — 17 gruppi, 105 test</p>
 <div id="summary" class="running">⏳ Running tests...</div>
 <div id="results"></div>
 
@@ -550,6 +550,21 @@ function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
     if (toggle) toggle.click();
     T.assert(true, 'Widget non bloccato');
     aa._resetAll();
+  });
+
+  window._aaTestStringCbEvents = [];
+  window.aaTestStringCallback = function(e) { window._aaTestStringCbEvents.push(e); };
+  aa = await boot({ contactEmail: 'a@b.it', callback: 'aaTestStringCallback' });
+  T.test('Callback come stringa (nome funzione globale)', function () {
+    window._aaTestStringCbEvents = [];
+    aa._openPanel();
+    var toggle = aa._panel.querySelector('[data-action="toggle"]');
+    if (toggle) toggle.click();
+    T.assert(window._aaTestStringCbEvents.length > 0, 'Evento ricevuto');
+    T.assertEqual(window._aaTestStringCbEvents[0].action, 'toggle');
+    aa._resetAll();
+    delete window.aaTestStringCallback;
+    delete window._aaTestStringCbEvents;
   });
   T.endGroup();
 

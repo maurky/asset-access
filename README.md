@@ -147,7 +147,7 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 | `buttonSize`         | `number`              | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
 | `buttonIcon`         | `string`              | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
 | `lang`               | `string`              | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
-| `callback`           | `function`            | `null`           | Funzione di callback invocata a ogni interazione. Riceve un oggetto `{ action, detail, state, lang }`.                                                           |
+| `callback`           | `function\|string`    | `null`           | Funzione di callback invocata a ogni interazione, oppure nome di una funzione globale (es. `'myCallback'`). Riceve un oggetto `{ action, detail, state, lang }`. |
 | `agidDeclaration`    | `object`              | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
 | `statementText`      | `object`              | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
 | `zIndex`             | `number`              | `999999`         | z-index del widget                                                                                                                                               |
@@ -246,17 +246,27 @@ var AssetAccessibilityConfig = {
 
 ### Callback
 
-La funzione `callback` viene invocata a ogni interazione dell'utente con il widget. Riceve un oggetto con queste proprietà:
+La funzione `callback` viene invocata a ogni interazione dell'utente con il widget. Accetta una funzione inline oppure il nome (stringa) di una funzione globale:
 
 ```javascript
-var AssetAccessibilityConfig = {
+// Funzione inline
+const AssetAccessibilityConfig = {
   contactEmail: "accessibilita@esempio.it",
-  callback: function (event) {
+  callback: (event) => {
     console.log(event.action); // es. 'toggle', 'step', 'applyProfile', 'reset', ...
     console.log(event.detail); // es. { key: 'readableFont' } o { value: 'adhd' }
     console.log(event.state); // copia completa dello stato corrente
     console.log(event.lang); // lingua corrente ('it', 'en', ...)
   },
+};
+
+// Oppure: nome di una funzione globale (utile in CMS, Google Tag Manager, ecc.)
+function myAccessibilityTracker(event) {
+  gtag("event", "accessibility_" + event.action);
+}
+const AssetAccessibilityConfig = {
+  contactEmail: "accessibilita@esempio.it",
+  callback: "myAccessibilityTracker",
 };
 ```
 
@@ -339,7 +349,7 @@ open demo.html
 
 ## Test
 
-Il progetto include una test suite automatizzata con **104 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
+Il progetto include una test suite automatizzata con **105 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
 
 ```bash
 open test.html
@@ -354,7 +364,7 @@ asset-access/
 ├── asset-accessibility.js    # Widget completo (JS + CSS iniettato)
 ├── demo.html                 # Pagina demo con configurazione di esempio
 ├── iframe.html               # Pagina di test per modalità iframe child
-├── test.html                 # Test suite automatizzata (104 test)
+├── test.html                 # Test suite automatizzata (105 test)
 ├── README.md                 # Questo file
 └── LICENSE                   # Licenza MIT
 ```
@@ -382,7 +392,7 @@ Il widget è sviluppato in vanilla JavaScript ES6 (classi, arrow functions, temp
 - [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
 - [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
 - [x] Distribuzione via CDN (jsDelivr)
-- [x] Test suite automatizzata (104 test, 17 gruppi)
+- [x] Test suite automatizzata (105 test, 17 gruppi)
 - [x] Sincronizzazione iframe via `postMessage` (`?mode=iframe`)
 - [ ] Documentazione API completa
 

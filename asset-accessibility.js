@@ -399,7 +399,7 @@
     contactPhone: '',  // REQUIRED: at least one of contactEmail / contactPhone
     statementText: null, // auto-generated from contacts if not provided
     agidDeclaration: null, // AgID declaration config (overrides statementText) — see README
-    callback: null, // function(action, state) — called on every UI interaction
+    callback: null, // function or string (global function name) — called on every UI interaction
     iframeOrigins: null, // null = same-origin only, ['https://...'] or '*' to accept cross-origin iframes
     preserveBackground: [], // CSS selectors excluded from contrast background override, e.g. ['.q-notifications__list']
     zIndex: 999999,
@@ -1286,10 +1286,13 @@
        CALLBACK
     ─────────────────────────────────────────── */
     _fireCallback(action, detail) {
-      if (typeof this.cfg.callback !== 'function') return;
+      const cb = typeof this.cfg.callback === 'string'
+        ? window[this.cfg.callback]
+        : this.cfg.callback;
+      if (typeof cb !== 'function') return;
       try {
-        this.cfg.callback({
-          action: action,
+        cb({
+          action,
           detail: detail || null,
           state: JSON.parse(JSON.stringify(this.state)),
           lang: this.lang,
