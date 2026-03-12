@@ -816,7 +816,7 @@
       const panelTransform = isCenter ? 'translateX(-50%)' : 'none';
 
       /* Build :not() exclusions from preserveBackground config */
-      const pbx = '';
+      let pbx = '';
       if (cfg.preserveBackground && cfg.preserveBackground.length) {
         for (let pb = 0; pb < cfg.preserveBackground.length; pb++) {
           let sel = cfg.preserveBackground[pb];
