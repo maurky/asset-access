@@ -739,6 +739,86 @@
   }
 
   /* ───────────────────────────────────────────
+     SHARED CSS CONSTANTS & BUILDERS
+  ─────────────────────────────────────────── */
+
+  /* Icon-font :not() chain — reused in readable-font rules */
+  const CSS_ICON_EXCL = ':not(.fa):not(.fas):not(.far):not(.fal):not(.fat):not(.fad):not(.fab):not(.fa-brands):not(.fa-solid):not(.fa-regular):not(.fa-light):not(.fa-thin):not(.fa-duotone):not(.material-icons):not(.material-symbols-outlined)';
+
+  /* Utility rules identical in parent and iframe child */
+  const CSS_SHARED =
+    '.aa-img-wrap{position:relative;display:inline-block;width:100%;}\n' +
+    '.aa-alt-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;word-break:break-word;border:2px dashed #9ca3af;border-radius:4px;background:rgba(243,244,246,0.9);color:#374151;font-style:italic;pointer-events:none;z-index:1;}\n' +
+    '.aa-alt-label.aa-alt-missing{color:#dc2626;border-color:#fca5a5;background:rgba(254,242,242,0.9);}\n' +
+    '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
+    '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n';
+
+  /* Contrast theme definitions */
+  const CONTRAST_THEMES = [
+    { mode: 'dark', bg: '#1a1a2e', fg: '#e0e0e0', bc: '#444', lc: '#7eb8ff', bb: '#7eb8ff' },
+    { mode: 'light', bg: '#fff', fg: '#111', bc: '#ccc', lc: null, bb: '#111' },
+    { mode: 'high', bg: '#000', fg: '#ff0', bc: '#ff0', lc: '#0ff', bb: '#ff0' },
+  ];
+
+  /**
+   * Build contrast CSS rules (shared by parent and iframe child).
+   * @param {string} elExcl   :not() for body * selector (e.g. ':not(#aa-panel)...')
+   * @param {string} linkExcl :not() for link color (e.g. ':not(#aa-panel a)')
+   * @param {Object} bdrExcl  per-element :not() for border rules { a, button, select, role }
+   * @param {string} pbx      preserveBackground :not() chain
+   */
+  const _buildContrastCSS = (elExcl, linkExcl, bdrExcl, pbx) => {
+    let css = '';
+    for (const t of CONTRAST_THEMES) {
+      const m = 'html.aa-contrast-' + t.mode;
+      css += m + '{background:' + t.bg + '!important;}\n';
+      css += m + ' body{background:' + t.bg + '!important;color:' + t.fg + '!important;}\n';
+      css += m + ' body *' + elExcl + pbx + '{background-color:' + t.bg + '!important;color:' + t.fg + '!important;border-color:' + t.bc + '!important;}\n';
+      if (t.lc) css += m + ' a' + linkExcl + '{color:' + t.lc + '!important;}\n';
+      /* Interactive element borders */
+      const sels = [
+        'a' + (bdrExcl.a || ''),
+        'button' + (bdrExcl.button || ''),
+        'input[type="submit"]', 'input[type="button"]',
+        'select' + (bdrExcl.select || ''),
+        '[role="button"]' + (bdrExcl.role || ''),
+      ];
+      css += sels.map((s) => m + ' body ' + s).join(',') +
+        '{border:1px solid ' + t.bb + '!important;}\n';
+    }
+    return css;
+  };
+
+  /**
+   * Build filter overlay + monochrome/saturation CSS.
+   * @param {number} zIndex   z-index for overlay
+   * @param {string} bodyExcl :not() chain for fallback body>* selectors
+   */
+  const _buildFilterCSS = (zIndex, bodyExcl) =>
+    '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:' + zIndex + ';}\n' +
+    'html.aa-monochrome #aa-filter-overlay{backdrop-filter:grayscale(100%);-webkit-backdrop-filter:grayscale(100%);}\n' +
+    'html.aa-saturation-high #aa-filter-overlay{backdrop-filter:saturate(200%);-webkit-backdrop-filter:saturate(200%);}\n' +
+    'html.aa-saturation-low #aa-filter-overlay{backdrop-filter:saturate(40%);-webkit-backdrop-filter:saturate(40%);}\n' +
+    '@supports not (backdrop-filter:grayscale(100%)){' +
+    'html.aa-monochrome body>*' + bodyExcl + '{filter:grayscale(100%)!important;}' +
+    'html.aa-saturation-high body>*' + bodyExcl + '{filter:saturate(200%)!important;}' +
+    'html.aa-saturation-low body>*' + bodyExcl + '{filter:saturate(40%)!important;}' +
+    '}\n';
+
+  /* Widget-element exclusion string (parent only) */
+  const WX_PANEL = ':not(#aa-panel):not(#aa-panel *)';
+  const WX_ALL = WX_PANEL + ':not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *)';
+  const WX_FILTER = ':not(#aa-filter-overlay)';
+
+  /* Border exclusion map (parent only) */
+  const BDR_PARENT = {
+    a: ':not(#aa-panel a):not(#aa-statement-overlay a)',
+    button: ':not(#aa-panel button):not(#aa-trigger):not(#aa-statement-overlay button)',
+    select: ':not(.aa-lang-select)',
+    role: ':not(#aa-panel [role="button"])',
+  };
+
+  /* ───────────────────────────────────────────
      LOCAL STORAGE KEY
   ─────────────────────────────────────────── */
   const STORAGE_KEY = 'asset-accessibility-prefs';
@@ -924,51 +1004,19 @@
         '#aa-statement-box .aa-stmt-body p{margin-bottom:12px;}\n' +
 
         /* Utility classes applied to <html> */
-        '.aa-readable-font,.aa-readable-font *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-box):not(#aa-statement-box *):not(.fa):not(.fas):not(.far):not(.fal):not(.fat):not(.fad):not(.fab):not(.fa-brands):not(.fa-solid):not(.fa-regular):not(.fa-light):not(.fa-thin):not(.fa-duotone):not(.material-icons):not(.material-symbols-outlined){font-family:Arial,Helvetica,sans-serif!important;}\n' +
-        '.aa-align-left,.aa-align-left *:not(#aa-panel):not(#aa-panel *){text-align:left!important;}\n' +
-        '.aa-align-center,.aa-align-center *:not(#aa-panel):not(#aa-panel *){text-align:center!important;}\n' +
-        '.aa-align-right,.aa-align-right *:not(#aa-panel):not(#aa-panel *){text-align:right!important;}\n' +
+        '.aa-readable-font,.aa-readable-font *' + WX_PANEL + ':not(#aa-trigger):not(#aa-statement-box):not(#aa-statement-box *)' + CSS_ICON_EXCL + '{font-family:Arial,Helvetica,sans-serif!important;}\n' +
+        '.aa-align-left,.aa-align-left *' + WX_PANEL + '{text-align:left!important;}\n' +
+        '.aa-align-center,.aa-align-center *' + WX_PANEL + '{text-align:center!important;}\n' +
+        '.aa-align-right,.aa-align-right *' + WX_PANEL + '{text-align:right!important;}\n' +
         '.aa-hide-images img:not(#aa-panel img){opacity:0!important;}\n' +
-        '.aa-hide-images *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(.aa-alt-label){background-image:none!important;}\n' +
-        '.aa-img-wrap{position:relative;display:inline-block;}\n' +
-        '.aa-alt-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;word-break:break-word;border:2px dashed #9ca3af;border-radius:4px;background:rgba(243,244,246,0.9);color:#374151;font-style:italic;pointer-events:none;z-index:1;}\n' +
-        '.aa-alt-label.aa-alt-missing{color:#dc2626;border-color:#fca5a5;background:rgba(254,242,242,0.9);}\n' +
-        '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
-        '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
+        '.aa-hide-images *' + WX_ALL + ':not(.aa-alt-label){background-image:none!important;}\n' +
+        CSS_SHARED +
 
-        /* Contrast themes — explicit background matching the theme color */
+        /* Contrast themes */
+        _buildContrastCSS(WX_ALL + WX_FILTER, ':not(#aa-panel a)', BDR_PARENT, pbx) +
 
-        'html.aa-contrast-dark{background:#1a1a2e!important;}\n' +
-        'html.aa-contrast-dark body{background:#1a1a2e!important;color:#e0e0e0!important;}\n' +
-        'html.aa-contrast-dark body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay)' + pbx + '{background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
-        'html.aa-contrast-dark a:not(#aa-panel a){color:#7eb8ff!important;}\n' +
-
-        'html.aa-contrast-light{background:#fff!important;}\n' +
-        'html.aa-contrast-light body{background:#fff!important;color:#111!important;}\n' +
-        'html.aa-contrast-light body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay)' + pbx + '{background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
-
-        'html.aa-contrast-high{background:#000!important;}\n' +
-        'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
-        'html.aa-contrast-high body *:not(#aa-panel):not(#aa-panel *):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-statement-overlay *):not(#aa-filter-overlay)' + pbx + '{background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
-        'html.aa-contrast-high a:not(#aa-panel a){color:#0ff!important;}\n' +
-
-        /* Visible border on interactive elements for all contrast modes */
-        'html.aa-contrast-dark body a:not(#aa-panel a):not(#aa-statement-overlay a),html.aa-contrast-dark body button:not(#aa-panel button):not(#aa-trigger):not(#aa-statement-overlay button),html.aa-contrast-dark body input[type="submit"],html.aa-contrast-dark body input[type="button"],html.aa-contrast-dark body select:not(.aa-lang-select),html.aa-contrast-dark body [role="button"]:not(#aa-panel [role="button"]){border:1px solid #7eb8ff!important;}\n' +
-        'html.aa-contrast-light body a:not(#aa-panel a):not(#aa-statement-overlay a),html.aa-contrast-light body button:not(#aa-panel button):not(#aa-trigger):not(#aa-statement-overlay button),html.aa-contrast-light body input[type="submit"],html.aa-contrast-light body input[type="button"],html.aa-contrast-light body select:not(.aa-lang-select),html.aa-contrast-light body [role="button"]:not(#aa-panel [role="button"]){border:1px solid #111!important;}\n' +
-        'html.aa-contrast-high body a:not(#aa-panel a):not(#aa-statement-overlay a),html.aa-contrast-high body button:not(#aa-panel button):not(#aa-trigger):not(#aa-statement-overlay button),html.aa-contrast-high body input[type="submit"],html.aa-contrast-high body input[type="button"],html.aa-contrast-high body select:not(.aa-lang-select),html.aa-contrast-high body [role="button"]:not(#aa-panel [role="button"]){border:1px solid #ff0!important;}\n' +
-
-        /* Monochrome & saturation: backdrop-filter overlay to preserve position:fixed */
-        '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:' + (cfg.zIndex - 1) + ';}\n' +
-        'html.aa-monochrome #aa-filter-overlay{backdrop-filter:grayscale(100%);-webkit-backdrop-filter:grayscale(100%);}\n' +
-        'html.aa-saturation-high #aa-filter-overlay{backdrop-filter:saturate(200%);-webkit-backdrop-filter:saturate(200%);}\n' +
-        'html.aa-saturation-low #aa-filter-overlay{backdrop-filter:saturate(40%);-webkit-backdrop-filter:saturate(40%);}\n' +
-
-        /* Fallback for older browsers without backdrop-filter */
-        '@supports not (backdrop-filter:grayscale(100%)){' +
-        'html.aa-monochrome body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:grayscale(100%)!important;}' +
-        'html.aa-saturation-high body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:saturate(200%)!important;}' +
-        'html.aa-saturation-low body>*:not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay){filter:saturate(40%)!important;}' +
-        '}\n' +
+        /* Monochrome & saturation */
+        _buildFilterCSS(cfg.zIndex - 1, ':not(#aa-panel):not(#aa-trigger):not(#aa-statement-overlay):not(#aa-filter-overlay)') +
 
         '/* end widget styles */\n';
 
@@ -1839,41 +1887,14 @@
     _injectStyles() {
       /* Utility CSS — injected once, never changes */
       const css = '\n/* ===== Asset Accessibility (iframe child) ===== */\n' +
-
-        /* Readable font */
-        '.aa-readable-font,.aa-readable-font *:not(.fa):not(.fas):not(.far):not(.fal):not(.fat):not(.fad):not(.fab):not(.fa-brands):not(.fa-solid):not(.fa-regular):not(.fa-light):not(.fa-thin):not(.fa-duotone):not(.material-icons):not(.material-symbols-outlined){font-family:Arial,Helvetica,sans-serif!important;}\n' +
-
-        /* Text align */
+        '.aa-readable-font,.aa-readable-font *' + CSS_ICON_EXCL + '{font-family:Arial,Helvetica,sans-serif!important;}\n' +
         '.aa-align-left,.aa-align-left *{text-align:left!important;}\n' +
         '.aa-align-center,.aa-align-center *{text-align:center!important;}\n' +
         '.aa-align-right,.aa-align-right *{text-align:right!important;}\n' +
-
-        /* Hide images */
         '.aa-hide-images img{opacity:0!important;}\n' +
         '.aa-hide-images *:not(.aa-alt-label){background-image:none!important;}\n' +
-        '.aa-img-wrap{position:relative;display:inline-block;}\n' +
-        '.aa-alt-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;word-break:break-word;border:2px dashed #9ca3af;border-radius:4px;background:rgba(243,244,246,0.9);color:#374151;font-style:italic;pointer-events:none;z-index:1;}\n' +
-        '.aa-alt-label.aa-alt-missing{color:#dc2626;border-color:#fca5a5;background:rgba(254,242,242,0.9);}\n' +
-
-        /* Stop animations */
-        '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
-
-        /* Big cursor */
-        '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
-
-        /* Monochrome / saturation overlay */
-        '#aa-filter-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999998;}\n' +
-        'html.aa-monochrome #aa-filter-overlay{backdrop-filter:grayscale(100%);-webkit-backdrop-filter:grayscale(100%);}\n' +
-        'html.aa-saturation-high #aa-filter-overlay{backdrop-filter:saturate(200%);-webkit-backdrop-filter:saturate(200%);}\n' +
-        'html.aa-saturation-low #aa-filter-overlay{backdrop-filter:saturate(40%);-webkit-backdrop-filter:saturate(40%);}\n' +
-
-        /* Fallback */
-        '@supports not (backdrop-filter:grayscale(100%)){' +
-        'html.aa-monochrome body>*:not(#aa-filter-overlay){filter:grayscale(100%)!important;}' +
-        'html.aa-saturation-high body>*:not(#aa-filter-overlay){filter:saturate(200%)!important;}' +
-        'html.aa-saturation-low body>*:not(#aa-filter-overlay){filter:saturate(40%)!important;}' +
-        '}\n' +
-
+        CSS_SHARED +
+        _buildFilterCSS(999998, ':not(#aa-filter-overlay)') +
         '/* end iframe utility styles */\n';
 
       const style = document.createElement('style');
@@ -1900,24 +1921,7 @@
       }
 
       const css = '/* iframe contrast themes */\n' +
-        'html.aa-contrast-dark{background:#1a1a2e!important;}\n' +
-        'html.aa-contrast-dark body{background:#1a1a2e!important;color:#e0e0e0!important;}\n' +
-        'html.aa-contrast-dark body *:not(#aa-filter-overlay)' + pbx + '{background-color:#1a1a2e!important;color:#e0e0e0!important;border-color:#444!important;}\n' +
-        'html.aa-contrast-dark a{color:#7eb8ff!important;}\n' +
-
-        'html.aa-contrast-light{background:#fff!important;}\n' +
-        'html.aa-contrast-light body{background:#fff!important;color:#111!important;}\n' +
-        'html.aa-contrast-light body *:not(#aa-filter-overlay)' + pbx + '{background-color:#fff!important;color:#111!important;border-color:#ccc!important;}\n' +
-
-        'html.aa-contrast-high{background:#000!important;}\n' +
-        'html.aa-contrast-high body{background:#000!important;color:#ff0!important;}\n' +
-        'html.aa-contrast-high body *:not(#aa-filter-overlay)' + pbx + '{background-color:#000!important;color:#ff0!important;border-color:#ff0!important;}\n' +
-        'html.aa-contrast-high a{color:#0ff!important;}\n' +
-
-        /* Visible border on interactive elements */
-        'html.aa-contrast-dark body a,html.aa-contrast-dark body button,html.aa-contrast-dark body input[type="submit"],html.aa-contrast-dark body input[type="button"],html.aa-contrast-dark body select,html.aa-contrast-dark body [role="button"]{border:1px solid #7eb8ff!important;}\n' +
-        'html.aa-contrast-light body a,html.aa-contrast-light body button,html.aa-contrast-light body input[type="submit"],html.aa-contrast-light body input[type="button"],html.aa-contrast-light body select,html.aa-contrast-light body [role="button"]{border:1px solid #111!important;}\n' +
-        'html.aa-contrast-high body a,html.aa-contrast-high body button,html.aa-contrast-high body input[type="submit"],html.aa-contrast-high body input[type="button"],html.aa-contrast-high body select,html.aa-contrast-high body [role="button"]{border:1px solid #ff0!important;}\n';
+        _buildContrastCSS(WX_FILTER, '', {}, pbx);
 
       const style = document.createElement('style');
       style.setAttribute('data-aw', 'iframe-contrast');
