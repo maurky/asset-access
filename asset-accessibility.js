@@ -82,7 +82,7 @@
       srProfileDeactivated: 'Profilo disattivato',
       srResetDone: 'Tutte le impostazioni sono state ripristinate',
       navBarFocus: 'Focus su',
-      navBarHint: 'Tasti: H titoli, M menu, F form, B pulsanti, G immagini, T tabelle, L liste, I aree',
+      navBarHint: 'Tasti: H titoli, M menu, F form, B pulsanti, G immagini, T tabelle, L liste, I aree · Shift+lettera = precedente',
     },
     en: {
       panelTitle: 'Accessibility',
@@ -135,7 +135,7 @@
       srProfileDeactivated: 'Profile deactivated',
       srResetDone: 'All settings have been reset',
       navBarFocus: 'Focus on',
-      navBarHint: 'Keys: H headings, M menu, F forms, B buttons, G graphics, T tables, L lists, I landmarks',
+      navBarHint: 'Keys: H headings, M menu, F forms, B buttons, G graphics, T tables, L lists, I landmarks · Shift+key = previous',
     },
     fr: {
       panelTitle: 'Accessibilité',
@@ -188,7 +188,7 @@
       srProfileDeactivated: 'Profil désactivé',
       srResetDone: 'Tous les paramètres ont été réinitialisés',
       navBarFocus: 'Focus sur',
-      navBarHint: 'Touches : H titres, M menu, F formulaires, B boutons, G images, T tableaux, L listes, I zones',
+      navBarHint: 'Touches : H titres, M menu, F formulaires, B boutons, G images, T tableaux, L listes, I zones · Maj+touche = précédent',
     },
     de: {
       panelTitle: 'Barrierefreiheit',
@@ -241,7 +241,7 @@
       srProfileDeactivated: 'Profil deaktiviert',
       srResetDone: 'Alle Einstellungen wurden zurückgesetzt',
       navBarFocus: 'Fokus auf',
-      navBarHint: 'Tasten: H Überschriften, M Menü, F Formulare, B Schaltflächen, G Grafiken, T Tabellen, L Listen, I Bereiche',
+      navBarHint: 'Tasten: H Überschriften, M Menü, F Formulare, B Schaltflächen, G Grafiken, T Tabellen, L Listen, I Bereiche · Umschalt+Taste = vorheriges',
     },
     es: {
       panelTitle: 'Accesibilidad',
@@ -294,7 +294,7 @@
       srProfileDeactivated: 'Perfil desactivado',
       srResetDone: 'Todos los ajustes han sido restablecidos',
       navBarFocus: 'Foco en',
-      navBarHint: 'Teclas: H títulos, M menú, F formularios, B botones, G gráficos, T tablas, L listas, I áreas',
+      navBarHint: 'Teclas: H títulos, M menú, F formularios, B botones, G gráficos, T tablas, L listas, I áreas · Mayús+tecla = anterior',
     },
   }
 
@@ -1976,7 +1976,7 @@
 
       /* ── Shortcut listener ── */
       this._kbShortcutHandler = (e) => {
-        /* Skip if inside text input or with modifiers */
+        /* Skip if inside text input or with non-shift modifiers */
         if (e.ctrlKey || e.altKey || e.metaKey) return;
         const tag = e.target.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
@@ -1988,7 +1988,7 @@
         if (!selector) return;
 
         e.preventDefault();
-        this._jumpToNext(selector);
+        this._jumpTo(selector, e.shiftKey ? -1 : 1);
       };
       document.addEventListener('keydown', this._kbShortcutHandler);
 
@@ -2039,7 +2039,7 @@
       });
     }
 
-    _jumpToNext(selector) {
+    _jumpTo(selector, dir) {
       const all = Array.from(document.querySelectorAll(selector)).filter(
         (el) => !el.closest('#aa-panel,#aa-trigger,#aa-statement-overlay,#aa-nav-bar') &&
           !el.disabled && !el.hidden && el.offsetParent !== null
@@ -2055,8 +2055,8 @@
           break;
         }
       }
-      /* Jump to next (cycle) */
-      const next = all[(idx + 1) % all.length];
+      /* Jump forward or backward (cycle) */
+      const next = all[((idx + dir) % all.length + all.length) % all.length];
 
       /* Ensure focusable */
       if (next.tabIndex < 0 && !next.getAttribute('tabindex')) {
@@ -2394,7 +2394,7 @@
         if (!selector) return;
 
         e.preventDefault();
-        this._jumpToNext(selector);
+        this._jumpTo(selector, e.shiftKey ? -1 : 1);
       };
       document.addEventListener('keydown', this._kbShortcutHandler);
 
@@ -2426,7 +2426,7 @@
       });
     }
 
-    _jumpToNext(selector) {
+    _jumpTo(selector, dir) {
       const all = Array.from(document.querySelectorAll(selector)).filter(
         (el) => !el.closest('#aa-nav-bar') &&
           !el.disabled && !el.hidden && el.offsetParent !== null
@@ -2437,7 +2437,7 @@
       for (let i = 0; i < all.length; i++) {
         if (all[i] === current || all[i].contains(current)) { idx = i; break; }
       }
-      const next = all[(idx + 1) % all.length];
+      const next = all[((idx + dir) % all.length + all.length) % all.length];
       if (next.tabIndex < 0 && !next.getAttribute('tabindex')) {
         next.setAttribute('tabindex', '-1');
         next.setAttribute('data-aa-temp-focus', 'true');

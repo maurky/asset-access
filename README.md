@@ -87,6 +87,7 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 | **I** | Aree landmark (main, header, footer, aside, section) |
 
 - Barra di stato fissa (configurabile in alto o in basso) che mostra l'elemento in focus corrente e le scorciatoie disponibili
+- **Shift+lettera** per tornare all'elemento precedente dello stesso tipo
 - Le scorciatoie non interferiscono con i campi di input (disattivate automaticamente quando il focus è su input, textarea, select o contenteditable)
 - Modalità "enhanced tab" opzionale: aggiunge `tabindex="0"` a elementi con `role` o `onclick` ma senza tabindex nativo
 - Sincronizzata negli iframe via `postMessage`
