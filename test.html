@@ -1,684 +1,808 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Asset Accessibility — Test Suite</title>
   <style>
-    * { box-sizing: border-box; margin: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; background: #f8f9fa; color: #1a1a1a; }
-    h1 { font-size: 22px; margin-bottom: 4px; }
-    .subtitle { color: #6b7280; font-size: 13px; margin-bottom: 20px; }
-    #summary { padding: 16px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; font-size: 15px; }
-    #summary.pass { background: #d1fae5; color: #065f46; }
-    #summary.fail { background: #fee2e2; color: #991b1b; }
-    #summary.running { background: #e0e7ff; color: #3730a3; }
-    .group { margin-bottom: 16px; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: #fff; }
-    .group-header { padding: 12px 16px; background: #f3f4f6; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .group-header:hover { background: #e5e7eb; }
-    .group-header .badge { font-size: 12px; padding: 2px 8px; border-radius: 99px; font-weight: 700; }
-    .badge.pass { background: #d1fae5; color: #065f46; }
-    .badge.fail { background: #fee2e2; color: #991b1b; }
-    .group-body { display: none; }
-    .group.open .group-body { display: block; }
-    .test-row { padding: 8px 16px; font-size: 13px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #f3f4f6; }
-    .test-row .icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
-    .test-row.pass .icon { color: #059669; }
-    .test-row.fail .icon { color: #dc2626; }
-    .test-row.fail { background: #fef2f2; }
-    .test-row .msg { color: #6b7280; font-size: 12px; margin-left: auto; max-width: 50%; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .duration { color: #9ca3af; font-size: 12px; margin-top: 8px; text-align: right; }
-    #test-sandbox { display: none; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 24px;
+      background: #f8f9fa;
+      color: #1a1a1a;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    #summary {
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    #summary.pass {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    #summary.fail {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    #summary.running {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .group {
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .group-header {
+      padding: 12px 16px;
+      background: #f3f4f6;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .group-header:hover {
+      background: #e5e7eb;
+    }
+
+    .group-header .badge {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-weight: 700;
+    }
+
+    .badge.pass {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge.fail {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .group-body {
+      display: none;
+    }
+
+    .group.open .group-body {
+      display: block;
+    }
+
+    .test-row {
+      padding: 8px 16px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .test-row .icon {
+      font-size: 14px;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .test-row.pass .icon {
+      color: #059669;
+    }
+
+    .test-row.fail .icon {
+      color: #dc2626;
+    }
+
+    .test-row.fail {
+      background: #fef2f2;
+    }
+
+    .test-row .msg {
+      color: #6b7280;
+      font-size: 12px;
+      margin-left: auto;
+      max-width: 50%;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .duration {
+      color: #9ca3af;
+      font-size: 12px;
+      margin-top: 8px;
+      text-align: right;
+    }
+
+    #test-sandbox {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
 
-<h1>♿ Asset Accessibility — Test Suite</h1>
-<p class="subtitle">v0.1.0-alpha — 17 gruppi, 105 test</p>
-<div id="summary" class="running">⏳ Running tests...</div>
-<div id="results"></div>
+  <h1>♿ Asset Accessibility — Test Suite</h1>
+  <p class="subtitle">v0.1.0-alpha — 17 gruppi, 107 test</p>
+  <div id="summary" class="running">⏳ Running tests...</div>
+  <div id="results"></div>
 
-<script>
-/* ═══════════════════════════════════════════════════════════════
-   MINI TEST FRAMEWORK (async-capable)
-   ═══════════════════════════════════════════════════════════════ */
-var T = (function () {
-  var groups = [];
-  var current = null;
-  var startTime = Date.now();
+  <script>
+    /* ═══════════════════════════════════════════════════════════════
+       MINI TEST FRAMEWORK (async-capable)
+       ═══════════════════════════════════════════════════════════════ */
+    var T = (function () {
+      var groups = [];
+      var current = null;
+      var startTime = Date.now();
 
-  function assert(cond, msg) {
-    if (!cond) throw new Error(msg || 'Assertion failed');
-  }
-  function assertEqual(a, b, msg) {
-    if (a !== b) throw new Error((msg || 'Expected') + ': got "' + a + '", expected "' + b + '"');
-  }
-  function assertIncludes(str, sub, msg) {
-    if (String(str).indexOf(sub) === -1) throw new Error((msg || 'Expected to include') + ' "' + sub + '"');
-  }
-  function assertNotIncludes(str, sub, msg) {
-    if (String(str).indexOf(sub) !== -1) throw new Error((msg || 'Expected to NOT include') + ' "' + sub + '"');
-  }
-
-  function beginGroup(name) {
-    current = { name: name, tests: [], passed: 0, failed: 0 };
-    groups.push(current);
-  }
-  function endGroup() { current = null; }
-
-  function test(name, fn) {
-    var result = { name: name, pass: false, error: '' };
-    try {
-      fn();
-      result.pass = true;
-      current.passed++;
-    } catch (e) {
-      result.error = e.message || String(e);
-      current.failed++;
-    }
-    current.tests.push(result);
-  }
-
-  function render() {
-    var totalPassed = 0, totalFailed = 0;
-    var html = '';
-    for (var g = 0; g < groups.length; g++) {
-      var grp = groups[g];
-      totalPassed += grp.passed;
-      totalFailed += grp.failed;
-      var cls = grp.failed > 0 ? 'fail' : 'pass';
-      var open = grp.failed > 0 ? ' open' : '';
-      html += '<div class="group' + open + '">';
-      html += '<div class="group-header" onclick="this.parentElement.classList.toggle(\'open\')">';
-      html += '<span>' + grp.name + '</span>';
-      html += '<span class="badge ' + cls + '">' + grp.passed + '/' + (grp.passed + grp.failed) + '</span>';
-      html += '</div><div class="group-body">';
-      for (var t = 0; t < grp.tests.length; t++) {
-        var r = grp.tests[t];
-        var rc = r.pass ? 'pass' : 'fail';
-        html += '<div class="test-row ' + rc + '">';
-        html += '<span class="icon">' + (r.pass ? '✓' : '✗') + '</span>';
-        html += '<span>' + r.name + '</span>';
-        if (r.error) html += '<span class="msg" title="' + r.error.replace(/"/g, '&quot;') + '">' + r.error + '</span>';
-        html += '</div>';
+      function assert(cond, msg) {
+        if (!cond) throw new Error(msg || 'Assertion failed');
       }
-      html += '</div></div>';
+      function assertEqual(a, b, msg) {
+        if (a !== b) throw new Error((msg || 'Expected') + ': got "' + a + '", expected "' + b + '"');
+      }
+      function assertIncludes(str, sub, msg) {
+        if (String(str).indexOf(sub) === -1) throw new Error((msg || 'Expected to include') + ' "' + sub + '"');
+      }
+      function assertNotIncludes(str, sub, msg) {
+        if (String(str).indexOf(sub) !== -1) throw new Error((msg || 'Expected to NOT include') + ' "' + sub + '"');
+      }
+
+      function beginGroup(name) {
+        current = { name: name, tests: [], passed: 0, failed: 0 };
+        groups.push(current);
+      }
+      function endGroup() { current = null; }
+
+      function test(name, fn) {
+        var result = { name: name, pass: false, error: '' };
+        try {
+          fn();
+          result.pass = true;
+          current.passed++;
+        } catch (e) {
+          result.error = e.message || String(e);
+          current.failed++;
+        }
+        current.tests.push(result);
+      }
+
+      function render() {
+        var totalPassed = 0, totalFailed = 0;
+        var html = '';
+        for (var g = 0; g < groups.length; g++) {
+          var grp = groups[g];
+          totalPassed += grp.passed;
+          totalFailed += grp.failed;
+          var cls = grp.failed > 0 ? 'fail' : 'pass';
+          var open = grp.failed > 0 ? ' open' : '';
+          html += '<div class="group' + open + '">';
+          html += '<div class="group-header" onclick="this.parentElement.classList.toggle(\'open\')">';
+          html += '<span>' + grp.name + '</span>';
+          html += '<span class="badge ' + cls + '">' + grp.passed + '/' + (grp.passed + grp.failed) + '</span>';
+          html += '</div><div class="group-body">';
+          for (var t = 0; t < grp.tests.length; t++) {
+            var r = grp.tests[t];
+            var rc = r.pass ? 'pass' : 'fail';
+            html += '<div class="test-row ' + rc + '">';
+            html += '<span class="icon">' + (r.pass ? '✓' : '✗') + '</span>';
+            html += '<span>' + r.name + '</span>';
+            if (r.error) html += '<span class="msg" title="' + r.error.replace(/"/g, '&quot;') + '">' + r.error + '</span>';
+            html += '</div>';
+          }
+          html += '</div></div>';
+        }
+        var elapsed = Date.now() - startTime;
+        html += '<div class="duration">Completato in ' + elapsed + 'ms</div>';
+        document.getElementById('results').innerHTML = html;
+        var sumEl = document.getElementById('summary');
+        var total = totalPassed + totalFailed;
+        if (totalFailed === 0) {
+          sumEl.className = 'pass';
+          sumEl.textContent = '✓ Tutti i ' + total + ' test superati';
+        } else {
+          sumEl.className = 'fail';
+          sumEl.textContent = '✗ ' + totalFailed + ' test falliti su ' + total;
+        }
+        document.title = (totalFailed === 0 ? '✓' : '✗') + ' Test Suite — Asset Accessibility';
+      }
+
+      return {
+        beginGroup: beginGroup, endGroup: endGroup, test: test, render: render,
+        assert: assert, assertEqual: assertEqual, assertIncludes: assertIncludes, assertNotIncludes: assertNotIncludes
+      };
+    })();
+
+    /* ═══════════════════════════════════════════════════════════════
+       HELPERS
+       ═══════════════════════════════════════════════════════════════ */
+    var html = document.documentElement;
+
+    function cleanup() {
+      ['aa-trigger', 'aa-panel', 'aa-statement-overlay', 'aa-filter-overlay', 'aa-live-region'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.remove();
+      });
+      var style = document.querySelector('style[data-aw]');
+      if (style) style.remove();
+      Array.from(html.classList).filter(function (c) { return c.indexOf('aa-') === 0; }).forEach(function (c) { html.classList.remove(c); });
+      html.style.fontSize = '';
+      document.body.style.lineHeight = '';
+      document.body.style.letterSpacing = '';
+      try { localStorage.removeItem('asset-accessibility-prefs'); } catch (e) { }
+      window._aaInstance = null;
+      window.AssetAccessibilityConfig = null;
     }
-    var elapsed = Date.now() - startTime;
-    html += '<div class="duration">Completato in ' + elapsed + 'ms</div>';
-    document.getElementById('results').innerHTML = html;
-    var sumEl = document.getElementById('summary');
-    var total = totalPassed + totalFailed;
-    if (totalFailed === 0) {
-      sumEl.className = 'pass';
-      sumEl.textContent = '✓ Tutti i ' + total + ' test superati';
-    } else {
-      sumEl.className = 'fail';
-      sumEl.textContent = '✗ ' + totalFailed + ' test falliti su ' + total;
+
+    function boot(cfg) {
+      cleanup();
+      window.AssetAccessibilityConfig = cfg;
+      var old = document.querySelector('script[data-aa-src]');
+      if (old) old.remove();
+      return new Promise(function (resolve) {
+        var s = document.createElement('script');
+        s.setAttribute('data-aa-src', 'true');
+        s.src = 'asset-accessibility.js';
+        s.onload = function () { setTimeout(function () { resolve(window._aaInstance); }, 60); };
+        s.onerror = function () { resolve(null); };
+        document.body.appendChild(s);
+      });
     }
-    document.title = (totalFailed === 0 ? '✓' : '✗') + ' Test Suite — Asset Accessibility';
-  }
 
-  return {
-    beginGroup: beginGroup, endGroup: endGroup, test: test, render: render,
-    assert: assert, assertEqual: assertEqual, assertIncludes: assertIncludes, assertNotIncludes: assertNotIncludes
-  };
-})();
+    function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
-/* ═══════════════════════════════════════════════════════════════
-   HELPERS
-   ═══════════════════════════════════════════════════════════════ */
-var html = document.documentElement;
+    /* ═══════════════════════════════════════════════════════════════
+       RUN ALL TESTS
+       ═══════════════════════════════════════════════════════════════ */
+    (async function () {
+      var aa;
 
-function cleanup() {
-  ['aa-trigger', 'aa-panel', 'aa-statement-overlay', 'aa-filter-overlay', 'aa-live-region'].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) el.remove();
-  });
-  var style = document.querySelector('style[data-aw]');
-  if (style) style.remove();
-  Array.from(html.classList).filter(function (c) { return c.indexOf('aa-') === 0; }).forEach(function (c) { html.classList.remove(c); });
-  html.style.fontSize = '';
-  document.body.style.lineHeight = '';
-  document.body.style.letterSpacing = '';
-  try { localStorage.removeItem('asset-accessibility-prefs'); } catch (e) {}
-  window._aaInstance = null;
-  window.AssetAccessibilityConfig = null;
-}
+      /* ═══ 1. INIZIALIZZAZIONE ═══ */
+      T.beginGroup('1. Inizializzazione');
 
-function boot(cfg) {
-  cleanup();
-  window.AssetAccessibilityConfig = cfg;
-  var old = document.querySelector('script[data-aa-src]');
-  if (old) old.remove();
-  return new Promise(function (resolve) {
-    var s = document.createElement('script');
-    s.setAttribute('data-aa-src', 'true');
-    s.src = 'asset-accessibility.js';
-    s.onload = function () { setTimeout(function () { resolve(window._aaInstance); }, 60); };
-    s.onerror = function () { resolve(null); };
-    document.body.appendChild(s);
-  });
-}
+      await boot({});
+      T.test('Widget NON si avvia senza contatti', function () {
+        T.assert(!window._aaInstance, 'Istanza deve essere null');
+        T.assert(!document.getElementById('aa-trigger'), 'Nessun trigger nel DOM');
+      });
 
-function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+      await boot({ contactEmail: '', contactPhone: '  ' });
+      T.test('Widget NON si avvia con contatti vuoti', function () {
+        T.assert(!window._aaInstance);
+      });
 
-/* ═══════════════════════════════════════════════════════════════
-   RUN ALL TESTS
-   ═══════════════════════════════════════════════════════════════ */
-(async function () {
-  var aa;
+      aa = await boot({ contactEmail: 'test@example.com' });
+      T.test('Widget si avvia con solo email', function () {
+        T.assert(!!aa, 'Istanza creata');
+        T.assert(!!document.getElementById('aa-trigger'));
+      });
 
-  /* ═══ 1. INIZIALIZZAZIONE ═══ */
-  T.beginGroup('1. Inizializzazione');
+      aa = await boot({ contactPhone: '+39 02 1234567' });
+      T.test('Widget si avvia con solo telefono', function () {
+        T.assert(!!aa);
+      });
 
-  await boot({});
-  T.test('Widget NON si avvia senza contatti', function () {
-    T.assert(!window._aaInstance, 'Istanza deve essere null');
-    T.assert(!document.getElementById('aa-trigger'), 'Nessun trigger nel DOM');
-  });
+      aa = await boot({ contactEmail: 'a@b.it', contactPhone: '+39 000' });
+      T.test('Widget si avvia con email + telefono', function () {
+        T.assert(!!aa);
+      });
+      T.endGroup();
 
-  await boot({ contactEmail: '', contactPhone: '  ' });
-  T.test('Widget NON si avvia con contatti vuoti', function () {
-    T.assert(!window._aaInstance);
-  });
+      /* ═══ 2. ELEMENTI DOM ═══ */
+      T.beginGroup('2. Elementi DOM');
+      T.test('Trigger button', function () { T.assert(!!document.getElementById('aa-trigger')); });
+      T.test('Panel', function () { T.assert(!!document.getElementById('aa-panel')); });
+      T.test('Statement overlay', function () { T.assert(!!document.getElementById('aa-statement-overlay')); });
+      T.test('Filter overlay', function () { T.assert(!!document.getElementById('aa-filter-overlay')); });
+      T.test('Live region', function () {
+        var lr = document.getElementById('aa-live-region');
+        T.assert(!!lr);
+        T.assertEqual(lr.getAttribute('role'), 'status');
+        T.assertEqual(lr.getAttribute('aria-live'), 'polite');
+      });
+      T.test('Style tag iniettato', function () { T.assert(!!document.querySelector('style[data-aw]')); });
+      T.endGroup();
 
-  aa = await boot({ contactEmail: 'test@example.com' });
-  T.test('Widget si avvia con solo email', function () {
-    T.assert(!!aa, 'Istanza creata');
-    T.assert(!!document.getElementById('aa-trigger'));
-  });
+      /* ═══ 3. ARIA ═══ */
+      T.beginGroup('3. ARIA Attributes');
+      T.test('Trigger: aria-expanded=false', function () { T.assertEqual(aa._btn.getAttribute('aria-expanded'), 'false'); });
+      T.test('Trigger: aria-controls=aa-panel', function () { T.assertEqual(aa._btn.getAttribute('aria-controls'), 'aa-panel'); });
+      T.test('Trigger: aria-haspopup=dialog', function () { T.assertEqual(aa._btn.getAttribute('aria-haspopup'), 'dialog'); });
+      T.test('Panel: role=dialog + aria-modal', function () {
+        T.assertEqual(aa._panel.getAttribute('role'), 'dialog');
+        T.assertEqual(aa._panel.getAttribute('aria-modal'), 'true');
+      });
+      T.test('Panel: aria-labelledby=aa-panel-title', function () {
+        T.assertEqual(aa._panel.getAttribute('aria-labelledby'), 'aa-panel-title');
+        T.assert(!!document.getElementById('aa-panel-title'));
+      });
+      T.test('Statement: role=dialog + aria-modal', function () {
+        T.assertEqual(aa._stmtOverlay.getAttribute('role'), 'dialog');
+        T.assertEqual(aa._stmtOverlay.getAttribute('aria-modal'), 'true');
+      });
+      T.test('Filter overlay: aria-hidden=true', function () {
+        T.assertEqual(document.getElementById('aa-filter-overlay').getAttribute('aria-hidden'), 'true');
+      });
 
-  aa = await boot({ contactPhone: '+39 02 1234567' });
-  T.test('Widget si avvia con solo telefono', function () {
-    T.assert(!!aa);
-  });
+      aa._openPanel();
+      T.test('7 profili con aria-pressed', function () {
+        var btns = aa._panel.querySelectorAll('[data-action="applyProfile"]');
+        T.assertEqual(btns.length, 7);
+        btns.forEach(function (b) { T.assert(b.hasAttribute('aria-pressed')); });
+      });
+      T.test('Toggle hanno role=switch + aria-checked', function () {
+        var toggles = aa._panel.querySelectorAll('.aa-toggle');
+        T.assert(toggles.length >= 3);
+        toggles.forEach(function (t) {
+          T.assertEqual(t.getAttribute('role'), 'switch');
+          T.assert(t.hasAttribute('aria-checked'));
+        });
+      });
+      T.test('Sezioni con role=group + aria-labelledby', function () {
+        var groups = aa._panel.querySelectorAll('[role="group"]');
+        T.assert(groups.length >= 4);
+      });
+      T.test('Pill colore con aria-pressed', function () {
+        var pills = aa._panel.querySelectorAll('[data-action="contrast"], [data-action="toggleMono"], [data-action="saturation"]');
+        pills.forEach(function (p) { T.assert(p.hasAttribute('aria-pressed'), 'aria-pressed su ' + p.textContent); });
+      });
+      T.test('Stepper con aria-label descrittivi', function () {
+        var stepBtns = aa._panel.querySelectorAll('.aa-step-btn');
+        T.assert(stepBtns.length >= 6, 'Almeno 6 bottoni stepper');
+        stepBtns.forEach(function (b) {
+          var label = b.getAttribute('aria-label');
+          T.assert(label && label.length > 3, 'aria-label: ' + label);
+        });
+      });
+      aa._closePanel();
+      T.endGroup();
 
-  aa = await boot({ contactEmail: 'a@b.it', contactPhone: '+39 000' });
-  T.test('Widget si avvia con email + telefono', function () {
-    T.assert(!!aa);
-  });
-  T.endGroup();
+      /* ═══ 4. PANNELLO APRI/CHIUDI ═══ */
+      T.beginGroup('4. Pannello Apri / Chiudi');
+      T.test('Inizialmente chiuso', function () { T.assert(!aa.isOpen); T.assert(!aa._panel.classList.contains('aa-visible')); });
+      T.test('Apertura', function () {
+        aa._openPanel();
+        T.assert(aa.isOpen);
+        T.assert(aa._panel.classList.contains('aa-visible'));
+        T.assertEqual(aa._btn.getAttribute('aria-expanded'), 'true');
+      });
+      T.test('Chiusura', function () {
+        aa._closePanel();
+        T.assert(!aa.isOpen);
+        T.assertEqual(aa._btn.getAttribute('aria-expanded'), 'false');
+      });
+      T.test('Statement apri/chiudi', function () {
+        aa._showStatement();
+        T.assert(aa.statementOpen);
+        T.assert(aa._stmtOverlay.classList.contains('aa-visible'));
+        aa._closeStatement();
+        T.assert(!aa.statementOpen);
+      });
+      T.endGroup();
 
-  /* ═══ 2. ELEMENTI DOM ═══ */
-  T.beginGroup('2. Elementi DOM');
-  T.test('Trigger button', function () { T.assert(!!document.getElementById('aa-trigger')); });
-  T.test('Panel', function () { T.assert(!!document.getElementById('aa-panel')); });
-  T.test('Statement overlay', function () { T.assert(!!document.getElementById('aa-statement-overlay')); });
-  T.test('Filter overlay', function () { T.assert(!!document.getElementById('aa-filter-overlay')); });
-  T.test('Live region', function () {
-    var lr = document.getElementById('aa-live-region');
-    T.assert(!!lr);
-    T.assertEqual(lr.getAttribute('role'), 'status');
-    T.assertEqual(lr.getAttribute('aria-live'), 'polite');
-  });
-  T.test('Style tag iniettato', function () { T.assert(!!document.querySelector('style[data-aw]')); });
-  T.endGroup();
+      /* ═══ 5. REGOLAZIONE CONTENUTI ═══ */
+      T.beginGroup('5. Regolazione Contenuti');
+      T.test('Font size +1', function () { aa._handleStep('fontSize', 1); T.assertEqual(aa.state.fontSizeStep, 1); T.assertEqual(html.style.fontSize, '110%'); });
+      T.test('Font size -1 → 0', function () { aa._handleStep('fontSize', -1); T.assertEqual(aa.state.fontSizeStep, 0); T.assertEqual(html.style.fontSize, ''); });
+      T.test('Font size max +5', function () { for (var i = 0; i < 10; i++) aa._handleStep('fontSize', 1); T.assertEqual(aa.state.fontSizeStep, 5); aa._resetAll(); });
+      T.test('Font size min -3', function () { for (var i = 0; i < 10; i++) aa._handleStep('fontSize', -1); T.assertEqual(aa.state.fontSizeStep, -3); T.assertEqual(html.style.fontSize, '70%'); aa._resetAll(); });
+      T.test('Readable font on/off', function () {
+        aa._handleToggle('readableFont'); T.assert(aa.state.readableFont); T.assert(html.classList.contains('aa-readable-font'));
+        aa._handleToggle('readableFont'); T.assert(!aa.state.readableFont); T.assert(!html.classList.contains('aa-readable-font'));
+      });
+      T.test('Text align left toggle', function () {
+        aa._handleAlign('left'); T.assertEqual(aa.state.textAlign, 'left'); T.assert(html.classList.contains('aa-align-left'));
+        aa._handleAlign('left'); T.assertEqual(aa.state.textAlign, ''); T.assert(!html.classList.contains('aa-align-left'));
+      });
+      T.test('Text align switch values', function () {
+        aa._handleAlign('center'); aa._handleAlign('right');
+        T.assert(!html.classList.contains('aa-align-center'));
+        T.assert(html.classList.contains('aa-align-right'));
+        aa._resetAll();
+      });
+      T.test('Line height step + max 5', function () {
+        aa._handleStep('lineHeight', 1); T.assertEqual(aa.state.lineHeight, 1); T.assert(document.body.style.lineHeight !== '');
+        for (var i = 0; i < 10; i++) aa._handleStep('lineHeight', 1); T.assertEqual(aa.state.lineHeight, 5);
+        aa._resetAll();
+      });
+      T.test('Letter spacing step + max 5', function () {
+        aa._handleStep('letterSpacing', 1); T.assertEqual(aa.state.letterSpacing, 1);
+        for (var i = 0; i < 10; i++) aa._handleStep('letterSpacing', 1); T.assertEqual(aa.state.letterSpacing, 5);
+        aa._resetAll();
+      });
+      T.endGroup();
 
-  /* ═══ 3. ARIA ═══ */
-  T.beginGroup('3. ARIA Attributes');
-  T.test('Trigger: aria-expanded=false', function () { T.assertEqual(aa._btn.getAttribute('aria-expanded'), 'false'); });
-  T.test('Trigger: aria-controls=aa-panel', function () { T.assertEqual(aa._btn.getAttribute('aria-controls'), 'aa-panel'); });
-  T.test('Trigger: aria-haspopup=dialog', function () { T.assertEqual(aa._btn.getAttribute('aria-haspopup'), 'dialog'); });
-  T.test('Panel: role=dialog + aria-modal', function () {
-    T.assertEqual(aa._panel.getAttribute('role'), 'dialog');
-    T.assertEqual(aa._panel.getAttribute('aria-modal'), 'true');
-  });
-  T.test('Panel: aria-labelledby=aa-panel-title', function () {
-    T.assertEqual(aa._panel.getAttribute('aria-labelledby'), 'aa-panel-title');
-    T.assert(!!document.getElementById('aa-panel-title'));
-  });
-  T.test('Statement: role=dialog + aria-modal', function () {
-    T.assertEqual(aa._stmtOverlay.getAttribute('role'), 'dialog');
-    T.assertEqual(aa._stmtOverlay.getAttribute('aria-modal'), 'true');
-  });
-  T.test('Filter overlay: aria-hidden=true', function () {
-    T.assertEqual(document.getElementById('aa-filter-overlay').getAttribute('aria-hidden'), 'true');
-  });
+      /* ═══ 6. COLORI ═══ */
+      T.beginGroup('6. Regolazioni Colore');
+      T.test('Contrast dark on/off', function () {
+        aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode, 'dark'); T.assert(html.classList.contains('aa-contrast-dark'));
+        aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode, '');
+      });
+      T.test('Contrast switch dark → light', function () {
+        aa._handleContrast('dark'); aa._handleContrast('light');
+        T.assert(!html.classList.contains('aa-contrast-dark'));
+        T.assert(html.classList.contains('aa-contrast-light'));
+        aa._resetAll();
+      });
+      T.test('Contrast high', function () { aa._handleContrast('high'); T.assert(html.classList.contains('aa-contrast-high')); aa._resetAll(); });
+      T.test('Monochrome on/off', function () {
+        aa.state.monochrome = true; aa._applyState(); T.assert(html.classList.contains('aa-monochrome'));
+        aa.state.monochrome = false; aa._applyState(); T.assert(!html.classList.contains('aa-monochrome'));
+      });
+      T.test('Saturazione high/low', function () {
+        aa.state.saturation = 'high'; aa._applyState(); T.assert(html.classList.contains('aa-saturation-high'));
+        aa.state.saturation = 'low'; aa._applyState(); T.assert(!html.classList.contains('aa-saturation-high')); T.assert(html.classList.contains('aa-saturation-low'));
+        aa._resetAll();
+      });
+      T.test('Monochrome esclude saturazione', function () {
+        aa.state.monochrome = true; aa.state.saturation = ''; aa._applyState();
+        T.assert(html.classList.contains('aa-monochrome'));
+        T.assert(!html.classList.contains('aa-saturation-high'));
+        aa._resetAll();
+      });
+      T.endGroup();
 
-  aa._openPanel();
-  T.test('6 profili con aria-pressed', function () {
-    var btns = aa._panel.querySelectorAll('[data-action="applyProfile"]');
-    T.assertEqual(btns.length, 6);
-    btns.forEach(function (b) { T.assert(b.hasAttribute('aria-pressed')); });
-  });
-  T.test('Toggle hanno role=switch + aria-checked', function () {
-    var toggles = aa._panel.querySelectorAll('.aa-toggle');
-    T.assert(toggles.length >= 3);
-    toggles.forEach(function (t) {
-      T.assertEqual(t.getAttribute('role'), 'switch');
-      T.assert(t.hasAttribute('aria-checked'));
-    });
-  });
-  T.test('Sezioni con role=group + aria-labelledby', function () {
-    var groups = aa._panel.querySelectorAll('[role="group"]');
-    T.assert(groups.length >= 4);
-  });
-  T.test('Pill colore con aria-pressed', function () {
-    var pills = aa._panel.querySelectorAll('[data-action="contrast"], [data-action="toggleMono"], [data-action="saturation"]');
-    pills.forEach(function (p) { T.assert(p.hasAttribute('aria-pressed'), 'aria-pressed su ' + p.textContent); });
-  });
-  T.test('Stepper con aria-label descrittivi', function () {
-    var stepBtns = aa._panel.querySelectorAll('.aa-step-btn');
-    T.assert(stepBtns.length >= 6, 'Almeno 6 bottoni stepper');
-    stepBtns.forEach(function (b) {
-      var label = b.getAttribute('aria-label');
-      T.assert(label && label.length > 3, 'aria-label: ' + label);
-    });
-  });
-  aa._closePanel();
-  T.endGroup();
+      /* ═══ 7. ALTRE FUNZIONALITÀ ═══ */
+      T.beginGroup('7. Altre Funzionalità');
+      T.test('Hide images', function () { aa._handleToggle('hideImages'); T.assert(html.classList.contains('aa-hide-images')); aa._handleToggle('hideImages'); T.assert(!html.classList.contains('aa-hide-images')); });
 
-  /* ═══ 4. PANNELLO APRI/CHIUDI ═══ */
-  T.beginGroup('4. Pannello Apri / Chiudi');
-  T.test('Inizialmente chiuso', function () { T.assert(!aa.isOpen); T.assert(!aa._panel.classList.contains('aa-visible')); });
-  T.test('Apertura', function () {
-    aa._openPanel();
-    T.assert(aa.isOpen);
-    T.assert(aa._panel.classList.contains('aa-visible'));
-    T.assertEqual(aa._btn.getAttribute('aria-expanded'), 'true');
-  });
-  T.test('Chiusura', function () {
-    aa._closePanel();
-    T.assert(!aa.isOpen);
-    T.assertEqual(aa._btn.getAttribute('aria-expanded'), 'false');
-  });
-  T.test('Statement apri/chiudi', function () {
-    aa._showStatement();
-    T.assert(aa.statementOpen);
-    T.assert(aa._stmtOverlay.classList.contains('aa-visible'));
-    aa._closeStatement();
-    T.assert(!aa.statementOpen);
-  });
-  T.endGroup();
+      /* Add test images for alt-label tests */
+      var testImgWithAlt = document.createElement('img');
+      testImgWithAlt.id = 'aa-test-img-alt';
+      testImgWithAlt.alt = 'Test image description';
+      testImgWithAlt.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      testImgWithAlt.style.cssText = 'width:100px;height:50px;';
+      document.body.appendChild(testImgWithAlt);
 
-  /* ═══ 5. REGOLAZIONE CONTENUTI ═══ */
-  T.beginGroup('5. Regolazione Contenuti');
-  T.test('Font size +1', function () { aa._handleStep('fontSize', 1); T.assertEqual(aa.state.fontSizeStep, 1); T.assertEqual(html.style.fontSize, '110%'); });
-  T.test('Font size -1 → 0', function () { aa._handleStep('fontSize', -1); T.assertEqual(aa.state.fontSizeStep, 0); T.assertEqual(html.style.fontSize, ''); });
-  T.test('Font size max +5', function () { for (var i=0;i<10;i++) aa._handleStep('fontSize',1); T.assertEqual(aa.state.fontSizeStep,5); aa._resetAll(); });
-  T.test('Font size min -3', function () { for (var i=0;i<10;i++) aa._handleStep('fontSize',-1); T.assertEqual(aa.state.fontSizeStep,-3); T.assertEqual(html.style.fontSize,'70%'); aa._resetAll(); });
-  T.test('Readable font on/off', function () {
-    aa._handleToggle('readableFont'); T.assert(aa.state.readableFont); T.assert(html.classList.contains('aa-readable-font'));
-    aa._handleToggle('readableFont'); T.assert(!aa.state.readableFont); T.assert(!html.classList.contains('aa-readable-font'));
-  });
-  T.test('Text align left toggle', function () {
-    aa._handleAlign('left'); T.assertEqual(aa.state.textAlign,'left'); T.assert(html.classList.contains('aa-align-left'));
-    aa._handleAlign('left'); T.assertEqual(aa.state.textAlign,''); T.assert(!html.classList.contains('aa-align-left'));
-  });
-  T.test('Text align switch values', function () {
-    aa._handleAlign('center'); aa._handleAlign('right');
-    T.assert(!html.classList.contains('aa-align-center'));
-    T.assert(html.classList.contains('aa-align-right'));
-    aa._resetAll();
-  });
-  T.test('Line height step + max 5', function () {
-    aa._handleStep('lineHeight',1); T.assertEqual(aa.state.lineHeight,1); T.assert(document.body.style.lineHeight!=='');
-    for (var i=0;i<10;i++) aa._handleStep('lineHeight',1); T.assertEqual(aa.state.lineHeight,5);
-    aa._resetAll();
-  });
-  T.test('Letter spacing step + max 5', function () {
-    aa._handleStep('letterSpacing',1); T.assertEqual(aa.state.letterSpacing,1);
-    for (var i=0;i<10;i++) aa._handleStep('letterSpacing',1); T.assertEqual(aa.state.letterSpacing,5);
-    aa._resetAll();
-  });
-  T.endGroup();
+      var testImgNoAlt = document.createElement('img');
+      testImgNoAlt.id = 'aa-test-img-noalt';
+      testImgNoAlt.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      testImgNoAlt.style.cssText = 'width:100px;height:50px;';
+      document.body.appendChild(testImgNoAlt);
 
-  /* ═══ 6. COLORI ═══ */
-  T.beginGroup('6. Regolazioni Colore');
-  T.test('Contrast dark on/off', function () {
-    aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode,'dark'); T.assert(html.classList.contains('aa-contrast-dark'));
-    aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode,'');
-  });
-  T.test('Contrast switch dark → light', function () {
-    aa._handleContrast('dark'); aa._handleContrast('light');
-    T.assert(!html.classList.contains('aa-contrast-dark'));
-    T.assert(html.classList.contains('aa-contrast-light'));
-    aa._resetAll();
-  });
-  T.test('Contrast high', function () { aa._handleContrast('high'); T.assert(html.classList.contains('aa-contrast-high')); aa._resetAll(); });
-  T.test('Monochrome on/off', function () {
-    aa.state.monochrome=true; aa._applyState(); T.assert(html.classList.contains('aa-monochrome'));
-    aa.state.monochrome=false; aa._applyState(); T.assert(!html.classList.contains('aa-monochrome'));
-  });
-  T.test('Saturazione high/low', function () {
-    aa.state.saturation='high'; aa._applyState(); T.assert(html.classList.contains('aa-saturation-high'));
-    aa.state.saturation='low'; aa._applyState(); T.assert(!html.classList.contains('aa-saturation-high')); T.assert(html.classList.contains('aa-saturation-low'));
-    aa._resetAll();
-  });
-  T.test('Monochrome esclude saturazione', function () {
-    aa.state.monochrome=true; aa.state.saturation=''; aa._applyState();
-    T.assert(html.classList.contains('aa-monochrome'));
-    T.assert(!html.classList.contains('aa-saturation-high'));
-    aa._resetAll();
-  });
-  T.endGroup();
+      T.test('Hide images crea wrapper e label con alt text', function () {
+        aa._handleToggle('hideImages');
+        var wrap = document.querySelector('#aa-test-img-alt')?.closest('.aa-img-wrap');
+        T.assert(!!wrap, 'Wrapper creato');
+        var label = wrap?.querySelector('.aa-alt-label');
+        T.assert(!!label, 'Label creata');
+        T.assertEqual(label.textContent, 'Test image description');
+        T.assert(!label.classList.contains('aa-alt-missing'), 'Non marcata come missing');
+      });
+      T.test('Immagine senza alt mostra "Testo alternativo mancante"', function () {
+        var wrap = document.querySelector('#aa-test-img-noalt')?.closest('.aa-img-wrap');
+        T.assert(!!wrap, 'Wrapper creato');
+        var label = wrap?.querySelector('.aa-alt-label');
+        T.assert(!!label, 'Label creata');
+        T.assertEqual(label.textContent, aa.t('altTextMissing'));
+        T.assert(label.classList.contains('aa-alt-missing'), 'Marcata come missing');
+      });
+      T.test('Toggle off rimuove wrapper e label', function () {
+        aa._handleToggle('hideImages');
+        T.assert(!document.querySelector('.aa-img-wrap'), 'Nessun wrapper rimasto');
+        T.assert(!document.querySelector('.aa-alt-label'), 'Nessuna label rimasta');
+        T.assert(!!document.querySelector('#aa-test-img-alt'), 'Immagine con alt ripristinata');
+        T.assert(!!document.querySelector('#aa-test-img-noalt'), 'Immagine senza alt ripristinata');
+      });
 
-  /* ═══ 7. ALTRE FUNZIONALITÀ ═══ */
-  T.beginGroup('7. Altre Funzionalità');
-  T.test('Hide images', function () { aa._handleToggle('hideImages'); T.assert(html.classList.contains('aa-hide-images')); aa._handleToggle('hideImages'); T.assert(!html.classList.contains('aa-hide-images')); });
+      /* Cleanup test images */
+      var ti1 = document.getElementById('aa-test-img-alt'); if (ti1) ti1.remove();
+      var ti2 = document.getElementById('aa-test-img-noalt'); if (ti2) ti2.remove();
 
-  /* Add test images for alt-label tests */
-  var testImgWithAlt = document.createElement('img');
-  testImgWithAlt.id = 'aa-test-img-alt';
-  testImgWithAlt.alt = 'Test image description';
-  testImgWithAlt.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-  testImgWithAlt.style.cssText = 'width:100px;height:50px;';
-  document.body.appendChild(testImgWithAlt);
+      T.test('Big cursor', function () { aa._handleToggle('bigCursor'); T.assert(html.classList.contains('aa-big-cursor')); aa._handleToggle('bigCursor'); });
+      T.test('Stop animations', function () { aa._handleToggle('stopAnimations'); T.assert(html.classList.contains('aa-stop-animations')); aa._handleToggle('stopAnimations'); });
+      T.test('Keyboard nav toggle', function () { aa._handleToggle('keyboardNav'); T.assert(html.classList.contains('aa-keyboard-nav')); T.assert(!!document.getElementById('aa-nav-bar')); aa._handleToggle('keyboardNav'); T.assert(!html.classList.contains('aa-keyboard-nav')); T.assert(!document.getElementById('aa-nav-bar')); });
+      T.endGroup();
 
-  var testImgNoAlt = document.createElement('img');
-  testImgNoAlt.id = 'aa-test-img-noalt';
-  testImgNoAlt.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-  testImgNoAlt.style.cssText = 'width:100px;height:50px;';
-  document.body.appendChild(testImgNoAlt);
+      /* ═══ 8. PROFILI ═══ */
+      T.beginGroup('8. Profili');
+      T.test('Applica "accessibility"', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile, 'accessibility'); T.assertEqual(aa.state.fontSizeStep, 2); T.assert(aa.state.readableFont); });
+      T.test('Toggle off stesso profilo → reset', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile, ''); T.assertEqual(aa.state.fontSizeStep, 0); });
+      T.test('Profilo "visuallyImpaired"', function () { aa._applyProfile('visuallyImpaired'); T.assertEqual(aa.state.fontSizeStep, 4); T.assert(aa.state.bigCursor); aa._resetAll(); });
+      T.test('Profilo "darkTheme"', function () { aa._applyProfile('darkTheme'); T.assertEqual(aa.state.contrastMode, 'dark'); T.assert(aa.state.bigCursor); T.assertEqual(aa.state.fontSizeStep, 0); aa._resetAll(); });
+      T.test('Profilo "adhd"', function () { aa._applyProfile('adhd'); T.assert(aa.state.hideImages); T.assert(aa.state.stopAnimations); aa._resetAll(); });
+      T.test('Profilo "cognitive"', function () { aa._applyProfile('cognitive'); T.assertEqual(aa.state.lineHeight, 3); T.assert(aa.state.stopAnimations); aa._resetAll(); });
+      T.test('Profilo "dyslexia"', function () { aa._applyProfile('dyslexia'); T.assertEqual(aa.state.textAlign, 'left'); T.assert(aa.state.readableFont); aa._resetAll(); });
+      T.test('Profilo "motorDisability"', function () { aa._applyProfile('motorDisability'); T.assert(aa.state.keyboardNav); T.assert(aa.state.bigCursor); T.assert(aa.state.stopAnimations); T.assert(html.classList.contains('aa-keyboard-nav')); aa._resetAll(); });
+      T.test('Toggle manuale disattiva profilo', function () { aa._applyProfile('accessibility'); aa._handleToggle('readableFont'); T.assertEqual(aa.state.activeProfile, ''); aa._resetAll(); });
+      T.test('Step disattiva profilo', function () { aa._applyProfile('accessibility'); aa._handleStep('fontSize', 1); T.assertEqual(aa.state.activeProfile, ''); aa._resetAll(); });
+      T.test('Align disattiva profilo', function () { aa._applyProfile('dyslexia'); aa._handleAlign('center'); T.assertEqual(aa.state.activeProfile, ''); aa._resetAll(); });
+      T.test('Contrast disattiva profilo', function () { aa._applyProfile('visuallyImpaired'); aa._handleContrast('light'); T.assertEqual(aa.state.activeProfile, ''); aa._resetAll(); });
+      T.endGroup();
 
-  T.test('Hide images crea wrapper e label con alt text', function () {
-    aa._handleToggle('hideImages');
-    var wrap = document.querySelector('#aa-test-img-alt')?.closest('.aa-img-wrap');
-    T.assert(!!wrap, 'Wrapper creato');
-    var label = wrap?.querySelector('.aa-alt-label');
-    T.assert(!!label, 'Label creata');
-    T.assertEqual(label.textContent, 'Test image description');
-    T.assert(!label.classList.contains('aa-alt-missing'), 'Non marcata come missing');
-  });
-  T.test('Immagine senza alt mostra "Testo alternativo mancante"', function () {
-    var wrap = document.querySelector('#aa-test-img-noalt')?.closest('.aa-img-wrap');
-    T.assert(!!wrap, 'Wrapper creato');
-    var label = wrap?.querySelector('.aa-alt-label');
-    T.assert(!!label, 'Label creata');
-    T.assertEqual(label.textContent, aa.t('altTextMissing'));
-    T.assert(label.classList.contains('aa-alt-missing'), 'Marcata come missing');
-  });
-  T.test('Toggle off rimuove wrapper e label', function () {
-    aa._handleToggle('hideImages');
-    T.assert(!document.querySelector('.aa-img-wrap'), 'Nessun wrapper rimasto');
-    T.assert(!document.querySelector('.aa-alt-label'), 'Nessuna label rimasta');
-    T.assert(!!document.querySelector('#aa-test-img-alt'), 'Immagine con alt ripristinata');
-    T.assert(!!document.querySelector('#aa-test-img-noalt'), 'Immagine senza alt ripristinata');
-  });
+      /* ═══ 9. RESET ═══ */
+      T.beginGroup('9. Reset');
+      T.test('Reset ripristina tutto', function () {
+        aa._handleStep('fontSize', 3); aa._handleToggle('readableFont'); aa._handleContrast('dark'); aa._handleToggle('hideImages');
+        aa._resetAll();
+        T.assertEqual(aa.state.fontSizeStep, 0); T.assert(!aa.state.readableFont); T.assertEqual(aa.state.contrastMode, ''); T.assert(!aa.state.hideImages);
+        T.assertEqual(html.style.fontSize, ''); T.assert(!html.classList.contains('aa-readable-font'));
+      });
+      T.test('Reset pulisce lo stato in localStorage', function () {
+        aa._handleStep('fontSize', 2);
+        var before = JSON.parse(localStorage.getItem('asset-accessibility-prefs'));
+        T.assertEqual(before.state.fontSizeStep, 2);
+        aa._resetAll();
+        var after = JSON.parse(localStorage.getItem('asset-accessibility-prefs'));
+        T.assertEqual(after.state.fontSizeStep, 0, 'fontSize torna a 0');
+        T.assert(!after.state.readableFont, 'readableFont torna a false');
+      });
+      T.endGroup();
 
-  /* Cleanup test images */
-  var ti1 = document.getElementById('aa-test-img-alt'); if (ti1) ti1.remove();
-  var ti2 = document.getElementById('aa-test-img-noalt'); if (ti2) ti2.remove();
+      /* ═══ 10. PERSISTENZA ═══ */
+      T.beginGroup('10. Persistenza (localStorage)');
+      T.test('Stato salvato', function () {
+        aa._handleStep('fontSize', 2); aa._handleToggle('readableFont');
+        var s = JSON.parse(localStorage.getItem('asset-accessibility-prefs'));
+        T.assertEqual(s.state.fontSizeStep, 2); T.assert(s.state.readableFont);
+        aa._resetAll();
+      });
+      T.test('Lingua salvata', function () {
+        aa.lang = 'fr'; aa._saveState();
+        T.assertEqual(JSON.parse(localStorage.getItem('asset-accessibility-prefs')).lang, 'fr');
+        aa.lang = 'it'; aa._saveState();
+      });
 
-  T.test('Big cursor', function () { aa._handleToggle('bigCursor'); T.assert(html.classList.contains('aa-big-cursor')); aa._handleToggle('bigCursor'); });
-  T.test('Stop animations', function () { aa._handleToggle('stopAnimations'); T.assert(html.classList.contains('aa-stop-animations')); aa._handleToggle('stopAnimations'); });
-  T.endGroup();
+      aa._handleStep('fontSize', 3); aa._handleToggle('bigCursor');
+      /* Save the prefs string before boot (which calls cleanup) */
+      var savedPrefs = localStorage.getItem('asset-accessibility-prefs');
+      cleanup();
+      /* Restore prefs so the new instance can load them */
+      localStorage.setItem('asset-accessibility-prefs', savedPrefs);
+      window.AssetAccessibilityConfig = { contactEmail: 'a@b.it', contactPhone: '+39 000' };
+      var old = document.querySelector('script[data-aa-src]');
+      if (old) old.remove();
+      await new Promise(function (resolve) {
+        var s = document.createElement('script');
+        s.setAttribute('data-aa-src', 'true');
+        s.src = 'asset-accessibility.js';
+        s.onload = function () { setTimeout(function () { aa = window._aaInstance; resolve(); }, 60); };
+        document.body.appendChild(s);
+      });
+      T.test('Stato ripristinato al riavvio', function () {
+        T.assertEqual(aa.state.fontSizeStep, 3);
+        T.assert(aa.state.bigCursor);
+        aa._resetAll();
+      });
+      T.endGroup();
 
-  /* ═══ 8. PROFILI ═══ */
-  T.beginGroup('8. Profili');
-  T.test('Applica "accessibility"', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile,'accessibility'); T.assertEqual(aa.state.fontSizeStep,2); T.assert(aa.state.readableFont); });
-  T.test('Toggle off stesso profilo → reset', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile,''); T.assertEqual(aa.state.fontSizeStep,0); });
-  T.test('Profilo "visuallyImpaired"', function () { aa._applyProfile('visuallyImpaired'); T.assertEqual(aa.state.fontSizeStep,4); T.assert(aa.state.bigCursor); aa._resetAll(); });
-  T.test('Profilo "darkTheme"', function () { aa._applyProfile('darkTheme'); T.assertEqual(aa.state.contrastMode,'dark'); T.assert(aa.state.bigCursor); T.assertEqual(aa.state.fontSizeStep,0); aa._resetAll(); });
-  T.test('Profilo "adhd"', function () { aa._applyProfile('adhd'); T.assert(aa.state.hideImages); T.assert(aa.state.stopAnimations); aa._resetAll(); });
-  T.test('Profilo "cognitive"', function () { aa._applyProfile('cognitive'); T.assertEqual(aa.state.lineHeight,3); T.assert(aa.state.stopAnimations); aa._resetAll(); });
-  T.test('Profilo "dyslexia"', function () { aa._applyProfile('dyslexia'); T.assertEqual(aa.state.textAlign,'left'); T.assert(aa.state.readableFont); aa._resetAll(); });
-  T.test('Toggle manuale disattiva profilo', function () { aa._applyProfile('accessibility'); aa._handleToggle('readableFont'); T.assertEqual(aa.state.activeProfile,''); aa._resetAll(); });
-  T.test('Step disattiva profilo', function () { aa._applyProfile('accessibility'); aa._handleStep('fontSize',1); T.assertEqual(aa.state.activeProfile,''); aa._resetAll(); });
-  T.test('Align disattiva profilo', function () { aa._applyProfile('dyslexia'); aa._handleAlign('center'); T.assertEqual(aa.state.activeProfile,''); aa._resetAll(); });
-  T.test('Contrast disattiva profilo', function () { aa._applyProfile('visuallyImpaired'); aa._handleContrast('light'); T.assertEqual(aa.state.activeProfile,''); aa._resetAll(); });
-  T.endGroup();
+      /* ═══ 11. LINGUE ═══ */
+      T.beginGroup('11. Lingue (i18n)');
+      T.test('Traduzione IT', function () { aa.lang = 'it'; T.assertEqual(aa.t('panelTitle'), 'Accessibilità'); T.assertEqual(aa.t('resetAll'), 'Ripristina Tutto'); });
+      T.test('Traduzione EN', function () { aa.lang = 'en'; T.assertEqual(aa.t('panelTitle'), 'Accessibility'); });
+      T.test('Traduzione FR', function () { aa.lang = 'fr'; T.assertEqual(aa.t('panelTitle'), 'Accessibilité'); });
+      T.test('Traduzione DE', function () { aa.lang = 'de'; T.assertEqual(aa.t('panelTitle'), 'Barrierefreiheit'); });
+      T.test('Traduzione ES', function () { aa.lang = 'es'; T.assertEqual(aa.t('panelTitle'), 'Accesibilidad'); });
+      T.test('Fallback chiave se lingua sconosciuta', function () { aa.lang = 'xx'; T.assertEqual(aa.t('panelTitle'), 'panelTitle'); aa.lang = 'it'; });
+      T.test('Cambio lingua aggiorna pannello', function () {
+        aa.lang = 'en'; aa._renderPanel();
+        T.assertIncludes(aa._panel.querySelector('#aa-panel-title').textContent, 'Accessibility');
+        aa.lang = 'it'; aa._renderPanel();
+        T.assertIncludes(aa._panel.querySelector('#aa-panel-title').textContent, 'Accessibilità');
+      });
+      T.test('Select con 5 opzioni', function () {
+        aa._openPanel();
+        var sel = aa._panel.querySelector('.aa-lang-select');
+        T.assert(!!sel); T.assertEqual(sel.options.length, 5); T.assertEqual(sel.value, 'it');
+        aa._closePanel();
+      });
+      T.test('Chiavi SR tradotte in tutte le lingue', function () {
+        var langs = ['it', 'en', 'fr', 'de', 'es'], keys = ['srOpenPanel', 'srClosePanel', 'srDecrease', 'srIncrease', 'srActivated', 'srDeactivated', 'srResetDone'];
+        for (var l = 0; l < langs.length; l++) { aa.lang = langs[l]; for (var k = 0; k < keys.length; k++) T.assert(aa.t(keys[k]) !== keys[k], langs[l] + '.' + keys[k]); }
+        aa.lang = 'it';
+      });
+      T.endGroup();
 
-  /* ═══ 9. RESET ═══ */
-  T.beginGroup('9. Reset');
-  T.test('Reset ripristina tutto', function () {
-    aa._handleStep('fontSize',3); aa._handleToggle('readableFont'); aa._handleContrast('dark'); aa._handleToggle('hideImages');
-    aa._resetAll();
-    T.assertEqual(aa.state.fontSizeStep,0); T.assert(!aa.state.readableFont); T.assertEqual(aa.state.contrastMode,''); T.assert(!aa.state.hideImages);
-    T.assertEqual(html.style.fontSize,''); T.assert(!html.classList.contains('aa-readable-font'));
-  });
-  T.test('Reset pulisce lo stato in localStorage', function () {
-    aa._handleStep('fontSize',2);
-    var before = JSON.parse(localStorage.getItem('asset-accessibility-prefs'));
-    T.assertEqual(before.state.fontSizeStep, 2);
-    aa._resetAll();
-    var after = JSON.parse(localStorage.getItem('asset-accessibility-prefs'));
-    T.assertEqual(after.state.fontSizeStep, 0, 'fontSize torna a 0');
-    T.assert(!after.state.readableFont, 'readableFont torna a false');
-  });
-  T.endGroup();
+      /* ═══ 12. CALLBACK ═══ */
+      T.beginGroup('12. Callback');
 
-  /* ═══ 10. PERSISTENZA ═══ */
-  T.beginGroup('10. Persistenza (localStorage)');
-  T.test('Stato salvato', function () {
-    aa._handleStep('fontSize',2); aa._handleToggle('readableFont');
-    var s = JSON.parse(localStorage.getItem('asset-accessibility-prefs'));
-    T.assertEqual(s.state.fontSizeStep,2); T.assert(s.state.readableFont);
-    aa._resetAll();
-  });
-  T.test('Lingua salvata', function () {
-    aa.lang='fr'; aa._saveState();
-    T.assertEqual(JSON.parse(localStorage.getItem('asset-accessibility-prefs')).lang,'fr');
-    aa.lang='it'; aa._saveState();
-  });
+      var cbEvents = [];
+      aa = await boot({ contactEmail: 'a@b.it', callback: function (e) { cbEvents.push(e); } });
 
-  aa._handleStep('fontSize',3); aa._handleToggle('bigCursor');
-  /* Save the prefs string before boot (which calls cleanup) */
-  var savedPrefs = localStorage.getItem('asset-accessibility-prefs');
-  cleanup();
-  /* Restore prefs so the new instance can load them */
-  localStorage.setItem('asset-accessibility-prefs', savedPrefs);
-  window.AssetAccessibilityConfig = { contactEmail: 'a@b.it', contactPhone: '+39 000' };
-  var old = document.querySelector('script[data-aa-src]');
-  if (old) old.remove();
-  await new Promise(function (resolve) {
-    var s = document.createElement('script');
-    s.setAttribute('data-aa-src', 'true');
-    s.src = 'asset-accessibility.js';
-    s.onload = function () { setTimeout(function () { aa = window._aaInstance; resolve(); }, 60); };
-    document.body.appendChild(s);
-  });
-  T.test('Stato ripristinato al riavvio', function () {
-    T.assertEqual(aa.state.fontSizeStep, 3);
-    T.assert(aa.state.bigCursor);
-    aa._resetAll();
-  });
-  T.endGroup();
+      T.test('Callback su toggle (click)', function () {
+        cbEvents = [];
+        aa._openPanel();
+        var toggle = aa._panel.querySelector('[data-action="toggle"]');
+        if (toggle) toggle.click();
+        var found = cbEvents.filter(function (e) { return e.action === 'toggle'; });
+        T.assert(found.length > 0);
+        T.assert(!!found[0].state); T.assert(typeof found[0].lang === 'string');
+        aa._resetAll();
+      });
+      T.test('Callback su reset (click)', function () {
+        cbEvents = [];
+        aa._openPanel();
+        var btn = aa._panel.querySelector('[data-action="reset"]');
+        if (btn) btn.click();
+        T.assert(cbEvents.some(function (e) { return e.action === 'reset'; }));
+      });
+      T.test('Callback riceve copia indipendente dello stato', function () {
+        cbEvents = [];
+        aa._openPanel();
+        var stepBtn = aa._panel.querySelector('[data-action="step"][data-dir="1"]');
+        if (stepBtn) {
+          /* First click → captures state with fontSizeStep = 1 */
+          stepBtn.click();
+          var firstEvent = cbEvents[cbEvents.length - 1];
+          var capturedFontSize = firstEvent.state.fontSizeStep;
+          /* Second click → widget state changes to fontSizeStep = 2 */
+          stepBtn.click();
+          /* Verify the first captured state is unchanged */
+          T.assertEqual(firstEvent.state.fontSizeStep, capturedFontSize, 'Copia indipendente');
+        }
+        aa._resetAll();
+      });
 
-  /* ═══ 11. LINGUE ═══ */
-  T.beginGroup('11. Lingue (i18n)');
-  T.test('Traduzione IT', function () { aa.lang='it'; T.assertEqual(aa.t('panelTitle'),'Accessibilità'); T.assertEqual(aa.t('resetAll'),'Ripristina Tutto'); });
-  T.test('Traduzione EN', function () { aa.lang='en'; T.assertEqual(aa.t('panelTitle'),'Accessibility'); });
-  T.test('Traduzione FR', function () { aa.lang='fr'; T.assertEqual(aa.t('panelTitle'),'Accessibilité'); });
-  T.test('Traduzione DE', function () { aa.lang='de'; T.assertEqual(aa.t('panelTitle'),'Barrierefreiheit'); });
-  T.test('Traduzione ES', function () { aa.lang='es'; T.assertEqual(aa.t('panelTitle'),'Accesibilidad'); });
-  T.test('Fallback chiave se lingua sconosciuta', function () { aa.lang='xx'; T.assertEqual(aa.t('panelTitle'),'panelTitle'); aa.lang='it'; });
-  T.test('Cambio lingua aggiorna pannello', function () {
-    aa.lang='en'; aa._renderPanel();
-    T.assertIncludes(aa._panel.querySelector('#aa-panel-title').textContent,'Accessibility');
-    aa.lang='it'; aa._renderPanel();
-    T.assertIncludes(aa._panel.querySelector('#aa-panel-title').textContent,'Accessibilità');
-  });
-  T.test('Select con 5 opzioni', function () {
-    aa._openPanel();
-    var sel = aa._panel.querySelector('.aa-lang-select');
-    T.assert(!!sel); T.assertEqual(sel.options.length,5); T.assertEqual(sel.value,'it');
-    aa._closePanel();
-  });
-  T.test('Chiavi SR tradotte in tutte le lingue', function () {
-    var langs=['it','en','fr','de','es'], keys=['srOpenPanel','srClosePanel','srDecrease','srIncrease','srActivated','srDeactivated','srResetDone'];
-    for (var l=0;l<langs.length;l++) { aa.lang=langs[l]; for (var k=0;k<keys.length;k++) T.assert(aa.t(keys[k])!==keys[k], langs[l]+'.'+keys[k]); }
-    aa.lang='it';
-  });
-  T.endGroup();
+      aa = await boot({ contactEmail: 'a@b.it', callback: function () { throw new Error('Test'); } });
+      T.test('Errore in callback non blocca il widget', function () {
+        aa._openPanel();
+        var toggle = aa._panel.querySelector('[data-action="toggle"]');
+        if (toggle) toggle.click();
+        T.assert(true, 'Widget non bloccato');
+        aa._resetAll();
+      });
 
-  /* ═══ 12. CALLBACK ═══ */
-  T.beginGroup('12. Callback');
+      window._aaTestStringCbEvents = [];
+      window.aaTestStringCallback = function (e) { window._aaTestStringCbEvents.push(e); };
+      aa = await boot({ contactEmail: 'a@b.it', callback: 'aaTestStringCallback' });
+      T.test('Callback come stringa (nome funzione globale)', function () {
+        window._aaTestStringCbEvents = [];
+        aa._openPanel();
+        var toggle = aa._panel.querySelector('[data-action="toggle"]');
+        if (toggle) toggle.click();
+        T.assert(window._aaTestStringCbEvents.length > 0, 'Evento ricevuto');
+        T.assertEqual(window._aaTestStringCbEvents[0].action, 'toggle');
+        aa._resetAll();
+        delete window.aaTestStringCallback;
+        delete window._aaTestStringCbEvents;
+      });
+      T.endGroup();
 
-  var cbEvents = [];
-  aa = await boot({ contactEmail: 'a@b.it', callback: function (e) { cbEvents.push(e); } });
+      /* ═══ 13. DICHIARAZIONE AGID ═══ */
+      T.beginGroup('13. Dichiarazione AgID');
 
-  T.test('Callback su toggle (click)', function () {
-    cbEvents = [];
-    aa._openPanel();
-    var toggle = aa._panel.querySelector('[data-action="toggle"]');
-    if (toggle) toggle.click();
-    var found = cbEvents.filter(function(e){return e.action==='toggle';});
-    T.assert(found.length>0);
-    T.assert(!!found[0].state); T.assert(typeof found[0].lang==='string');
-    aa._resetAll();
-  });
-  T.test('Callback su reset (click)', function () {
-    cbEvents = [];
-    aa._openPanel();
-    var btn = aa._panel.querySelector('[data-action="reset"]');
-    if (btn) btn.click();
-    T.assert(cbEvents.some(function(e){return e.action==='reset';}));
-  });
-  T.test('Callback riceve copia indipendente dello stato', function () {
-    cbEvents = [];
-    aa._openPanel();
-    var stepBtn = aa._panel.querySelector('[data-action="step"][data-dir="1"]');
-    if (stepBtn) {
-      /* First click → captures state with fontSizeStep = 1 */
-      stepBtn.click();
-      var firstEvent = cbEvents[cbEvents.length - 1];
-      var capturedFontSize = firstEvent.state.fontSizeStep;
-      /* Second click → widget state changes to fontSizeStep = 2 */
-      stepBtn.click();
-      /* Verify the first captured state is unchanged */
-      T.assertEqual(firstEvent.state.fontSizeStep, capturedFontSize, 'Copia indipendente');
-    }
-    aa._resetAll();
-  });
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test s.r.l.', entityUrl: 'https://test.it', conformanceStatus: 'full', declarationDate: '2026-01-15' } });
+      T.test('Status "full" → pienamente conforme', function () { T.assertIncludes(aa.cfg.statementText.it, 'pienamente conforme'); });
+      T.test('EntityName presente', function () { T.assertIncludes(aa.cfg.statementText.it, 'Test s.r.l.'); });
+      T.test('Data formattata GG/MM/AAAA', function () { T.assertIncludes(aa.cfg.statementText.it, '15/01/2026'); });
 
-  aa = await boot({ contactEmail: 'a@b.it', callback: function(){ throw new Error('Test'); } });
-  T.test('Errore in callback non blocca il widget', function () {
-    aa._openPanel();
-    var toggle = aa._panel.querySelector('[data-action="toggle"]');
-    if (toggle) toggle.click();
-    T.assert(true, 'Widget non bloccato');
-    aa._resetAll();
-  });
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'partial', nonAccessibleContent: { nonConformities: ['Alt mancanti (1.1.1)', 'Contrasto (1.4.3)'] } } });
+      T.test('Status "partial" → parzialmente conforme', function () { T.assertIncludes(aa.cfg.statementText.it, 'parzialmente conforme'); });
+      T.test('Non conformità elencate', function () { T.assertIncludes(aa.cfg.statementText.it, 'Alt mancanti'); T.assertIncludes(aa.cfg.statementText.it, 'Contrasto'); });
 
-  window._aaTestStringCbEvents = [];
-  window.aaTestStringCallback = function(e) { window._aaTestStringCbEvents.push(e); };
-  aa = await boot({ contactEmail: 'a@b.it', callback: 'aaTestStringCallback' });
-  T.test('Callback come stringa (nome funzione globale)', function () {
-    window._aaTestStringCbEvents = [];
-    aa._openPanel();
-    var toggle = aa._panel.querySelector('[data-action="toggle"]');
-    if (toggle) toggle.click();
-    T.assert(window._aaTestStringCbEvents.length > 0, 'Evento ricevuto');
-    T.assertEqual(window._aaTestStringCbEvents[0].action, 'toggle');
-    aa._resetAll();
-    delete window.aaTestStringCallback;
-    delete window._aaTestStringCbEvents;
-  });
-  T.endGroup();
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'none' } });
+      T.test('Status "none" → non è conforme', function () { T.assertIncludes(aa.cfg.statementText.it, 'non è conforme'); });
 
-  /* ═══ 13. DICHIARAZIONE AGID ═══ */
-  T.beginGroup('13. Dichiarazione AgID');
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'partial', nonAccessibleContent: { disproportionateBurden: ['Mappe'] } } });
+      T.test('Onere sproporzionato', function () { T.assertIncludes(aa.cfg.statementText.it, 'Onere sproporzionato'); T.assertIncludes(aa.cfg.statementText.it, 'Mappe'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test s.r.l.', entityUrl:'https://test.it', conformanceStatus:'full', declarationDate:'2026-01-15' }});
-  T.test('Status "full" → pienamente conforme', function () { T.assertIncludes(aa.cfg.statementText.it,'pienamente conforme'); });
-  T.test('EntityName presente', function () { T.assertIncludes(aa.cfg.statementText.it,'Test s.r.l.'); });
-  T.test('Data formattata GG/MM/AAAA', function () { T.assertIncludes(aa.cfg.statementText.it,'15/01/2026'); });
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'partial', nonAccessibleContent: { outsideScope: ['Live streaming'] } } });
+      T.test('Contenuti fuori ambito', function () { T.assertIncludes(aa.cfg.statementText.it, 'non rientra'); T.assertIncludes(aa.cfg.statementText.it, 'Live streaming'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'partial', nonAccessibleContent:{ nonConformities:['Alt mancanti (1.1.1)','Contrasto (1.4.3)'] }}});
-  T.test('Status "partial" → parzialmente conforme', function () { T.assertIncludes(aa.cfg.statementText.it,'parzialmente conforme'); });
-  T.test('Non conformità elencate', function () { T.assertIncludes(aa.cfg.statementText.it,'Alt mancanti'); T.assertIncludes(aa.cfg.statementText.it,'Contrasto'); });
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'partial', nonAccessibleContent: { nonConformities: ['X'], alternatives: 'Email per richieste' } } });
+      T.test('Alternative accessibili', function () { T.assertIncludes(aa.cfg.statementText.it, 'Email per richieste'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'none' }});
-  T.test('Status "none" → non è conforme', function () { T.assertIncludes(aa.cfg.statementText.it,'non è conforme'); });
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'full' } });
+      T.test('Link AgID in procedura', function () { T.assertIncludes(aa.cfg.statementText.it, 'agid.gov.it'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'partial', nonAccessibleContent:{ disproportionateBurden:['Mappe'] }}});
-  T.test('Onere sproporzionato', function () { T.assertIncludes(aa.cfg.statementText.it,'Onere sproporzionato'); T.assertIncludes(aa.cfg.statementText.it,'Mappe'); });
+      aa = await boot({ contactEmail: 'a@b.it', contactPhone: '+39 000', agidDeclaration: { entityName: 'Test', conformanceStatus: 'full', responsibleName: 'Mario Rossi', responsibleRole: 'PM', feedbackUrl: 'https://t.it/fb' } });
+      T.test('Responsabile e feedback URL', function () { T.assertIncludes(aa.cfg.statementText.it, 'Mario Rossi'); T.assertIncludes(aa.cfg.statementText.it, 'PM'); T.assertIncludes(aa.cfg.statementText.it, 't.it/fb'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'partial', nonAccessibleContent:{ outsideScope:['Live streaming'] }}});
-  T.test('Contenuti fuori ambito', function () { T.assertIncludes(aa.cfg.statementText.it,'non rientra'); T.assertIncludes(aa.cfg.statementText.it,'Live streaming'); });
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'full', evaluationMethod: 'third-party' } });
+      T.test('Valutazione terzi', function () { T.assertIncludes(aa.cfg.statementText.it, 'valutazione effettuata da terzi'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'partial', nonAccessibleContent:{ nonConformities:['X'], alternatives:'Email per richieste' }}});
-  T.test('Alternative accessibili', function () { T.assertIncludes(aa.cfg.statementText.it,'Email per richieste'); });
+      aa = await boot({ contactEmail: 'a@b.it', agidDeclaration: { entityName: 'Test', conformanceStatus: 'partial', nonAccessibleContent: { nonConformities: ['X'] } } });
+      T.test('Tutte e 5 le lingue generate', function () {
+        var st = aa.cfg.statementText;
+        T.assert(st.it.length > 50); T.assert(st.en.length > 50); T.assert(st.fr.length > 50); T.assert(st.de.length > 50); T.assert(st.es.length > 50);
+      });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'full' }});
-  T.test('Link AgID in procedura', function () { T.assertIncludes(aa.cfg.statementText.it,'agid.gov.it'); });
+      aa = await boot({ contactEmail: 'a@b.it', statementText: { it: 'Custom' }, agidDeclaration: { entityName: 'Override', conformanceStatus: 'full' } });
+      T.test('agidDeclaration sovrascrive statementText', function () {
+        T.assertIncludes(aa.cfg.statementText.it, 'Override');
+        T.assertNotIncludes(aa.cfg.statementText.it, 'Custom');
+      });
+      T.endGroup();
 
-  aa = await boot({ contactEmail:'a@b.it', contactPhone:'+39 000', agidDeclaration:{ entityName:'Test', conformanceStatus:'full', responsibleName:'Mario Rossi', responsibleRole:'PM', feedbackUrl:'https://t.it/fb' }});
-  T.test('Responsabile e feedback URL', function () { T.assertIncludes(aa.cfg.statementText.it,'Mario Rossi'); T.assertIncludes(aa.cfg.statementText.it,'PM'); T.assertIncludes(aa.cfg.statementText.it,'t.it/fb'); });
+      /* ═══ 14. STATEMENT DEFAULT ═══ */
+      T.beginGroup('14. Statement Default');
+      aa = await boot({ contactEmail: 'test@example.com' });
+      T.test('Auto-genera da email', function () { T.assertIncludes(aa.cfg.statementText.it, 'test@example.com'); T.assertIncludes(aa.cfg.statementText.en, 'test@example.com'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'full', evaluationMethod:'third-party' }});
-  T.test('Valutazione terzi', function () { T.assertIncludes(aa.cfg.statementText.it,'valutazione effettuata da terzi'); });
+      aa = await boot({ contactPhone: '+39 123 456' });
+      T.test('Auto-genera da telefono', function () { T.assertIncludes(aa.cfg.statementText.it, '+39 123 456'); });
 
-  aa = await boot({ contactEmail:'a@b.it', agidDeclaration:{ entityName:'Test', conformanceStatus:'partial', nonAccessibleContent:{ nonConformities:['X'] }}});
-  T.test('Tutte e 5 le lingue generate', function () {
-    var st = aa.cfg.statementText;
-    T.assert(st.it.length>50); T.assert(st.en.length>50); T.assert(st.fr.length>50); T.assert(st.de.length>50); T.assert(st.es.length>50);
-  });
+      aa = await boot({ contactEmail: 'a@b.it' });
+      T.test('Include Difensore Civico', function () { T.assertIncludes(aa.cfg.statementText.it, 'Difensore Civico'); });
+      T.endGroup();
 
-  aa = await boot({ contactEmail:'a@b.it', statementText:{it:'Custom'}, agidDeclaration:{entityName:'Override',conformanceStatus:'full'} });
-  T.test('agidDeclaration sovrascrive statementText', function () {
-    T.assertIncludes(aa.cfg.statementText.it,'Override');
-    T.assertNotIncludes(aa.cfg.statementText.it,'Custom');
-  });
-  T.endGroup();
+      /* ═══ 15. CONFIGURAZIONE ═══ */
+      T.beginGroup('15. Configurazione');
+      aa = await boot({ contactEmail: 'a@b.it' });
+      T.test('Default position bottom-right', function () { T.assertEqual(aa.cfg.position, 'bottom-right'); });
 
-  /* ═══ 14. STATEMENT DEFAULT ═══ */
-  T.beginGroup('14. Statement Default');
-  aa = await boot({ contactEmail:'test@example.com' });
-  T.test('Auto-genera da email', function () { T.assertIncludes(aa.cfg.statementText.it,'test@example.com'); T.assertIncludes(aa.cfg.statementText.en,'test@example.com'); });
+      aa = await boot({ contactEmail: 'a@b.it', position: 'bottom-center' });
+      T.test('Custom position', function () { T.assertEqual(aa.cfg.position, 'bottom-center'); });
 
-  aa = await boot({ contactPhone:'+39 123 456' });
-  T.test('Auto-genera da telefono', function () { T.assertIncludes(aa.cfg.statementText.it,'+39 123 456'); });
+      aa = await boot({ contactEmail: 'a@b.it', buttonColor: '#ff0000' });
+      T.test('Custom buttonColor', function () { T.assertEqual(aa.cfg.buttonColor, '#ff0000'); });
 
-  aa = await boot({ contactEmail:'a@b.it' });
-  T.test('Include Difensore Civico', function () { T.assertIncludes(aa.cfg.statementText.it,'Difensore Civico'); });
-  T.endGroup();
+      aa = await boot({ contactEmail: 'a@b.it', zIndex: 500 });
+      T.test('Custom zIndex', function () { T.assertEqual(aa.cfg.zIndex, 500); });
 
-  /* ═══ 15. CONFIGURAZIONE ═══ */
-  T.beginGroup('15. Configurazione');
-  aa = await boot({ contactEmail:'a@b.it' });
-  T.test('Default position bottom-right', function () { T.assertEqual(aa.cfg.position,'bottom-right'); });
+      aa = await boot({ contactEmail: 'a@b.it', lang: 'de' });
+      T.test('Lang forzata', function () { T.assertEqual(aa.lang, 'de'); });
+      T.endGroup();
 
-  aa = await boot({ contactEmail:'a@b.it', position:'bottom-center' });
-  T.test('Custom position', function () { T.assertEqual(aa.cfg.position,'bottom-center'); });
+      /* ═══ 16. ANNUNCI SR ═══ */
+      T.beginGroup('16. Annunci Screen Reader');
+      aa = await boot({ contactEmail: 'a@b.it' });
+      aa._announce('Test msg');
+      await delay(100);
+      T.test('_announce scrive nel live region', function () { T.assertEqual(document.getElementById('aa-live-region').textContent, 'Test msg'); });
+      aa._announce('Second');
+      await delay(100);
+      T.test('Live region si aggiorna', function () { T.assertEqual(document.getElementById('aa-live-region').textContent, 'Second'); });
+      T.endGroup();
 
-  aa = await boot({ contactEmail:'a@b.it', buttonColor:'#ff0000' });
-  T.test('Custom buttonColor', function () { T.assertEqual(aa.cfg.buttonColor,'#ff0000'); });
+      /* ═══ 17. INTEGRITÀ CLASSI CSS ═══ */
+      T.beginGroup('17. Integrità Classi CSS');
+      T.test('Nessuna classe aa- dopo reset', function () {
+        aa._handleStep('fontSize', 3); aa._handleToggle('readableFont'); aa._handleContrast('high'); aa._handleToggle('bigCursor'); aa._handleToggle('stopAnimations');
+        aa._resetAll();
+        var rem = Array.from(html.classList).filter(function (c) { return c.indexOf('aa-') === 0; });
+        T.assertEqual(rem.length, 0, 'Rimaste: ' + rem.join(', '));
+      });
+      T.test('Una sola classe contrasto', function () {
+        aa._handleContrast('dark'); T.assert(html.classList.contains('aa-contrast-dark')); T.assert(!html.classList.contains('aa-contrast-light'));
+        aa._handleContrast('high'); T.assert(!html.classList.contains('aa-contrast-dark')); T.assert(html.classList.contains('aa-contrast-high'));
+        aa._resetAll();
+      });
+      T.test('Una sola classe allineamento', function () {
+        aa._handleAlign('left'); aa._handleAlign('right');
+        T.assert(!html.classList.contains('aa-align-left')); T.assert(html.classList.contains('aa-align-right'));
+        aa._resetAll();
+      });
+      T.endGroup();
 
-  aa = await boot({ contactEmail:'a@b.it', zIndex:500 });
-  T.test('Custom zIndex', function () { T.assertEqual(aa.cfg.zIndex,500); });
-
-  aa = await boot({ contactEmail:'a@b.it', lang:'de' });
-  T.test('Lang forzata', function () { T.assertEqual(aa.lang,'de'); });
-  T.endGroup();
-
-  /* ═══ 16. ANNUNCI SR ═══ */
-  T.beginGroup('16. Annunci Screen Reader');
-  aa = await boot({ contactEmail:'a@b.it' });
-  aa._announce('Test msg');
-  await delay(100);
-  T.test('_announce scrive nel live region', function () { T.assertEqual(document.getElementById('aa-live-region').textContent,'Test msg'); });
-  aa._announce('Second');
-  await delay(100);
-  T.test('Live region si aggiorna', function () { T.assertEqual(document.getElementById('aa-live-region').textContent,'Second'); });
-  T.endGroup();
-
-  /* ═══ 17. INTEGRITÀ CLASSI CSS ═══ */
-  T.beginGroup('17. Integrità Classi CSS');
-  T.test('Nessuna classe aa- dopo reset', function () {
-    aa._handleStep('fontSize',3); aa._handleToggle('readableFont'); aa._handleContrast('high'); aa._handleToggle('bigCursor'); aa._handleToggle('stopAnimations');
-    aa._resetAll();
-    var rem = Array.from(html.classList).filter(function(c){return c.indexOf('aa-')===0;});
-    T.assertEqual(rem.length,0,'Rimaste: '+rem.join(', '));
-  });
-  T.test('Una sola classe contrasto', function () {
-    aa._handleContrast('dark'); T.assert(html.classList.contains('aa-contrast-dark')); T.assert(!html.classList.contains('aa-contrast-light'));
-    aa._handleContrast('high'); T.assert(!html.classList.contains('aa-contrast-dark')); T.assert(html.classList.contains('aa-contrast-high'));
-    aa._resetAll();
-  });
-  T.test('Una sola classe allineamento', function () {
-    aa._handleAlign('left'); aa._handleAlign('right');
-    T.assert(!html.classList.contains('aa-align-left')); T.assert(html.classList.contains('aa-align-right'));
-    aa._resetAll();
-  });
-  T.endGroup();
-
-  /* ═══ RENDER ═══ */
-  T.render();
-  cleanup();
-})();
-</script>
+      /* ═══ RENDER ═══ */
+      T.render();
+      cleanup();
+    })();
+  </script>
 </body>
+
 </html>

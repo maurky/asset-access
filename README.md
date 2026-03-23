@@ -41,6 +41,7 @@ L'obiettivo è fornire uno strumento semplice da installare che aiuti i gestori 
 - **ADHD** — riduzione distrazioni: saturazione bassa, animazioni ferme, immagini nascoste
 - **Disabilità cognitiva** — layout semplificato: testo grande, interlinea ampia, no animazioni
 - **Dislessia** — font leggibile, interlinea e spaziatura massime, allineamento a sinistra
+- **Motoria** — navigazione da tastiera con scorciatoie (H titoli, M menu, F form, B pulsanti, G immagini, T tabelle, L liste, I aree), cursore grande, animazioni ferme, barra di stato con focus corrente
 
 I profili si attivano/disattivano con un click. Eventuali modifiche manuali disattivano il profilo attivo.
 
@@ -69,6 +70,27 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 - Dichiarazione di accessibilità (popup dedicata)
 - Reset completo delle impostazioni
 
+### Navigazione da tastiera (Motoria)
+
+- Focus ring potenziato (outline 3px + box-shadow) su tutti gli elementi quando attivo
+- Scorciatoie da tastiera per saltare tra elementi per tipo:
+
+| Tasto | Salta a                                              |
+| ----- | ---------------------------------------------------- |
+| **H** | Titoli (h1–h6)                                       |
+| **M** | Menu / navigazione                                   |
+| **F** | Form e campi                                         |
+| **B** | Pulsanti                                             |
+| **G** | Immagini e grafiche                                  |
+| **T** | Tabelle                                              |
+| **L** | Liste                                                |
+| **I** | Aree landmark (main, header, footer, aside, section) |
+
+- Barra di stato fissa (configurabile in alto o in basso) che mostra l'elemento in focus corrente e le scorciatoie disponibili
+- Le scorciatoie non interferiscono con i campi di input (disattivate automaticamente quando il focus è su input, textarea, select o contenteditable)
+- Modalità "enhanced tab" opzionale: aggiunge `tabindex="0"` a elementi con `role` o `onclick` ma senza tabindex nativo
+- Sincronizzata negli iframe via `postMessage`
+
 ### Screen Reader e Tastiera
 
 - `aria-live` region per annunci di ogni cambio di stato
@@ -92,6 +114,14 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 - Supporto multi-iframe (più iframe nella stessa pagina)
 - Zero configurazione nell'iframe (basta il tag script)
 - Supporto cross-origin con parametro `origin`
+
+## Live Demo
+
+Prova il widget direttamente nel browser:
+
+**[🔗 Apri la demo](https://maurky.github.io/asset-access/demo.html)**
+
+La demo include contenuti di esempio per testare tutte le funzionalità: profili, contrasti, navigazione da tastiera (con scorciatoie H, M, F, B, G, T, L, I), nascondi immagini con alt text, sincronizzazione iframe e dichiarazione AgID.
 
 ## Installazione
 
@@ -138,21 +168,23 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 
 ## Configurazione
 
-| Parametro            | Tipo                  | Default          | Descrizione                                                                                                                                                      |
-| -------------------- | --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`contactEmail`**   | `string`              | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                                   |
-| **`contactPhone`**   | `string`              | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                                                |
-| `position`           | `string`              | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `bottom-center`, `top-right`, `top-left`                                                                  |
-| `buttonColor`        | `string`              | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                                             |
-| `buttonSize`         | `number`              | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
-| `buttonIcon`         | `string`              | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
-| `lang`               | `string`              | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
-| `callback`           | `function\|string`    | `null`           | Funzione di callback invocata a ogni interazione, oppure nome di una funzione globale (es. `'myCallback'`). Riceve un oggetto `{ action, detail, state, lang }`. |
-| `agidDeclaration`    | `object`              | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
-| `statementText`      | `object`              | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
-| `zIndex`             | `number`              | `999999`         | z-index del widget                                                                                                                                               |
-| `iframeOrigins`      | `null\|string\|array` | `null`           | Origini accettate per iframe child. `null` = same-origin, `'*'` = qualsiasi, `['https://...']` = lista specifica.                                                |
-| `preserveBackground` | `array`               | `[]`             | Selettori CSS esclusi dall'override del `background-color` nei contrasti. Es: `['.q-notifications__list', '.my-modal']`                                          |
+| Parametro                | Tipo                  | Default          | Descrizione                                                                                                                                                      |
+| ------------------------ | --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`contactEmail`**       | `string`              | —                | **Obbligatorio\*** — Email per segnalazioni sull'accessibilità                                                                                                   |
+| **`contactPhone`**       | `string`              | —                | **Obbligatorio\*** — Telefono per segnalazioni sull'accessibilità                                                                                                |
+| `position`               | `string`              | `'bottom-right'` | Posizione del pulsante: `bottom-right`, `bottom-left`, `bottom-center`, `top-right`, `top-left`                                                                  |
+| `buttonColor`            | `string`              | `'#1a56db'`      | Colore HEX del pulsante e degli accenti nel pannello                                                                                                             |
+| `buttonSize`             | `number`              | `56`             | Dimensione in pixel del pulsante trigger                                                                                                                         |
+| `buttonIcon`             | `string`              | `'default'`      | `'default'` per l'icona inclusa, oppure una stringa SVG custom                                                                                                   |
+| `lang`                   | `string`              | _auto-detect_    | Lingua iniziale: `'it'`, `'en'`, `'fr'`, `'de'`, `'es'`. Se omesso, viene rilevata automaticamente dal browser.                                                  |
+| `callback`               | `function\|string`    | `null`           | Funzione di callback invocata a ogni interazione, oppure nome di una funzione globale (es. `'myCallback'`). Riceve un oggetto `{ action, detail, state, lang }`. |
+| `agidDeclaration`        | `object`              | `null`           | Configurazione per generazione automatica della Dichiarazione AgID Allegato 1. Se presente, sovrascrive `statementText`. Vedi sezione dedicata.                  |
+| `statementText`          | `object`              | _auto-generato_  | Oggetto con chiavi `it`, `en`, `fr`, `de`, `es`, ciascuna contenente l'HTML della dichiarazione. Se omesso, viene generato automaticamente dai contatti forniti. |
+| `zIndex`                 | `number`              | `999999`         | z-index del widget                                                                                                                                               |
+| `iframeOrigins`          | `null\|string\|array` | `null`           | Origini accettate per iframe child. `null` = same-origin, `'*'` = qualsiasi, `['https://...']` = lista specifica.                                                |
+| `preserveBackground`     | `array`               | `[]`             | Selettori CSS esclusi dall'override del `background-color` nei contrasti. Es: `['.q-notifications__list', '.my-modal']`                                          |
+| `keyboardNavBarPosition` | `string`              | `'bottom'`       | Posizione della barra di stato della navigazione da tastiera: `'top'` o `'bottom'`.                                                                              |
+| `keyboardNavEnhancedTab` | `boolean`             | `false`          | Se `true`, aggiunge `tabindex="0"` agli elementi con `role` o `onclick` ma senza tabindex nativo (approccio completo).                                           |
 
 > \* Almeno uno tra `contactEmail` e `contactPhone` deve essere specificato, altrimenti il widget non si avvia.
 
@@ -349,7 +381,7 @@ open demo.html
 
 ## Test
 
-Il progetto include una test suite automatizzata con **105 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
+Il progetto include una test suite automatizzata con **107 test organizzati in 17 gruppi**. La suite gira direttamente nel browser — basta aprire `test.html`:
 
 ```bash
 open test.html
@@ -364,7 +396,7 @@ asset-access/
 ├── asset-accessibility.js    # Widget completo (JS + CSS iniettato)
 ├── demo.html                 # Pagina demo con configurazione di esempio
 ├── iframe.html               # Pagina di test per modalità iframe child
-├── test.html                 # Test suite automatizzata (105 test)
+├── test.html                 # Test suite automatizzata (107 test)
 ├── README.md                 # Questo file
 └── LICENSE                   # Licenza MIT
 ```
@@ -387,12 +419,12 @@ Il widget è sviluppato in vanilla JavaScript ES6 (classi, arrow functions, temp
 
 - [x] Persistenza delle preferenze (localStorage)
 - [x] Supporto lingue aggiuntive (francese, tedesco, spagnolo)
-- [x] Profili di accessibilità predefiniti (Accessibilità, Tema Scuro, Ipovedente, ADHD, Disabilità Cognitiva, Dislessia)
+- [x] Profili di accessibilità predefiniti (Accessibilità, Tema Scuro, Ipovedente, ADHD, Disabilità Cognitiva, Dislessia, Motoria)
 - [x] Navigazione da tastiera completa nel pannello (focus trap, Tab/Shift+Tab, Escape)
 - [x] Screen reader: attributi ARIA avanzati (live region, aria-modal, focus management)
 - [x] Generatore automatico della dichiarazione di accessibilità AgID (Allegato 1)
 - [x] Distribuzione via CDN (jsDelivr)
-- [x] Test suite automatizzata (105 test, 17 gruppi)
+- [x] Test suite automatizzata (107 test, 17 gruppi)
 - [x] Sincronizzazione iframe via `postMessage` (`?mode=iframe`)
 - [ ] Documentazione API completa
 

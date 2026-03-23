@@ -235,9 +235,8 @@
         <span class="c-comment">&lt;!-- 2. Configura --&gt;</span><br>
         <span class="c-tag">&lt;script&gt;</span><br>
         &nbsp;&nbsp;<span class="c-key">var</span> AssetAccessibilityConfig = {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactEmail</span>: <span class="c-str">'<a
-            href="/cdn-cgi/l/email-protection" class="__cf_email__"
-            data-cfemail="ceafadadabbdbda7aca7a2a7baaf8eabbdaba3bea7a1e0a7ba">[email&#160;protected]</a>'</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">contactEmail</span>: <span
+          class="c-str">'accessibilita@esempio.it'</span>,<br>
         &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">agidDeclaration</span>: {<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">entityName</span>: <span class="c-str">'Azienda
           s.r.l.'</span>,<br>
@@ -448,7 +447,7 @@
         <div class="card">
           <h3>👤 Profili</h3>
           <p>Configurazioni predefinite con un click: Accessibilità, Tema Scuro, Ipovedente, ADHD, Disabilità Cognitiva,
-            Dislessia.</p>
+            Dislessia, Motoria.</p>
         </div>
         <div class="card">
           <h3>📝 Contenuti</h3>
@@ -487,8 +486,166 @@
         <span class="animated-badge">🚀 Badge Animato 2</span>
         <span class="animated-badge">🎯 Badge Animato 3</span>
       </div>
-      <p><small>I badge qui sopra hanno un'animazione — prova ad attivarla "Ferma Animazioni" nel widget.</small></p>
+      <p><small>I badge qui sopra hanno un'animazione — prova ad attivare "Ferma Animazioni" nel widget.</small></p>
     </div>
+
+    <!-- ── Menu di navigazione (tasto M) ── -->
+    <nav aria-label="Menu di esempio"
+      style="background:#fff;border-radius:14px;padding:16px 24px;margin-bottom:48px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#1e3a5f;margin-bottom:12px;">Menu di
+        Navigazione</h2>
+      <p style="font-size:.85rem;color:#9ca3af;margin-bottom:12px;">Premi <kbd
+          style="padding:2px 6px;border:1px solid #d1d5db;border-radius:3px;background:#f3f4f6;font-size:.8rem;">M</kbd>
+        per saltare qui con la navigazione da tastiera.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="#"
+          style="color:#2563eb;text-decoration:none;font-weight:500;padding:8px 16px;border-radius:8px;background:#eff6ff;">Home</a>
+        <a href="#"
+          style="color:#2563eb;text-decoration:none;font-weight:500;padding:8px 16px;border-radius:8px;background:#eff6ff;">Servizi</a>
+        <a href="#"
+          style="color:#2563eb;text-decoration:none;font-weight:500;padding:8px 16px;border-radius:8px;background:#eff6ff;">Chi
+          Siamo</a>
+        <a href="#"
+          style="color:#2563eb;text-decoration:none;font-weight:500;padding:8px 16px;border-radius:8px;background:#eff6ff;">Contatti</a>
+        <a href="#"
+          style="color:#2563eb;text-decoration:none;font-weight:500;padding:8px 16px;border-radius:8px;background:#eff6ff;">Blog</a>
+      </div>
+    </nav>
+
+    <!-- ── Bottoni (tasto B) ── -->
+    <div class="section">
+      <h2>Pulsanti</h2>
+      <p>Premi <kbd
+          style="padding:2px 6px;border:1px solid #d1d5db;border-radius:3px;background:#f3f4f6;font-size:.8rem;">B</kbd>
+        per saltare tra i pulsanti della pagina.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;">
+        <button
+          style="padding:10px 24px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">Primario</button>
+        <button
+          style="padding:10px 24px;border-radius:8px;border:2px solid #2563eb;background:transparent;color:#2563eb;font-weight:600;cursor:pointer;">Secondario</button>
+        <button
+          style="padding:10px 24px;border-radius:8px;border:none;background:#dc2626;color:#fff;font-weight:600;cursor:pointer;">Elimina</button>
+        <button
+          style="padding:10px 24px;border-radius:8px;border:1px solid #d1d5db;background:#f9fafb;color:#374151;font-weight:600;cursor:pointer;"
+          disabled>Disabilitato</button>
+        <button
+          style="padding:10px 24px;border-radius:8px;border:none;background:#059669;color:#fff;font-weight:600;cursor:pointer;">Conferma</button>
+      </div>
+    </div>
+
+    <!-- ── Formulario (tasto F) ── -->
+    <div class="section">
+      <h2>Modulo di Contatto</h2>
+      <p>Premi <kbd
+          style="padding:2px 6px;border:1px solid #d1d5db;border-radius:3px;background:#f3f4f6;font-size:.8rem;">F</kbd>
+        per saltare ai campi del modulo.</p>
+      <form
+        style="background:#fff;border-radius:14px;padding:24px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:grid;gap:16px;"
+        onsubmit="return false;">
+        <div>
+          <label for="demo-name" style="display:block;font-weight:600;margin-bottom:4px;font-size:.9rem;">Nome</label>
+          <input id="demo-name" type="text" placeholder="Mario Rossi"
+            style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:.9rem;">
+        </div>
+        <div>
+          <label for="demo-email" style="display:block;font-weight:600;margin-bottom:4px;font-size:.9rem;">Email</label>
+          <input id="demo-email" type="email" placeholder="mario@esempio.it"
+            style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:.9rem;">
+        </div>
+        <div>
+          <label for="demo-topic"
+            style="display:block;font-weight:600;margin-bottom:4px;font-size:.9rem;">Argomento</label>
+          <select id="demo-topic"
+            style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:.9rem;background:#fff;">
+            <option>Segnalazione accessibilità</option>
+            <option>Richiesta informazioni</option>
+            <option>Supporto tecnico</option>
+            <option>Altro</option>
+          </select>
+        </div>
+        <div>
+          <label for="demo-msg"
+            style="display:block;font-weight:600;margin-bottom:4px;font-size:.9rem;">Messaggio</label>
+          <textarea id="demo-msg" rows="3" placeholder="Descrivi il problema..."
+            style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:.9rem;resize:vertical;"></textarea>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button type="submit"
+            style="padding:10px 24px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">Invia</button>
+          <button type="reset"
+            style="padding:10px 24px;border-radius:8px;border:1px solid #d1d5db;background:transparent;color:#6b7280;font-weight:600;cursor:pointer;">Svuota</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ── Galleria immagini (tasto G) ── -->
+    <div class="section">
+      <h2>Galleria Immagini</h2>
+      <p>Premi <kbd
+          style="padding:2px 6px;border:1px solid #d1d5db;border-radius:3px;background:#f3f4f6;font-size:.8rem;">G</kbd>
+        per saltare tra le immagini.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+          alt="Montagne innevate al tramonto" style="width:100%;height:160px;object-fit:cover;border-radius:10px;">
+        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop"
+          alt="Foresta verde con nebbia" style="width:100%;height:160px;object-fit:cover;border-radius:10px;">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop"
+          alt="Spiaggia tropicale" style="width:100%;height:160px;object-fit:cover;border-radius:10px;">
+      </div>
+    </div>
+
+    <!-- ── Liste (tasto L) ── -->
+    <div class="section">
+      <h2>Liste</h2>
+      <p>Premi <kbd
+          style="padding:2px 6px;border:1px solid #d1d5db;border-radius:3px;background:#f3f4f6;font-size:.8rem;">L</kbd>
+        per saltare tra le liste.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px;">
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:8px;">Normative supportate</h3>
+          <ul style="padding-left:20px;color:#4b5563;">
+            <li>WCAG 2.1 Livello AA</li>
+            <li>European Accessibility Act</li>
+            <li>D.Lgs. 82/2022</li>
+            <li>Legge Stanca (L. 4/2004)</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:8px;">Profili disponibili</h3>
+          <ol style="padding-left:20px;color:#4b5563;">
+            <li>Accessibilità</li>
+            <li>Tema Scuro</li>
+            <li>Ipovedente</li>
+            <li>ADHD</li>
+            <li>Disabilità Cognitiva</li>
+            <li>Dislessia</li>
+            <li>Motoria</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Aree landmark (tasto I) ── -->
+    <section aria-label="Area informativa"
+      style="background:#fff;border-radius:14px;padding:24px;margin-bottom:48px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#1e3a5f;margin-bottom:12px;">Area
+        Informativa (Landmark)</h2>
+      <p style="color:#4b5563;">Premi <kbd
+          style="padding:2px 6px;border:1px solid #d1d5db;border-radius:3px;background:#f3f4f6;font-size:.8rem;">I</kbd>
+        per saltare tra le aree semantiche della pagina (header, nav, main, section, aside, footer).</p>
+      <p style="color:#4b5563;margin-top:8px;">Questo blocco è un <code>&lt;section&gt;</code> con
+        <code>aria-label</code>, il menù sopra è un <code>&lt;nav&gt;</code>, e il footer in basso è un
+        <code>&lt;footer&gt;</code>.
+      </p>
+    </section>
+
+    <aside aria-label="Nota a margine"
+      style="background:#fefce8;border-left:4px solid #eab308;border-radius:0 14px 14px 0;padding:20px 24px;margin-bottom:48px;">
+      <h3 style="color:#854d0e;margin-bottom:8px;">Nota a margine (aside)</h3>
+      <p style="color:#713f12;font-size:.9rem;">Questo è un elemento <code>&lt;aside&gt;</code>, navigabile con il tasto
+        <strong>I</strong>. Gli screen reader e il widget di accessibilità lo riconoscono come area complementare.
+      </p>
+    </aside>
 
   </div>
 
@@ -503,7 +660,6 @@
   <!-- ═══════════════════════════════════════ -->
 
   <!-- 1. Carica lo script -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script src="asset-accessibility.js"></script>
 
   <!-- 2. Configura (contactEmail e/o contactPhone sono OBBLIGATORI) -->

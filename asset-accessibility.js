@@ -36,6 +36,7 @@
       sectionProfiles: 'Profili',
       profileAccessibility: 'Accessibilità',
       profileDarkTheme: 'Tema Scuro',
+      profileMotor: 'Motoria',
       profileVisuallyImpaired: 'Ipovedente',
       profileAdhd: 'ADHD',
       profileCognitive: 'Disabilità Cognitiva',
@@ -61,6 +62,7 @@
       altTextMissing: 'Testo alternativo mancante',
       cursorSize: 'Cursore Grande',
       stopAnimations: 'Ferma Animazioni',
+      keyboardNav: 'Navigazione Tastiera',
       resetAll: 'Ripristina Tutto',
       statement: 'Dichiarazione',
       statementTitle: 'Dichiarazione di Accessibilità',
@@ -79,12 +81,15 @@
       srProfileActivated: 'Profilo attivato',
       srProfileDeactivated: 'Profilo disattivato',
       srResetDone: 'Tutte le impostazioni sono state ripristinate',
+      navBarFocus: 'Focus su',
+      navBarHint: 'Tasti: H titoli, M menu, F form, B pulsanti, G immagini, T tabelle, L liste, I aree',
     },
     en: {
       panelTitle: 'Accessibility',
       sectionProfiles: 'Profiles',
       profileAccessibility: 'Accessibility',
       profileDarkTheme: 'Dark Theme',
+      profileMotor: 'Motor',
       profileVisuallyImpaired: 'Visually Impaired',
       profileAdhd: 'ADHD',
       profileCognitive: 'Cognitive Disability',
@@ -110,6 +115,7 @@
       altTextMissing: 'Alternate text missing',
       cursorSize: 'Large Cursor',
       stopAnimations: 'Stop Animations',
+      keyboardNav: 'Keyboard Navigation',
       resetAll: 'Reset All',
       statement: 'Statement',
       statementTitle: 'Accessibility Statement',
@@ -128,12 +134,15 @@
       srProfileActivated: 'Profile activated',
       srProfileDeactivated: 'Profile deactivated',
       srResetDone: 'All settings have been reset',
+      navBarFocus: 'Focus on',
+      navBarHint: 'Keys: H headings, M menu, F forms, B buttons, G graphics, T tables, L lists, I landmarks',
     },
     fr: {
       panelTitle: 'Accessibilité',
       sectionProfiles: 'Profils',
       profileAccessibility: 'Accessibilité',
       profileDarkTheme: 'Thème Sombre',
+      profileMotor: 'Motrice',
       profileVisuallyImpaired: 'Malvoyant',
       profileAdhd: 'TDAH',
       profileCognitive: 'Handicap Cognitif',
@@ -159,6 +168,7 @@
       altTextMissing: 'Texte alternatif manquant',
       cursorSize: 'Grand Curseur',
       stopAnimations: 'Arrêter les Animations',
+      keyboardNav: 'Navigation au Clavier',
       resetAll: 'Tout Réinitialiser',
       statement: 'Déclaration',
       statementTitle: 'Déclaration d\'Accessibilité',
@@ -177,12 +187,15 @@
       srProfileActivated: 'Profil activé',
       srProfileDeactivated: 'Profil désactivé',
       srResetDone: 'Tous les paramètres ont été réinitialisés',
+      navBarFocus: 'Focus sur',
+      navBarHint: 'Touches : H titres, M menu, F formulaires, B boutons, G images, T tableaux, L listes, I zones',
     },
     de: {
       panelTitle: 'Barrierefreiheit',
       sectionProfiles: 'Profile',
       profileAccessibility: 'Barrierefreiheit',
       profileDarkTheme: 'Dunkles Thema',
+      profileMotor: 'Motorisch',
       profileVisuallyImpaired: 'Sehbehindert',
       profileAdhd: 'ADHS',
       profileCognitive: 'Kognitive Behinderung',
@@ -208,6 +221,7 @@
       altTextMissing: 'Alternativtext fehlt',
       cursorSize: 'Großer Cursor',
       stopAnimations: 'Animationen Stoppen',
+      keyboardNav: 'Tastaturnavigation',
       resetAll: 'Alles Zurücksetzen',
       statement: 'Erklärung',
       statementTitle: 'Erklärung zur Barrierefreiheit',
@@ -226,12 +240,15 @@
       srProfileActivated: 'Profil aktiviert',
       srProfileDeactivated: 'Profil deaktiviert',
       srResetDone: 'Alle Einstellungen wurden zurückgesetzt',
+      navBarFocus: 'Fokus auf',
+      navBarHint: 'Tasten: H Überschriften, M Menü, F Formulare, B Schaltflächen, G Grafiken, T Tabellen, L Listen, I Bereiche',
     },
     es: {
       panelTitle: 'Accesibilidad',
       sectionProfiles: 'Perfiles',
       profileAccessibility: 'Accesibilidad',
       profileDarkTheme: 'Tema Oscuro',
+      profileMotor: 'Motora',
       profileVisuallyImpaired: 'Discapacidad Visual',
       profileAdhd: 'TDAH',
       profileCognitive: 'Discapacidad Cognitiva',
@@ -257,6 +274,7 @@
       altTextMissing: 'Texto alternativo faltante',
       cursorSize: 'Cursor Grande',
       stopAnimations: 'Detener Animaciones',
+      keyboardNav: 'Navegación por Teclado',
       resetAll: 'Restablecer Todo',
       statement: 'Declaración',
       statementTitle: 'Declaración de Accesibilidad',
@@ -275,6 +293,8 @@
       srProfileActivated: 'Perfil activado',
       srProfileDeactivated: 'Perfil desactivado',
       srResetDone: 'Todos los ajustes han sido restablecidos',
+      navBarFocus: 'Foco en',
+      navBarHint: 'Teclas: H títulos, M menú, F formularios, B botones, G gráficos, T tablas, L listas, I áreas',
     },
   }
 
@@ -300,6 +320,7 @@
         hideImages: false,
         bigCursor: false,
         stopAnimations: false,
+        keyboardNav: false,
       },
     },
     darkTheme: {
@@ -316,6 +337,7 @@
         hideImages: false,
         bigCursor: true,
         stopAnimations: false,
+        keyboardNav: false,
       },
     },
     visuallyImpaired: {
@@ -332,6 +354,7 @@
         hideImages: false,
         bigCursor: true,
         stopAnimations: false,
+        keyboardNav: false,
       },
     },
     adhd: {
@@ -348,6 +371,7 @@
         hideImages: true,
         bigCursor: false,
         stopAnimations: true,
+        keyboardNav: false,
       },
     },
     cognitive: {
@@ -364,6 +388,7 @@
         hideImages: false,
         bigCursor: false,
         stopAnimations: true,
+        keyboardNav: false,
       },
     },
     dyslexia: {
@@ -380,6 +405,24 @@
         hideImages: false,
         bigCursor: false,
         stopAnimations: true,
+        keyboardNav: false,
+      },
+    },
+    motorDisability: {
+      icon: '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01"/><path d="M10 8h.01"/><path d="M14 8h.01"/><path d="M18 8h.01"/><path d="M6 12h.01"/><path d="M10 12h.01"/><path d="M14 12h.01"/><path d="M18 12h.01"/><path d="M8 16h8"/></svg>',
+      state: {
+        fontSizeStep: 0,
+        readableFont: false,
+        lineHeight: 0,
+        letterSpacing: 0,
+        textAlign: '',
+        contrastMode: '',
+        monochrome: false,
+        saturation: '',
+        hideImages: false,
+        bigCursor: true,
+        stopAnimations: true,
+        keyboardNav: true,
       },
     },
   }
@@ -402,6 +445,8 @@
     callback: null, // function or string (global function name) — called on every UI interaction
     iframeOrigins: null, // null = same-origin only, ['https://...'] or '*' to accept cross-origin iframes
     preserveBackground: [], // CSS selectors excluded from contrast background override, e.g. ['.q-notifications__list']
+    keyboardNavBarPosition: 'bottom', // 'top' | 'bottom' — position of the keyboard nav status bar
+    keyboardNavEnhancedTab: false, // true = add tabindex="0" to elements with onclick/role but no tabindex
     zIndex: 999999,
   }
 
@@ -739,6 +784,28 @@
   }
 
   /* ───────────────────────────────────────────
+     DOM HELPERS (CSP-safe — no innerHTML)
+  ─────────────────────────────────────────── */
+  const _el = (tag, attrs = {}, ...children) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'className') e.className = v;
+      else if (k === 'textContent') e.textContent = v;
+      else e.setAttribute(k, v);
+    }
+    for (const c of children) {
+      if (typeof c === 'string') e.append(c);
+      else if (c) e.appendChild(c);
+    }
+    return e;
+  };
+
+  const _svg = (svgString) => {
+    const doc = new DOMParser().parseFromString(svgString, 'image/svg+xml');
+    return document.importNode(doc.documentElement, true);
+  };
+
+  /* ───────────────────────────────────────────
      SHARED CSS CONSTANTS & BUILDERS
   ─────────────────────────────────────────── */
 
@@ -751,7 +818,18 @@
     '.aa-alt-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;word-break:break-word;border:2px dashed #9ca3af;border-radius:4px;background:rgba(243,244,246,0.9);color:#374151;font-style:italic;pointer-events:none;z-index:1;}\n' +
     '.aa-alt-label.aa-alt-missing{color:#dc2626;border-color:#fca5a5;background:rgba(254,242,242,0.9);}\n' +
     '.aa-stop-animations,.aa-stop-animations *{animation:none!important;transition:none!important;}\n' +
-    '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n';
+    '.aa-big-cursor,.aa-big-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'black\' stroke=\'white\' stroke-width=\'1\'%3E%3Cpath d=\'M5 3l14 8-6 1.5L10 19z\'/%3E%3C/svg%3E") 4 2,auto!important;}\n' +
+    /* Keyboard navigation — enhanced focus ring */
+    'html.aa-keyboard-nav *:focus{outline:3px solid #1a56db!important;outline-offset:2px!important;box-shadow:0 0 0 6px rgba(26,86,219,0.25)!important;}\n' +
+    'html.aa-keyboard-nav *:focus:not(:focus-visible){outline:none!important;box-shadow:none!important;}\n' +
+    /* Status bar */
+    '#aa-nav-bar{position:fixed;left:0;right:0;z-index:999997;display:none;align-items:center;gap:12px;padding:8px 16px;background:rgba(17,24,39,0.92);color:#f3f4f6;font-size:13px;font-family:system-ui,-apple-system,sans-serif;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}\n' +
+    '#aa-nav-bar.aa-nav-top{top:0;}#aa-nav-bar.aa-nav-bottom{bottom:0;}\n' +
+    'html.aa-keyboard-nav #aa-nav-bar{display:flex;}\n' +
+    '#aa-nav-bar .aa-nav-focus{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;}\n' +
+    '#aa-nav-bar .aa-nav-focus .aa-nav-tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#374151;color:#9ca3af;font-size:11px;font-weight:400;margin-right:6px;text-transform:uppercase;}\n' +
+    '#aa-nav-bar .aa-nav-hint{color:#9ca3af;font-size:11px;white-space:nowrap;}\n' +
+    '#aa-nav-bar .aa-nav-hint kbd{display:inline-block;padding:1px 5px;border:1px solid #6b7280;border-radius:3px;background:#1f2937;color:#e5e7eb;font-size:11px;font-family:inherit;margin:0 1px;}\n';
 
   /* Contrast theme definitions */
   const CONTRAST_THEMES = [
@@ -833,7 +911,20 @@
     adhd: 'profileAdhd',
     cognitive: 'profileCognitive',
     dyslexia: 'profileDyslexia',
+    motorDisability: 'profileMotor',
   }
+
+  /* ── Keyboard navigation shortcut map ── */
+  const KBD_SHORTCUTS = {
+    h: 'h1,h2,h3,h4,h5,h6',
+    m: 'nav,[role="navigation"]',
+    f: 'form,input:not([type="hidden"]),select,textarea',
+    b: 'button,[role="button"],input[type="submit"],input[type="button"]',
+    g: 'img,svg[role="img"],[role="img"],figure',
+    t: 'table,[role="table"],[role="grid"]',
+    l: 'ul,ol,[role="list"]',
+    i: 'main,header,footer,aside,section,[role="main"],[role="banner"],[role="contentinfo"],[role="complementary"],[role="region"]',
+  };
 
   class AssetAccessibility {
     constructor(mergedConfig) {
@@ -857,6 +948,7 @@
         hideImages: false,
         bigCursor: false,
         stopAnimations: false,
+        keyboardNav: false,
       };
 
       // Restore persisted preferences
@@ -1134,8 +1226,8 @@
       /* ─ Profiles section ─ */
       html += '<div class="aa-section-label" id="aa-sec-profiles">' + this.t('sectionProfiles') + '</div>';
       html += '<div class="aa-profiles" role="group" aria-labelledby="aa-sec-profiles">';
-      const profileKeys = ['accessibility', 'darkTheme', 'visuallyImpaired', 'adhd', 'cognitive', 'dyslexia'];
-      const profileI18nKeys = ['profileAccessibility', 'profileDarkTheme', 'profileVisuallyImpaired', 'profileAdhd', 'profileCognitive', 'profileDyslexia'];
+      const profileKeys = ['accessibility', 'darkTheme', 'visuallyImpaired', 'adhd', 'cognitive', 'dyslexia', 'motorDisability'];
+      const profileI18nKeys = ['profileAccessibility', 'profileDarkTheme', 'profileVisuallyImpaired', 'profileAdhd', 'profileCognitive', 'profileDyslexia', 'profileMotor'];
       for (let p = 0; p < profileKeys.length; p++) {
         const pKey = profileKeys[p];
         const isActive = s.activeProfile === pKey;
@@ -1241,6 +1333,7 @@
       html += this._rowToggle('hideImages', s.hideImages);
       html += this._rowToggle('cursorSize', s.bigCursor);
       html += this._rowToggle('stopAnimations', s.stopAnimations);
+      html += this._rowToggle('keyboardNav', s.keyboardNav);
       html += '</div>';
 
       html += '</div>'; // .aa-body
@@ -1314,6 +1407,7 @@
       else if (key === 'hideImages') stateKey = 'hideImages';
       else if (key === 'cursorSize') stateKey = 'bigCursor';
       else if (key === 'stopAnimations') stateKey = 'stopAnimations';
+      else if (key === 'keyboardNav') stateKey = 'keyboardNav';
       return (
         '<div class="aa-row"><span class="aa-row-label">' +
         this.t(key) +
@@ -1523,7 +1617,7 @@
       this.state.activeProfile = '';
       this.state[key] = !this.state[key];
       /* Map state key back to i18n key for announcement */
-      const labelMap = { readableFont: 'readableFont', hideImages: 'hideImages', bigCursor: 'cursorSize', stopAnimations: 'stopAnimations' };
+      const labelMap = { readableFont: 'readableFont', hideImages: 'hideImages', bigCursor: 'cursorSize', stopAnimations: 'stopAnimations', keyboardNav: 'keyboardNav' };
       const label = this.t(labelMap[key] || key);
       this._applyState();
       this._renderPanel();
@@ -1661,6 +1755,9 @@
           state: JSON.parse(JSON.stringify(this.state)),
           preserveBackground: this.cfg.preserveBackground || [],
           altTextMissing: this.t('altTextMissing'),
+          keyboardNavBarPosition: this.cfg.keyboardNavBarPosition || 'bottom',
+          navBarHint: this._buildHintHTML(),
+          navBarFocusLabel: this.t('navBarFocus'),
         }, origin);
       } catch (e) {
         console.error('[AA parent] Errore invio a iframe:', e.message);
@@ -1727,6 +1824,7 @@
         'aa-hide-images': s.hideImages,
         'aa-big-cursor': s.bigCursor,
         'aa-stop-animations': s.stopAnimations,
+        'aa-keyboard-nav': s.keyboardNav,
       };
 
       for (let cls in classes) {
@@ -1742,6 +1840,13 @@
         this._showAltLabels();
       } else {
         this._hideAltLabels();
+      }
+
+      /* Keyboard navigation */
+      if (s.keyboardNav) {
+        this._enableKeyboardNav();
+      } else {
+        this._disableKeyboardNav();
       }
 
       /* Persist */
@@ -1818,10 +1923,173 @@
         hideImages: false,
         bigCursor: false,
         stopAnimations: false,
+        keyboardNav: false,
       };
       this._clearState();
       this._applyState();
       this._renderPanel();
+    }
+
+    /* ───────────────────────────────────────────
+       KEYBOARD NAVIGATION METHODS
+    ─────────────────────────────────────────── */
+    _enableKeyboardNav() {
+      if (this._kbActive) return;
+      this._kbActive = true;
+
+      /* ── Status bar ── */
+      if (!this._navBar) {
+        const bar = document.createElement('div');
+        bar.id = 'aa-nav-bar';
+        bar.setAttribute('aria-hidden', 'true');
+        const pos = this.cfg.keyboardNavBarPosition === 'top' ? 'aa-nav-top' : 'aa-nav-bottom';
+        bar.className = pos;
+
+        const focusSpan = document.createElement('span');
+        focusSpan.className = 'aa-nav-focus';
+        focusSpan.textContent = '—';
+
+        const hintSpan = document.createElement('span');
+        hintSpan.className = 'aa-nav-hint';
+        hintSpan.innerHTML = this._buildHintHTML();
+
+        bar.appendChild(focusSpan);
+        bar.appendChild(hintSpan);
+        document.body.appendChild(bar);
+        this._navBar = bar;
+        this._navFocus = focusSpan;
+        this._navHint = hintSpan;
+      }
+
+      /* ── Enhanced tab (optional) ── */
+      if (this.cfg.keyboardNavEnhancedTab) {
+        this._enhancedTabEls = [];
+        document.querySelectorAll('[role="button"],[role="link"],[role="tab"],[role="menuitem"],[role="option"],[onclick]').forEach((el) => {
+          if (!el.closest('#aa-panel,#aa-trigger,#aa-statement-overlay') &&
+            el.tabIndex < 0 && !el.getAttribute('tabindex')) {
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('data-aa-tabindex', 'true');
+            this._enhancedTabEls.push(el);
+          }
+        });
+      }
+
+      /* ── Shortcut listener ── */
+      this._kbShortcutHandler = (e) => {
+        /* Skip if inside text input or with modifiers */
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+        /* Skip if panel or statement is open */
+        if (this.isOpen || this.statementOpen) return;
+
+        const key = e.key.toLowerCase();
+        const selector = KBD_SHORTCUTS[key];
+        if (!selector) return;
+
+        e.preventDefault();
+        this._jumpToNext(selector);
+      };
+      document.addEventListener('keydown', this._kbShortcutHandler);
+
+      /* ── Focus tracker ── */
+      this._kbFocusHandler = () => {
+        this._updateNavBar();
+      };
+      document.addEventListener('focusin', this._kbFocusHandler);
+    }
+
+    _disableKeyboardNav() {
+      if (!this._kbActive) return;
+      this._kbActive = false;
+
+      /* Remove shortcut listener */
+      if (this._kbShortcutHandler) {
+        document.removeEventListener('keydown', this._kbShortcutHandler);
+        this._kbShortcutHandler = null;
+      }
+
+      /* Remove focus tracker */
+      if (this._kbFocusHandler) {
+        document.removeEventListener('focusin', this._kbFocusHandler);
+        this._kbFocusHandler = null;
+      }
+
+      /* Remove enhanced tab */
+      if (this._enhancedTabEls) {
+        for (const el of this._enhancedTabEls) {
+          el.removeAttribute('tabindex');
+          el.removeAttribute('data-aa-tabindex');
+        }
+        this._enhancedTabEls = null;
+      }
+
+      /* Remove status bar */
+      if (this._navBar) {
+        this._navBar.remove();
+        this._navBar = null;
+        this._navFocus = null;
+        this._navHint = null;
+      }
+
+      /* Remove temporary tabindex on non-focusable elements */
+      document.querySelectorAll('[data-aa-temp-focus]').forEach((el) => {
+        el.removeAttribute('tabindex');
+        el.removeAttribute('data-aa-temp-focus');
+      });
+    }
+
+    _jumpToNext(selector) {
+      const all = Array.from(document.querySelectorAll(selector)).filter(
+        (el) => !el.closest('#aa-panel,#aa-trigger,#aa-statement-overlay,#aa-nav-bar') &&
+          !el.disabled && !el.hidden && el.offsetParent !== null
+      );
+      if (!all.length) return;
+
+      /* Find current position */
+      const current = document.activeElement;
+      let idx = -1;
+      for (let i = 0; i < all.length; i++) {
+        if (all[i] === current || all[i].contains(current)) {
+          idx = i;
+          break;
+        }
+      }
+      /* Jump to next (cycle) */
+      const next = all[(idx + 1) % all.length];
+
+      /* Ensure focusable */
+      if (next.tabIndex < 0 && !next.getAttribute('tabindex')) {
+        next.setAttribute('tabindex', '-1');
+        next.setAttribute('data-aa-temp-focus', 'true');
+      }
+      next.focus();
+      next.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+
+    _updateNavBar() {
+      if (!this._navFocus) return;
+      const el = document.activeElement;
+      if (!el || el === document.body || el === document.documentElement) {
+        this._navFocus.textContent = '—';
+        return;
+      }
+      const tag = el.tagName.toLowerCase();
+      const text = (el.getAttribute('aria-label') || el.textContent || '').trim().substring(0, 60);
+      this._navFocus.innerHTML = '';
+
+      const tagSpan = document.createElement('span');
+      tagSpan.className = 'aa-nav-tag';
+      tagSpan.textContent = tag;
+      this._navFocus.appendChild(tagSpan);
+      this._navFocus.appendChild(document.createTextNode(
+        (this.t('navBarFocus') + ' ') + (text || '#' + (el.id || '…'))
+      ));
+    }
+
+    _buildHintHTML() {
+      const keys = Object.keys(KBD_SHORTCUTS);
+      return keys.map((k) => '<kbd>' + k.toUpperCase() + '</kbd>').join(' ');
     }
 
     /* ───────────────────────────────────────────
@@ -1874,6 +2142,10 @@
       this._ready = false;
       this._pbInjected = false;
       this._altTextMissing = 'Alternate text missing';
+      this._kbActive = false;
+      this._navBarPosition = 'bottom';
+      this._navBarHint = '';
+      this._navBarFocusLabel = 'Focus on';
       this.state = null;
 
       console.log('[AA iframe] Modalità iframe attivata. Origin target:', this._origin);
@@ -1972,6 +2244,7 @@
         'aa-hide-images': s.hideImages,
         'aa-big-cursor': s.bigCursor,
         'aa-stop-animations': s.stopAnimations,
+        'aa-keyboard-nav': s.keyboardNav,
       };
       for (let cls in classes) {
         if (classes[cls]) html.classList.add(cls);
@@ -1983,6 +2256,13 @@
         this._showAltLabels();
       } else {
         this._hideAltLabels();
+      }
+
+      /* Keyboard navigation */
+      if (s.keyboardNav) {
+        this._enableKeyboardNav();
+      } else {
+        this._disableKeyboardNav();
       }
     }
 
@@ -2009,6 +2289,11 @@
         if (e.data.altTextMissing) {
           this._altTextMissing = e.data.altTextMissing;
         }
+
+        /* Store keyboard nav config from parent */
+        if (e.data.keyboardNavBarPosition) this._navBarPosition = e.data.keyboardNavBarPosition;
+        if (e.data.navBarHint) this._navBarHint = e.data.navBarHint;
+        if (e.data.navBarFocusLabel) this._navBarFocusLabel = e.data.navBarFocusLabel;
 
         this._applyState(e.data.state);
       });
@@ -2069,6 +2354,115 @@
         if (img) wrap.parentNode.insertBefore(img, wrap);
         wrap.remove();
       });
+    }
+
+    /* ── Keyboard Navigation (iframe child) ── */
+    _enableKeyboardNav() {
+      if (this._kbActive) return;
+      this._kbActive = true;
+
+      /* Status bar */
+      if (!this._navBar) {
+        const bar = document.createElement('div');
+        bar.id = 'aa-nav-bar';
+        bar.setAttribute('aria-hidden', 'true');
+        bar.className = this._navBarPosition === 'top' ? 'aa-nav-top' : 'aa-nav-bottom';
+
+        const focusSpan = document.createElement('span');
+        focusSpan.className = 'aa-nav-focus';
+        focusSpan.textContent = '—';
+
+        const hintSpan = document.createElement('span');
+        hintSpan.className = 'aa-nav-hint';
+        hintSpan.innerHTML = this._navBarHint || Object.keys(KBD_SHORTCUTS).map((k) => '<kbd>' + k.toUpperCase() + '</kbd>').join(' ');
+
+        bar.appendChild(focusSpan);
+        bar.appendChild(hintSpan);
+        document.body.appendChild(bar);
+        this._navBar = bar;
+        this._navFocus = focusSpan;
+      }
+
+      /* Shortcut listener */
+      this._kbShortcutHandler = (e) => {
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+        const key = e.key.toLowerCase();
+        const selector = KBD_SHORTCUTS[key];
+        if (!selector) return;
+
+        e.preventDefault();
+        this._jumpToNext(selector);
+      };
+      document.addEventListener('keydown', this._kbShortcutHandler);
+
+      /* Focus tracker */
+      this._kbFocusHandler = () => { this._updateNavBar(); };
+      document.addEventListener('focusin', this._kbFocusHandler);
+    }
+
+    _disableKeyboardNav() {
+      if (!this._kbActive) return;
+      this._kbActive = false;
+
+      if (this._kbShortcutHandler) {
+        document.removeEventListener('keydown', this._kbShortcutHandler);
+        this._kbShortcutHandler = null;
+      }
+      if (this._kbFocusHandler) {
+        document.removeEventListener('focusin', this._kbFocusHandler);
+        this._kbFocusHandler = null;
+      }
+      if (this._navBar) {
+        this._navBar.remove();
+        this._navBar = null;
+        this._navFocus = null;
+      }
+      document.querySelectorAll('[data-aa-temp-focus]').forEach((el) => {
+        el.removeAttribute('tabindex');
+        el.removeAttribute('data-aa-temp-focus');
+      });
+    }
+
+    _jumpToNext(selector) {
+      const all = Array.from(document.querySelectorAll(selector)).filter(
+        (el) => !el.closest('#aa-nav-bar') &&
+          !el.disabled && !el.hidden && el.offsetParent !== null
+      );
+      if (!all.length) return;
+      const current = document.activeElement;
+      let idx = -1;
+      for (let i = 0; i < all.length; i++) {
+        if (all[i] === current || all[i].contains(current)) { idx = i; break; }
+      }
+      const next = all[(idx + 1) % all.length];
+      if (next.tabIndex < 0 && !next.getAttribute('tabindex')) {
+        next.setAttribute('tabindex', '-1');
+        next.setAttribute('data-aa-temp-focus', 'true');
+      }
+      next.focus();
+      next.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+
+    _updateNavBar() {
+      if (!this._navFocus) return;
+      const el = document.activeElement;
+      if (!el || el === document.body || el === document.documentElement) {
+        this._navFocus.textContent = '—';
+        return;
+      }
+      const tag = el.tagName.toLowerCase();
+      const text = (el.getAttribute('aria-label') || el.textContent || '').trim().substring(0, 60);
+      this._navFocus.innerHTML = '';
+      const tagSpan = document.createElement('span');
+      tagSpan.className = 'aa-nav-tag';
+      tagSpan.textContent = tag;
+      this._navFocus.appendChild(tagSpan);
+      this._navFocus.appendChild(document.createTextNode(
+        (this._navBarFocusLabel || 'Focus on') + ' ' + (text || '#' + (el.id || '…'))
+      ));
     }
 
     _stopPolling() {
