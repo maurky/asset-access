@@ -156,7 +156,7 @@ Dopo aver incluso lo script, definisci l'oggetto di configurazione con almeno un
 <script>
   var AssetAccessibilityConfig = {
     contactEmail: "accessibilita@esempio.it",
-    contactPhone: "+39 06 1234567",
+    contactPhone: "+39 02 1234567",
     position: "bottom-right",
     buttonColor: "#1a56db",
   };
@@ -186,6 +186,7 @@ Il widget si inizializza automaticamente al caricamento del DOM. Non è necessar
 | `preserveBackground`     | `array`               | `[]`             | Selettori CSS esclusi dall'override del `background-color` nei contrasti. Es: `['.q-notifications__list', '.my-modal']`                                          |
 | `keyboardNavBarPosition` | `string`              | `'bottom'`       | Posizione della barra di stato della navigazione da tastiera: `'top'` o `'bottom'`.                                                                              |
 | `keyboardNavEnhancedTab` | `boolean`             | `false`          | Se `true`, aggiunge `tabindex="0"` agli elementi con `role` o `onclick` ma senza tabindex nativo (approccio completo).                                           |
+| `keyboardNavButtons`     | `array`               | `[]`             | Selettori CSS aggiuntivi da includere nella scorciatoia **B** (pulsanti). Utile per tag `<a>` stilizzati come bottoni. Es: `['.btn', 'a.cta', '.button']`        |
 
 > \* Almeno uno tra `contactEmail` e `contactPhone` deve essere specificato, altrimenti il widget non si avvia.
 

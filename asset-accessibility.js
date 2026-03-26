@@ -447,6 +447,7 @@
     preserveBackground: [], // CSS selectors excluded from contrast background override, e.g. ['.q-notifications__list']
     keyboardNavBarPosition: 'bottom', // 'top' | 'bottom' — position of the keyboard nav status bar
     keyboardNavEnhancedTab: false, // true = add tabindex="0" to elements with onclick/role but no tabindex
+    keyboardNavButtons: [], // additional CSS selectors for B shortcut, e.g. ['.btn', 'a.cta']
     zIndex: 999999,
   }
 
@@ -1756,6 +1757,7 @@
           preserveBackground: this.cfg.preserveBackground || [],
           altTextMissing: this.t('altTextMissing'),
           keyboardNavBarPosition: this.cfg.keyboardNavBarPosition || 'bottom',
+          keyboardNavButtons: this.cfg.keyboardNavButtons || [],
           navBarHint: this._buildHintHTML(),
           navBarFocusLabel: this.t('navBarFocus'),
         }, origin);
@@ -1974,6 +1976,12 @@
         });
       }
 
+      /* ── Build effective shortcut map (merge keyboardNavButtons into B) ── */
+      this._kbMap = Object.assign({}, KBD_SHORTCUTS);
+      if (this.cfg.keyboardNavButtons && this.cfg.keyboardNavButtons.length) {
+        this._kbMap.b = this._kbMap.b + ',' + this.cfg.keyboardNavButtons.join(',');
+      }
+
       /* ── Shortcut listener ── */
       this._kbShortcutHandler = (e) => {
         /* Skip if inside text input or with non-shift modifiers */
@@ -1984,7 +1992,7 @@
         if (this.isOpen || this.statementOpen) return;
 
         const key = e.key.toLowerCase();
-        const selector = KBD_SHORTCUTS[key];
+        const selector = this._kbMap[key];
         if (!selector) return;
 
         e.preventDefault();
@@ -2008,6 +2016,7 @@
         document.removeEventListener('keydown', this._kbShortcutHandler);
         this._kbShortcutHandler = null;
       }
+      this._kbMap = null;
 
       /* Remove focus tracker */
       if (this._kbFocusHandler) {
@@ -2146,6 +2155,7 @@
       this._navBarPosition = 'bottom';
       this._navBarHint = '';
       this._navBarFocusLabel = 'Focus on';
+      this._keyboardNavButtons = [];
       this.state = null;
 
       console.log('[AA iframe] Modalità iframe attivata. Origin target:', this._origin);
@@ -2292,6 +2302,7 @@
 
         /* Store keyboard nav config from parent */
         if (e.data.keyboardNavBarPosition) this._navBarPosition = e.data.keyboardNavBarPosition;
+        if (e.data.keyboardNavButtons) this._keyboardNavButtons = e.data.keyboardNavButtons;
         if (e.data.navBarHint) this._navBarHint = e.data.navBarHint;
         if (e.data.navBarFocusLabel) this._navBarFocusLabel = e.data.navBarFocusLabel;
 
@@ -2383,6 +2394,12 @@
         this._navFocus = focusSpan;
       }
 
+      /* Build effective shortcut map (merge keyboardNavButtons into B) */
+      this._kbMap = Object.assign({}, KBD_SHORTCUTS);
+      if (this._keyboardNavButtons && this._keyboardNavButtons.length) {
+        this._kbMap.b = this._kbMap.b + ',' + this._keyboardNavButtons.join(',');
+      }
+
       /* Shortcut listener */
       this._kbShortcutHandler = (e) => {
         if (e.ctrlKey || e.altKey || e.metaKey) return;
@@ -2390,7 +2407,7 @@
         if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
 
         const key = e.key.toLowerCase();
-        const selector = KBD_SHORTCUTS[key];
+        const selector = this._kbMap[key];
         if (!selector) return;
 
         e.preventDefault();
@@ -2411,6 +2428,7 @@
         document.removeEventListener('keydown', this._kbShortcutHandler);
         this._kbShortcutHandler = null;
       }
+      this._kbMap = null;
       if (this._kbFocusHandler) {
         document.removeEventListener('focusin', this._kbFocusHandler);
         this._kbFocusHandler = null;

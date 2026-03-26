@@ -530,6 +530,12 @@
           disabled>Disabilitato</button>
         <button
           style="padding:10px 24px;border-radius:8px;border:none;background:#059669;color:#fff;font-weight:600;cursor:pointer;">Conferma</button>
+        <a href="#" class="btn-link"
+          style="display:inline-flex;align-items:center;padding:10px 24px;border-radius:8px;border:none;background:#7c3aed;color:#fff;font-weight:600;cursor:pointer;text-decoration:none;">Link
+          come bottone</a>
+        <a href="#" class="btn-link"
+          style="display:inline-flex;align-items:center;padding:10px 24px;border-radius:8px;border:1px solid #7c3aed;background:transparent;color:#7c3aed;font-weight:600;cursor:pointer;text-decoration:none;">Altro
+          link-bottone</a>
       </div>
     </div>
 
@@ -686,6 +692,7 @@
         responsibleName: 'Responsabile Accessibilità',
         responsibleRole: 'Web Manager'
       },
+      keyboardNavButtons: ['.btn-link'],
       callback: (event) => {
         console.log('[AA Callback]', event.action, event.detail, event.state);
       }
