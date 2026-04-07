@@ -36,7 +36,7 @@ L'obiettivo è fornire uno strumento semplice da installare che aiuti i gestori 
 ### Profili predefiniti
 
 - **Accessibilità** — testo più grande, font leggibile, interlinea e spaziatura aumentate
-- **Tema Scuro** — contrasto scuro e cursore grande
+- **Tema Scuro** — contrasto scuro soft (bottoni e form mantengono l'aspetto originale, link stilizzati come dark), cursore grande
 - **Ipovedente** — testo molto grande, contrasto elevato, cursore grande
 - **ADHD** — riduzione distrazioni: saturazione bassa, animazioni ferme, immagini nascoste
 - **Disabilità cognitiva** — layout semplificato: testo grande, interlinea ampia, no animazioni
@@ -55,7 +55,9 @@ I profili si attivano/disattivano con un click. Eventuali modifiche manuali disa
 
 ### Regolazioni colore
 
-- Tema a contrasto scuro
+- Contrasto scuro a doppia modalità (click ciclico):
+  - **Contrasto Scuro** — sfondo scuro con bottoni e form che mantengono il loro aspetto originale, link stilizzati come nella modalità totale
+  - **Totalmente Scuro** — sfondo scuro con testo, bottoni, form e link tutti uniformati al tema
 - Tema a contrasto chiaro
 - Tema a contrasto elevato (sfondo nero, testo giallo)
 - Modalità monocromatica (scala di grigi)

@@ -447,13 +447,14 @@
 
       /* ═══ 6. COLORI ═══ */
       T.beginGroup('6. Regolazioni Colore');
-      T.test('Contrast dark on/off', function () {
+      T.test('Contrast dark 3 stati: off → darkSoft → dark → off', function () {
+        aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode, 'darkSoft'); T.assert(html.classList.contains('aa-contrast-darkSoft'));
         aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode, 'dark'); T.assert(html.classList.contains('aa-contrast-dark'));
-        aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode, '');
+        aa._handleContrast('dark'); T.assertEqual(aa.state.contrastMode, ''); T.assert(!html.classList.contains('aa-contrast-dark'));
       });
-      T.test('Contrast switch dark → light', function () {
+      T.test('Contrast switch darkSoft → light', function () {
         aa._handleContrast('dark'); aa._handleContrast('light');
-        T.assert(!html.classList.contains('aa-contrast-dark'));
+        T.assert(!html.classList.contains('aa-contrast-darkSoft'));
         T.assert(html.classList.contains('aa-contrast-light'));
         aa._resetAll();
       });
@@ -532,7 +533,11 @@
       T.test('Applica "accessibility"', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile, 'accessibility'); T.assertEqual(aa.state.fontSizeStep, 2); T.assert(aa.state.readableFont); });
       T.test('Toggle off stesso profilo → reset', function () { aa._applyProfile('accessibility'); T.assertEqual(aa.state.activeProfile, ''); T.assertEqual(aa.state.fontSizeStep, 0); });
       T.test('Profilo "visuallyImpaired"', function () { aa._applyProfile('visuallyImpaired'); T.assertEqual(aa.state.fontSizeStep, 4); T.assert(aa.state.bigCursor); aa._resetAll(); });
-      T.test('Profilo "darkTheme"', function () { aa._applyProfile('darkTheme'); T.assertEqual(aa.state.contrastMode, 'dark'); T.assert(aa.state.bigCursor); T.assertEqual(aa.state.fontSizeStep, 0); aa._resetAll(); });
+      T.test('Profilo "darkTheme" 3 stati', function () {
+        aa._applyProfile('darkTheme'); T.assertEqual(aa.state.contrastMode, 'darkSoft'); T.assert(aa.state.bigCursor);
+        aa._applyProfile('darkTheme'); T.assertEqual(aa.state.contrastMode, 'dark'); T.assertEqual(aa.state.activeProfile, 'darkTheme');
+        aa._applyProfile('darkTheme'); T.assertEqual(aa.state.contrastMode, ''); T.assertEqual(aa.state.activeProfile, '');
+      });
       T.test('Profilo "adhd"', function () { aa._applyProfile('adhd'); T.assert(aa.state.hideImages); T.assert(aa.state.stopAnimations); aa._resetAll(); });
       T.test('Profilo "cognitive"', function () { aa._applyProfile('cognitive'); T.assertEqual(aa.state.lineHeight, 3); T.assert(aa.state.stopAnimations); aa._resetAll(); });
       T.test('Profilo "dyslexia"', function () { aa._applyProfile('dyslexia'); T.assertEqual(aa.state.textAlign, 'left'); T.assert(aa.state.readableFont); aa._resetAll(); });
@@ -787,7 +792,7 @@
         T.assertEqual(rem.length, 0, 'Rimaste: ' + rem.join(', '));
       });
       T.test('Una sola classe contrasto', function () {
-        aa._handleContrast('dark'); T.assert(html.classList.contains('aa-contrast-dark')); T.assert(!html.classList.contains('aa-contrast-light'));
+        aa._handleContrast('dark'); aa._handleContrast('dark'); T.assert(html.classList.contains('aa-contrast-dark')); T.assert(!html.classList.contains('aa-contrast-darkSoft')); T.assert(!html.classList.contains('aa-contrast-light'));
         aa._handleContrast('high'); T.assert(!html.classList.contains('aa-contrast-dark')); T.assert(html.classList.contains('aa-contrast-high'));
         aa._resetAll();
       });

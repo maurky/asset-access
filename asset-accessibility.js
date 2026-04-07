@@ -52,6 +52,7 @@
       letterSpacing: 'Spaziatura Caratteri',
       sectionColor: 'Regolazioni Colore',
       contrastDark: 'Contrasto Scuro',
+      contrastDarkTotal: 'Totalmente Scuro',
       contrastLight: 'Contrasto Chiaro',
       contrastHigh: 'Contrasto Elevato',
       monochrome: 'Monocromatico',
@@ -105,6 +106,7 @@
       letterSpacing: 'Letter Spacing',
       sectionColor: 'Color Settings',
       contrastDark: 'Dark Contrast',
+      contrastDarkTotal: 'Total Dark',
       contrastLight: 'Light Contrast',
       contrastHigh: 'High Contrast',
       monochrome: 'Monochrome',
@@ -158,6 +160,7 @@
       letterSpacing: 'Espacement des Lettres',
       sectionColor: 'Réglages des Couleurs',
       contrastDark: 'Contraste Sombre',
+      contrastDarkTotal: 'Totalement Sombre',
       contrastLight: 'Contraste Clair',
       contrastHigh: 'Contraste Élevé',
       monochrome: 'Monochrome',
@@ -211,6 +214,7 @@
       letterSpacing: 'Zeichenabstand',
       sectionColor: 'Farbeinstellungen',
       contrastDark: 'Dunkler Kontrast',
+      contrastDarkTotal: 'Total Dunkel',
       contrastLight: 'Heller Kontrast',
       contrastHigh: 'Hoher Kontrast',
       monochrome: 'Monochrom',
@@ -264,6 +268,7 @@
       letterSpacing: 'Espaciado de Letras',
       sectionColor: 'Ajustes de Color',
       contrastDark: 'Contraste Oscuro',
+      contrastDarkTotal: 'Totalmente Oscuro',
       contrastLight: 'Contraste Claro',
       contrastHigh: 'Contraste Alto',
       monochrome: 'Monocromático',
@@ -331,7 +336,7 @@
         lineHeight: 0,
         letterSpacing: 0,
         textAlign: '',
-        contrastMode: 'dark',
+        contrastMode: 'darkSoft',
         monochrome: false,
         saturation: '',
         hideImages: false,
@@ -834,8 +839,12 @@
 
   /* Contrast theme definitions */
   const CONTRAST_THEMES = [
+    {
+      mode: 'darkSoft', bg: '#1a1a2e', fg: '#e0e0e0', bc: '#444', lc: '#7eb8ff', lb: '#7eb8ff',
+      elExclExtra: ':not(button):not(input):not(select):not(textarea):not([role="button"])'
+    },
     { mode: 'dark', bg: '#1a1a2e', fg: '#e0e0e0', bc: '#444', lc: '#7eb8ff', bb: '#7eb8ff' },
-    { mode: 'light', bg: '#fff', fg: '#111', bc: '#ccc', lc: null, bb: '#111' },
+    { mode: 'light', bg: '#fff', fg: '#111', bc: '#ccc', bb: '#111' },
     { mode: 'high', bg: '#000', fg: '#ff0', bc: '#ff0', lc: '#0ff', bb: '#ff0' },
   ];
 
@@ -850,20 +859,27 @@
     let css = '';
     for (const t of CONTRAST_THEMES) {
       const m = 'html.aa-contrast-' + t.mode;
+      const extra = t.elExclExtra || '';
       css += m + '{background:' + t.bg + '!important;}\n';
       css += m + ' body{background:' + t.bg + '!important;color:' + t.fg + '!important;}\n';
-      css += m + ' body *' + elExcl + pbx + '{background-color:' + t.bg + '!important;color:' + t.fg + '!important;border-color:' + t.bc + '!important;}\n';
+      css += m + ' body *' + elExcl + extra + pbx + '{background-color:' + t.bg + '!important;color:' + t.fg + '!important;border-color:' + t.bc + '!important;}\n';
       if (t.lc) css += m + ' a' + linkExcl + '{color:' + t.lc + '!important;}\n';
-      /* Interactive element borders */
-      const sels = [
-        'a' + (bdrExcl.a || ''),
-        'button' + (bdrExcl.button || ''),
-        'input[type="submit"]', 'input[type="button"]',
-        'select' + (bdrExcl.select || ''),
-        '[role="button"]' + (bdrExcl.role || ''),
-      ];
-      css += sels.map((s) => m + ' body ' + s).join(',') +
-        '{border:1px solid ' + t.bb + '!important;}\n';
+      /* Interactive element borders (skip if no bb — soft mode keeps originals) */
+      if (t.bb) {
+        const sels = [
+          'a' + (bdrExcl.a || ''),
+          'button' + (bdrExcl.button || ''),
+          'input[type="submit"]', 'input[type="button"]',
+          'select' + (bdrExcl.select || ''),
+          '[role="button"]' + (bdrExcl.role || ''),
+        ];
+        css += sels.map((s) => m + ' body ' + s).join(',') +
+          '{border:1px solid ' + t.bb + '!important;}\n';
+      } else if (t.lb) {
+        /* Link-only border (soft mode) */
+        css += m + ' body a' + (bdrExcl.a || '') +
+          '{border:1px solid ' + t.lb + '!important;}\n';
+      }
     }
     return css;
   };
@@ -943,7 +959,7 @@
         textAlign: '', // '' | left | center | right
         lineHeight: 0, // 0 to 5 steps (+20% each)
         letterSpacing: 0, // 0 to 5 steps
-        contrastMode: '', // '' | dark | light | high
+        contrastMode: '', // '' | darkSoft | dark | light | high
         monochrome: false,
         saturation: '', // '' | high | low
         hideImages: false,
@@ -992,7 +1008,7 @@
       let pbx = '';
       if (cfg.preserveBackground && cfg.preserveBackground.length) {
         for (let pb = 0; pb < cfg.preserveBackground.length; pb++) {
-          let sel = cfg.preserveBackground[pb];
+          const sel = cfg.preserveBackground[pb];
           pbx += ':not(' + sel + '):not(' + sel + ' *)';
         }
       }
@@ -1062,6 +1078,7 @@
         '.aa-pill{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid #d1d5db;background:#fff;color:#374151;cursor:pointer;transition:all .15s;white-space:nowrap;}\n' +
         '.aa-pill:hover{border-color:' + cfg.buttonColor + ';color:' + cfg.buttonColor + ';}\n' +
         '.aa-pill.aa-active{background:' + cfg.buttonColor + ';border-color:' + cfg.buttonColor + ';color:#fff;}\n' +
+        '.aa-pill.aa-active-full{background:#111827;border-color:#111827;color:#fff;}\n' +
         '.aa-pill:focus-visible{outline:2px solid ' + cfg.buttonColor + ';outline-offset:1px;}\n' +
 
         /* Profile cards */
@@ -1075,6 +1092,7 @@
         '.aa-profile-card.aa-active svg{color:#fff;}\n' +
         '.aa-profile-card-label{font-size:10px;font-weight:600;line-height:1.2;color:#374151;}\n' +
         '.aa-profile-card.aa-active .aa-profile-card-label{color:#fff;}\n' +
+        '.aa-profile-card.aa-active-full{background:#111827;border-color:#111827;}\n' +
 
         /* Footer */
         '.aa-footer{border-top:1px solid #e5e7eb;padding:10px 16px;display:flex;gap:8px;flex-shrink:0;background:#f8f9fb;}\n' +
@@ -1232,13 +1250,26 @@
       for (let p = 0; p < profileKeys.length; p++) {
         const pKey = profileKeys[p];
         const isActive = s.activeProfile === pKey;
+        /* darkTheme card has 3 visual states */
+        let cardCls = 'aa-profile-card';
+        let cardLabel = this.t(profileI18nKeys[p]);
+        if (pKey === 'darkTheme' && isActive) {
+          if (s.contrastMode === 'dark') {
+            cardCls += ' aa-active aa-active-full';
+            cardLabel = this.t('contrastDarkTotal');
+          } else {
+            cardCls += ' aa-active';
+          }
+        } else if (isActive) {
+          cardCls += ' aa-active';
+        }
         html +=
-          '<button class="aa-profile-card' + (isActive ? ' aa-active' : '') +
+          '<button class="' + cardCls +
           '" data-action="applyProfile" data-value="' + pKey +
           '" aria-pressed="' + isActive +
-          '" aria-label="' + this.t(profileI18nKeys[p]) + (isActive ? ', ' + this.t('srActivated') : '') + '">' +
+          '" aria-label="' + cardLabel + (isActive ? ', ' + this.t('srActivated') : '') + '">' +
           PROFILES[pKey].icon +
-          '<span class="aa-profile-card-label">' + this.t(profileI18nKeys[p]) + '</span>' +
+          '<span class="aa-profile-card-label">' + cardLabel + '</span>' +
           '</button>';
       }
       html += '</div>';
@@ -1294,8 +1325,19 @@
       html +=
         '<div class="aa-section-label" id="aa-sec-color">' + this.t('sectionColor') + '</div>';
       html += '<div class="aa-pills" role="group" aria-labelledby="aa-sec-color">';
-      const modes = ['contrastDark', 'contrastLight', 'contrastHigh'];
-      const modeVals = ['dark', 'light', 'high'];
+
+      /* Dark contrast pill (3 states: off → darkSoft → dark) */
+      const darkState = s.contrastMode === 'darkSoft' ? 1 : s.contrastMode === 'dark' ? 2 : 0;
+      const darkLabel = darkState === 2 ? this.t('contrastDarkTotal') : this.t('contrastDark');
+      const darkCls = darkState === 2 ? ' aa-active aa-active-full' : darkState === 1 ? ' aa-active' : '';
+      html +=
+        '<button class="aa-pill' + darkCls +
+        '" data-action="contrast" data-value="dark" aria-pressed="' + (darkState > 0) + '">' +
+        darkLabel + '</button>';
+
+      /* Light & High contrast pills */
+      const modes = ['contrastLight', 'contrastHigh'];
+      const modeVals = ['light', 'high'];
       for (let i = 0; i < modes.length; i++) {
         const mActive = s.contrastMode === modeVals[i];
         html +=
@@ -1636,19 +1678,41 @@
 
     _handleContrast(val) {
       this.state.activeProfile = '';
-      this.state.contrastMode = this.state.contrastMode === val ? '' : val;
-      const contrastMap = { dark: 'contrastDark', light: 'contrastLight', high: 'contrastHigh' };
+      /* Dark has 3 states: off → darkSoft → dark → off */
+      if (val === 'dark' || val === 'darkSoft') {
+        if (this.state.contrastMode === 'darkSoft') this.state.contrastMode = 'dark';
+        else if (this.state.contrastMode === 'dark') this.state.contrastMode = '';
+        else this.state.contrastMode = 'darkSoft';
+      } else {
+        this.state.contrastMode = this.state.contrastMode === val ? '' : val;
+      }
+      const contrastMap = { darkSoft: 'contrastDark', dark: 'contrastDarkTotal', light: 'contrastLight', high: 'contrastHigh' };
       this._applyState();
       this._renderPanel();
       this._announce(
         this.state.contrastMode
           ? this.t(contrastMap[this.state.contrastMode]) + ': ' + this.t('srActivated')
-          : this.t(contrastMap[val]) + ': ' + this.t('srDeactivated')
+          : this.t('contrastDark') + ': ' + this.t('srDeactivated')
       );
     }
 
     _applyProfile(key) {
-      /* Toggle off if same profile is already active */
+      /* darkTheme has 3 states: off → darkSoft → dark → off */
+      if (key === 'darkTheme' && this.state.activeProfile === 'darkTheme') {
+        if (this.state.contrastMode === 'darkSoft') {
+          this.state.contrastMode = 'dark';
+          this._applyState();
+          this._renderPanel();
+          this._announce(this.t('contrastDarkTotal') + ': ' + this.t('srActivated'));
+          return;
+        }
+        /* contrastMode === 'dark' → reset */
+        this._resetAll();
+        this._announce(this.t(PROFILE_I18N[key]) + ': ' + this.t('srProfileDeactivated'));
+        return;
+      }
+
+      /* Toggle off if same profile is already active (other profiles) */
       if (this.state.activeProfile === key) {
         this._resetAll();
         this._announce(this.t(PROFILE_I18N[key]) + ': ' + this.t('srProfileDeactivated'));
@@ -1817,6 +1881,7 @@
         'aa-align-left': s.textAlign === 'left',
         'aa-align-center': s.textAlign === 'center',
         'aa-align-right': s.textAlign === 'right',
+        'aa-contrast-darkSoft': s.contrastMode === 'darkSoft',
         'aa-contrast-dark': s.contrastMode === 'dark',
         'aa-contrast-light': s.contrastMode === 'light',
         'aa-contrast-high': s.contrastMode === 'high',
@@ -2197,7 +2262,7 @@
       let pbx = '';
       if (preserveBackground && preserveBackground.length) {
         for (let i = 0; i < preserveBackground.length; i++) {
-          let sel = preserveBackground[i];
+          const sel = preserveBackground[i];
           pbx += ':not(' + sel + '):not(' + sel + ' *)';
         }
       }
@@ -2245,6 +2310,7 @@
         'aa-align-left': s.textAlign === 'left',
         'aa-align-center': s.textAlign === 'center',
         'aa-align-right': s.textAlign === 'right',
+        'aa-contrast-darkSoft': s.contrastMode === 'darkSoft',
         'aa-contrast-dark': s.contrastMode === 'dark',
         'aa-contrast-light': s.contrastMode === 'light',
         'aa-contrast-high': s.contrastMode === 'high',
